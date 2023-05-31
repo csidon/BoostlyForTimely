@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Database Table Example</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Boostly</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h2>Message Preview</h2>
+        <form>
+            <div class="form-group">
+            <label for="dateInput">Date:</label>
+            <input type="date" class="form-control" id="dateInput">
+          </div>
+          <div class="form-group">
+            <label for="timeInput">Time:</label>
+            <input type="time" class="form-control" id="timeInput">
+          </div>
+          <div class="form-group">
+            <label for="availabilityInput">Slot Availability Length:</label>
+            <input type="number" class="form-control" id="availabilityInput" placeholder="Enter slot length (in minutes)">
+          </div>
+          <div class="form-group">
+            <label for="messagePreview">Message Preview:</label>
+            <textarea class="form-control" id="messagePreview" readonly></textarea>
+          </div>
+        </form>
+        <!-- Send Notification Button -->
+        <button class="btn btn-primary" type="button">Send Notification</button>
+  </div>
+
+    
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="../static/functions.js"></script>
+</body>
+</html>
