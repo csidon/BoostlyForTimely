@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    <!-- Putting JQuery here to see if this helps with loading scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <!-- Testing to see if downgrading to 4.6 works for dropdowns.. it does!! -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <!-- Linking our custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+  	<script src="https://kit.fontawesome.com/2ca52e1c9f.js" crossorigin="anonymous"></script>
+
+
+	{% if title %}
+		<title>Boostly - {{ title }}</title>
+	{% else %}
+		<title>This is the new Homepage!</title>
+	{% endif %}
+	</head>
+
+	<body>
+		<!-- Navbar and Making it responsive  -->
+		<header class="site-header">
+		  <nav class="navbar navbar-expand-md navbar-dark back-color-nav fixed-top py-3">
+		    <div class="container">
+		      <a class="navbar-brand mr-4" href="/">Boostly</a>
+		      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+		        <span class="navbar-toggler-icon"></span>
+		      </button>
+		      <!-- Navbar Left Side -->
+
+		      <div class="collapse navbar-collapse" id="navbarToggle">
+		        <div class="navbar-nav mr-auto">
+		        	{% if current_user.is_authenticated %}
+		        		<a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('main.dashboard') }}">Dashboard</a>
+		        	{% else %}
+		          	<a class="nav-item nav-link" style="color:#424242;" href="{{ url_for('main.home') }}">Home</a>
+		        	{% endif %}
+		          
+		        </div>
+		        <!-- Navbar Right Side -->
+		        <div class="navbar-nav">
+		        	<!-- # Using ginja2 conditional and using current_user.is_authenticated to check if user is logged in or not -->
+		        	{% if current_user.is_authenticated %}		
+		        		<a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.account') }}">{{ current_user.userFirstName }} {{ current_user.userLastName }}</a>
+		        		<a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.logout') }}">Logout</a>
+		        	{% else %}
+			          <a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.login') }}">Login</a>
+			          <a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.register') }}">Register</a>
+		          {% endif %}
+		        </div>
+		      </div>
+		    </div>
+		  </nav>
+		</header>
+
+		
+		<main role="main" class="container">
+		  <div class="row">
+		    <div class="col-md-10">
+		    	{% with messages = get_flashed_messages(with_categories=true) %}
+		    		{% if messages %}
+		    			{% for category, message in messages %}
+		    				<div class="alert alert-{{ category }}">
+		    						{{ message }}
+		    				</div>
+		    			{% endfor %}
+		    		{% endif %}
+		    	{% endwith %}
+		      {% block content %}{% endblock %}
+		    	
+		    </div>
+<!--		    <div class="col-md-4">-->
+<!--		      <div class="content-section">-->
+<!--		        <h3>Our Sidebar</h3>-->
+<!--		        <p class='text-muted'>You can put any information here you'd like.-->
+<!--		          <ul class="list-group">-->
+<!--		            <li class="list-group-item list-group-item-light">Latest Posts</li>-->
+<!--		            <li class="list-group-item list-group-item-light">Announcements</li>-->
+<!--		            <li class="list-group-item list-group-item-light">Calendars</li>-->
+<!--		            <li class="list-group-item list-group-item-light">etc</li>-->
+<!--		          </ul>-->
+<!--		        </p>-->
+<!--		      </div>-->
+<!--		    </div>-->
+		  </div>
+		</main> 
+		
+
+		<!-- Optional JS for Bootstrap - jQuery first, then Popper.js, then Bootstrap -->
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> -->
+		<!-- <script src="https://unpkg.com/@popperjs/core@2"></script> -->
+<!-- 		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script> -->
+
+		<!-- Again testing to see if 4.6 works.. it does!! -->
+		
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+		<script src="{{ url_for('static', filename='myscripts.js') }}"></script>
+
+
+	</body>
+</html>

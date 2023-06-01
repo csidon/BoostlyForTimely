@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+	<div class="content-section">
+	  <div class="media col-md-6">
+	    <img class="rounded-circle account-img" src="{{ userImage }}">
+	    <div class="media-body col-md-8">
+	      <h5 class="mt-4">Kia Ora {{ current_user.userFirstName }} {{ current_user.userLastName }}</h5>
+	      <p class="text-secondary">{{ current_user.userEmail }}</p>
+	    </div>
+	  </div>
+	</div>
+	<!-- AccountUpdateForm here -->
+	<div class="content-section">
+	  	<!-- INCLUDING ENCODING TYPE OTHERWISE IMAGE DATA WON'T BE PASSED CORRECTLY! -->
+		<form method="POST" action="" enctype="multipart/form-data">
+			<!-- # Hidden tag method adds a CSRF token -->
+			{{ form.hidden_tag() }}		
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4">Edit Account Info</legend>
+				<div class="form-group">
+					{{ form.userFirstName.label(class="form-control-label") }}
+					{{ form.userFirstName(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.userLastName.label(class="form-control-label") }}
+					{{ form.userLastName(class="form-control form-control-lg") }}
+				</div>
+				<div class="form-group">
+					{{ form.userEmail.label(class="form-control-label") }} 
+
+					<!-- Validate to ensure unique email otherwise throw error message -->
+					{% if form.userEmail.errors %}
+						{{ form.userEmail(class="form-control form-control-lg is-invalid")}}
+						<div class="invalid-feedback">
+							{% for error in form.userEmail.errors %}
+								<span> {{ error }} </span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.userEmail(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+			</fieldset>
+			
+			<!-- Allows user to upload a new profile pic -->
+			<div class="form-group">
+				<!-- {{ form.uploadImage.label() }} -->
+				{{ form.uploadImage.label() }}<br>
+				{{ form.uploadImage(class="form-control-file") }}
+
+				{% if form.uploadImage.errors %}
+					{% for error in form.uploadImage.errors %}
+						<!-- Wrapping in 'text-danger' instead of 'invalid-feedback' because this is a file field -->
+						<br><span class="text-danger"> {{ error }} </span><br><br>
+					{% endfor %}						
+				{% endif %}					
+			</div>
+
+			<div class="form-group">
+					{{ form.submit(class="btn btn-outline-info") }}
+				</div>
+		</form>
+	</div>
+
+	
+{% endblock content %}
