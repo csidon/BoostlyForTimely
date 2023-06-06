@@ -17,82 +17,27 @@
 						<div class="form-group col-sm-6 flex-column d-flex">
 
 
-alertSubject = StringField('Subject', validators=[DataRequired()], default = 'A new slot has opened up!')
-	alertBody = TextAreaField('Alert Message',
+
+
+
+
+
 
 							<!-- Display of content -->
-							{{ form.alertSubject.label(class="form-control-label") }}
-							
-							{{ form.alertBody.label(class="form-control-label") }}
+							{{ form.slotStartDate.label(class="form-control-label") }}
+							{{ form.slotStartDate(class="form-control form-control-lg") }}		
 
-							{{ form.taskTitle.label(class="form-control-label") }}
+							{{ form.slotStartTime.label(class="form-control-label") }}
+							{{ form.slotStartTime(class="form-control form-control-lg") }}		
+
+							{{ form.slotLength.label(class="form-control-label") }}
+							{{ form.slotLength(class="form-control form-control-lg") }}		
+
+							Message template
+							{{ context.alertSubject }}
 
 
-							{{ form.taskTitle.label(class="form-control-label") }}
-							{% if form.taskTitle.errors %}
-								{{ form.taskTitle(class="form-control form-control-lg is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.taskTitle.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.taskTitle(class="form-control form-control-lg") }}
-							{% endif %}
-						</div>
-
-						<div class="form-group col-sm-6 flex-column d-flex">
-							{{ form.taskDue.label(class="datepicker") }}
-							{% if form.taskDue.errors %}
-								{{ form.taskDue(class="form-control form-control-lg is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.taskDue.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.taskDue(class="form-control form-control-lg") }}
-							{% endif %}
-						</div>
-					</div>
-
-					<div class="row justify-content-between text-left">
-						<div class="form-group col-sm-6 flex-column d-flex">
-							<!-- {{ form.taskStatus }} -->
-							{% for choices in form.taskStatus %}
-								<label class="radio">
-									{{ choices }}
-									{{ choices.label }}
-								</label>
-							{% endfor %}
-						</div>
-
-						<div class="form-group col-sm-6 flex-column d-flex">
-							{% for choices in form.taskPriority %}
-								<label class="radio">
-									{{ choices }}
-									{{ choices.label }}
-								</label>
-							{% endfor %}
-						</div>
-					</div>
-
-					<div class="row justify-content-between text-left">
-						<div class="form-group col-lg-12 flex-column d-flex">
-							{{ form.taskDescription.label(class="form-control-label") }}
-							{% if form.taskDescription.errors %}
-								{{ form.taskDescription(class="form-control form-control-lg is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.taskDescription.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.taskDescription(class="form-control form-control-lg") }}
-							{% endif %}
-						</div>
-					</div>
-
+	
 					<div class="row justify-content-end">
 						<div class="form-group mr-3">
 							<a href={{ url_for('main.dashboard') }} class="btn btn-info">Cancel</a>

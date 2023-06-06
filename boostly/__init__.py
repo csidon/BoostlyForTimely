@@ -24,8 +24,9 @@ loginManager.login_message_category = 'info'		# Makes pretty - Assigns Bootstrap
 from boostly.users.routes import users
 # from boostly.tasks.routes import tasks
 from boostly.main.routes import main
-
+from boostly.alerts.routes import alerts
 
 application.register_blueprint(users)
 # application.register_blueprint(tasks)
 application.register_blueprint(main)
+application.register_blueprint(alerts)
