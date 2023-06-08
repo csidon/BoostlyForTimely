@@ -61,3 +61,13 @@ db.session.commit()
 db.drop_all()
 
 
+# Some adds
+user1 = User(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
+staff1 = Staff(firstName="The", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid=1)
+client1 = Client(firstName="Richie", lastName="Rich", email="richie@rich.com", staffid=2)
+alert1 = TempWaitAlert(slotStartDateTime="2023-05-16 20:15:00", slotLength=45, staffuid=2, clientid=2)
+alert2 = TempWaitAlert(slotStartDateTime="2023-06-01 11:30:00", slotLength=120, staffuid=2, clientid=2)
+
+
+user1 = UserTest(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="'$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
+staff1 = StaffTest(firstName="The", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid2=1)
