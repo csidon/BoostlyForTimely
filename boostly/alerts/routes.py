@@ -19,7 +19,7 @@ alerts = Blueprint('alerts', __name__)
 @alerts.route("/waitalert/<int:id>", methods=['GET','POST'])
 # @login_required             # Needed for routes that can only be accessed after login
 def newWaitAlert(id):
-    # alert = TempWaitAlert.query.get_or_404(id)
+    alert = TempWaitAlert.query.get_or_404(id)
     # if alert.staff != current_user:                               # ** ENABLE LATER
     #     abort(403)
     form = WaitAlertForm()
@@ -64,35 +64,18 @@ def newWaitAlert(id):
         return redirect(url_for('main.dashboard'))
 
     elif request.method == 'GET':
-        # Get data from the database to display on createAlert.html
-        # # Get the datetime from the database and split it up to day, date, and time
-        # slotDay = TempWaitAlert.slotStartDateTime
-        # slotDate = TempWaitAlert.slotStartDateTime
-        # slotTime = TempWaitAlert.slotStartDateTime
-        # form.slotStartDate.data = slotDate
-        # form.slotStartTime.data = slotTime
-        # form.slotLength.data = alert.slotLength
+    
 
-        #--- HARDCODED DATA TO START
-        dummySlotStartDateTime = "2023-05-16 20:15:00"      # Check to see if db returns string or datetime obj, but i suspect string
-        dummySlotEndDT = "2023-05-16 22:45:00"
-        # To calculate slot length, convert start and end time to datetime < -- try doing this early on instead of at this stage
-        t1 = datetime.strptime(dummySlotStartDateTime, "%Y-%m-%d %H:%M:%S")
-        print('Start time:', t1.time())
-        t2 = datetime.strptime(dummySlotEndDT, "%Y-%m-%d %H:%M:%S")
-        print('End time:', t2.time())
-        deltaMins = (t2-t1).total_seconds()/60
-        deltaMinsnInt = "{:.0f}".format(deltaMins)
-        print("Time difference is {:.0f}".format(deltaMins) + " minutes")
+        dbSlotDT = alert.slotStartDateTime
 
-        context['slotDay'] = t1.strftime("%A")
-        context['slotDate'] = t1.strftime("%d %b %Y")
-        context['slotTime'] = t1.strftime("%H:%M")
-        context['slotLength'] = deltaMinsnInt
+        context['slotDay'] = dbSlotDT.strftime("%A")
+        context['slotDate'] = dbSlotDT.strftime("%d %b %Y")
+        context['slotTime'] = dbSlotDT.strftime("%H:%M")
+        context['slotLength'] = alert.slotLength
 
-        form.slotStartDate.data = t1
-        form.slotStartTime.data = t1
-        form.slotLength.data = deltaMinsnInt
+        form.slotStartDate.data = dbSlotDT
+        form.slotStartTime.data = dbSlotDT
+        form.slotLength.data = alert.slotLength
 
 
 
@@ -100,5 +83,5 @@ def newWaitAlert(id):
     # context['done'] = Task.query.filter(Task.userID==current_user.id,Task.taskStatus=="done").count()
 
 
-    return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert")
+    return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert", alert=alert)
 

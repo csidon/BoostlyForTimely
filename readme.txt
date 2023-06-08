@@ -27,12 +27,19 @@ Make sure that main application is renamed to application.py and the flask app i
 Make sure that .idea and __pycache__ files are deleted before upload
 
 
+user_1 = User(userFirstName='Chris', userLastName='DaTester', userEmail='chris.chonghuihui@gmail.com', userPassword='superDev!')
 
 ####################################
 # Tips & Tricks
 #----------------------------------
 # To get out of venv
 >> venv\Scripts\deactivate
+
+## Basic sqlite db connectivity
+# In TLD:
+> python
+>> from boostly import db
+>> db.create_all()
 
 ## To add a user, after <<flask shell>> and <<create_all()>>, create a user using e.g. 
 user_1 = User(userEmail='new@test.com', userPassword="password!")

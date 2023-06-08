@@ -33,8 +33,9 @@ def home():
 @main.route("/dashboard")
 @login_required             # Needed for routes that can only be accessed after login
 def dashboard():
-    # context = dict()
+    context = dict()
     # dateToday = datetime.today()
+
     # context['overdue'] = Task.query.filter(Task.userID == current_user.id, Task.taskDue < dateToday, Task.taskStatus != "archived").count()
     # context['overdueTasks'] = Task.query.filter(Task.userID == current_user.id, Task.taskDue < dateToday, Task.taskStatus != "archived").order_by(Task.taskDue)
     # context['tasks'] = Task.query.filter(Task.userID==current_user.id)

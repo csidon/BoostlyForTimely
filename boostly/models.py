@@ -43,14 +43,14 @@ class User(db.Model, UserMixin):                                                
 #     wAlert = db.relationship('TempWaitAlert', backref='client', lazy=True) 
 
 
-# class Event(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     calEventUID = db.Column(db.String(100), nullable=False)
-#     eventOwner = db.Column(db.String(120), nullable=False)
-#     status = db.Column(db.String(30), nullable=False)
-#     eventStart = db.Column(db.DateTime, nullable=False)
-#     eventEnd = db.Column(db.DateTime, nullable=False)
-#     eventUpdated = db.Column(db.DateTime, nullable=False)
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    calEventUID = db.Column(db.String(100), nullable=False)
+    eventOwner = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.String(30), nullable=False)
+    eventStart = db.Column(db.DateTime, nullable=False)
+    eventEnd = db.Column(db.DateTime, nullable=False)
+    eventUpdated = db.Column(db.DateTime, nullable=False)
 
 
 # class MsgTmpl(db.Model):
