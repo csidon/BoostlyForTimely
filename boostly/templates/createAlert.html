@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="container">
+		<h2>Kia ora {{ current_user.userFirstName }}!</h2>
+		<p>Notify Your Waitlist of Slot Availability</p> 
+	</div>
+<div class="container-fluid px-1 py-5 mx-5">
+	<div class="row d-flex justify-content-center">
+		<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+			<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+			 <div class="card">
+				<form class="form-card py-3 mx-5" method="POST">
+					{{ form.hidden_tag() }}
+					<div class="row justify-content-between text-left">
+						<div class="form-group col-sm-6 flex-column d-flex">
+
+
+
+							<!-- Display of content -->
+							{{ form.slotStartDate.label(class="form-control-label") }}
+							{{ form.slotStartDate(class="form-control form-control-lg") }}		
+
+							{{ form.slotStartTime.label(class="form-control-label") }}
+							{{ form.slotStartTime(class="form-control form-control-lg") }}		
+
+							{{ form.slotLength.label(class="form-control-label") }}
+							{{ form.slotLength(class="form-control form-control-lg") }}		
+
+							Message template
+							{{ context.alertSubject }}
+
+
+	
+					<div class="row justify-content-end">
+						<div class="form-group mr-3">
+							<a href={{ url_for('main.dashboard') }} class="btn btn-info">Cancel</a>
+							<button type="submit" class="btn btn-outline-info">Create</button>
+						</div>
+					</div>
+				</form>
+			 </div>
+		</div>
+	</div>
+</div>
+	<script>
+
+		// const btn = document.getElementById('submit');     
+		// const radioButtons = document.querySelectorAll('input[name="taskStatus"]');
+        // btn.addEventListener("click", () => {
+        //     let selectedStatus;
+        //     for (const radioButton of radioButtons) {
+        //         if (radioButton.checked) {
+        //             selectedStatus = radioButton.value;
+        //             break;
+        //         }
+        //     }
+        //     // show the output:
+        //     // output.innerText = selectedStatus ? `You selected ${selectedStatus}` : `You haven't selected any status`;
+        // });
+
+
+	</script>
+
+
+{% endblock content %}

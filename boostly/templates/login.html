@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block content %}
+
+	<section class="vh-40">
+<!--		Container settings-->
+		<div class="container-fluid py-5 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100 g-0" style="background-color: #F2D1CE;">
+				<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+					<!--form-->
+					<form  method="POST" action="">
+						<!-- # Hidden tag method adds a CSRF token -->
+						{{ form.hidden_tag() }}
+							<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;"> Welcome</legend>
+
+							<div class="form-outline mb-2">
+								{{ form.userEmail.label(class="form-control-label") }}
+								{% if form.userEmail.errors %}
+									{{ form.userEmail(class="form-control form-control-lg is-invalid")}}
+									<div class="invalid-feedback">
+										{% for error in form.userEmail.errors %}
+											<span> {{ error }} </span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.userEmail(class="form-control form-control-lg") }}
+								{% endif %}
+							</div>
+							<div class="form-outline mb-1">
+								{{ form.userPassword.label(class="form-control-label") }}
+								{% if form.userPassword.errors %}
+									{{ form.userPassword(class="form-control form-control-lg is-invalid")}}
+									<div class="invalid-feedback">
+										{% for error in form.userPassword.errors %}
+											<span> {{ error }} </span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.userPassword(class="form-control form-control-lg") }}
+								{% endif %}
+							</div>
+							<!--remember me check-box and forgot password link-->
+							<div class = "d-flex justify-content-between align-items-center">
+								<div class='form-check mb-0'>
+									{{ form.userRemember(class="form-check-input") }}
+									{{ form.userRemember.label(class="small form-check-label") }}
+								</div>
+								<small class="text-body">
+									<a href="#">Forgot your password?</a>
+								</small>
+							</div>
+							<!--login button-->
+							<div class="text-center text-lg-start mt-4 pt-2">
+								{{ form.submit(class="btn btn-outline-secondary btn-lg btn-block login-btn") }}
+							</div>
+							<!--link to the registration page-->
+							<div class="text-center text-lg-start mt-4 pt-2">
+								<small class="small mt-2 pt-1 mb-0">
+									Want an account? <a class="link-primary" href="{{ url_for('users.register') }}">Sign up here</a>
+								</small>
+							</div>
+					</form>
+				</div>
+				<div class="col-lg-6 px-0 d-none d-lg-block">
+        			<img src="../static/images/rocket.png"
+          				alt="Login image" class ="login-pic img-fluid" style="object-position: right;">
+          				<div class="text-center text-lg-start mt-0 pt-0">
+							<small class="small mb-0">
+								Image by <a href="https://pixabay.com/users/satheeshsankaran-11196627/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5816644">Satheesh Sankaran</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5816644">Pixabay</a>
+							</small>
+						</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock content %}

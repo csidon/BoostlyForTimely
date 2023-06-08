@@ -1,0 +1,75 @@
+<!-- This will soon be transferred to the home.html page, with the home.html page content swapped here -->
+
+{% extends "layout.html" %}
+{% block content %}
+	<section class="vh-40">
+<!--		Container settings-->
+
+		<div class="container-fluid py-3 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100 g-0" >
+				<div class="col-3"></div>
+				<div class="text-center col-6 px-5 py-3" style="background-color: #F2D1CE; border-radius: 2rem;">
+					<!--Just basic text here-->
+					<h1 class="mt-2" style = "font-weight: bold; font-size: 4em; color: #5E5E5E;"> Boostly</h1>
+					<h2>Let Us Boost your Timely.</h2>
+					<p class="border-bottom p-2 mb-3">Save yourself time to do the things you love.</p>
+					<!--form-->
+					<form  method="POST" action="">
+						<!-- # Hidden tag method adds a CSRF token -->
+						{{ form.hidden_tag() }}
+
+							<div class="form-outline mb-2">
+								{{ form.userEmail.label(class="form-control-label") }}
+								{% if form.userEmail.errors %}
+									{{ form.userEmail(class="form-control form-control-md is-invalid")}}
+									<div class="invalid-feedback">
+										{% for error in form.userEmail.errors %}
+											<span> {{ error }} </span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.userEmail(class="form-control form-control-md") }}
+								{% endif %}
+							</div>
+							<div class="form-outline mb-1">
+								{{ form.userPassword.label(class="form-control-label") }}
+								{% if form.userPassword.errors %}
+									{{ form.userPassword(class="form-control form-control-md is-invalid")}}
+									<div class="invalid-feedback">
+										{% for error in form.userPassword.errors %}
+											<span> {{ error }} </span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.userPassword(class="form-control form-control-md") }}
+								{% endif %}
+							</div>
+							<!--remember me check-box and forgot password link-->
+							<div class = "d-flex justify-content-between align-items-center">
+								<div class='form-check mb-0'>
+									{{ form.userRemember(class="form-check-input") }}
+									{{ form.userRemember.label(class="small form-check-label") }}
+								</div>
+								<small class="text-body">
+									<a href="#">Forgot your password?</a>
+								</small>
+							</div>
+							<!--login button-->
+							<div class="text-center text-lg-start mt-4 pt-2 pb-3">
+								{{ form.submit(class="btn btn-outline-secondary btn-lg btn-block login-btn") }}
+							</div>
+							<!--link to the registration page-->
+							
+					</form>
+
+					
+				</div>
+				<div class="col-3"></div>
+
+			</div>
+		</div>
+	</section>
+{% endblock content %}
+
+
+

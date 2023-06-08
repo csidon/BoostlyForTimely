@@ -1,0 +1,370 @@
+{% extends "layout.html" %}
+	{% block content %}
+	<div class="container">
+		<h2>Kia ora {{ current_user.userFirstName }}!</h2>
+		<p>Notify Your Waitlist of Slot Availability</p> 
+	</div>
+	<section>
+		<div class="container">
+			<!-- ToDo, Doing, Done summary cards -->
+		    <div class="row d-flex justify-content-center align-items-center">
+
+		        <div class="col-md-4 col-xl-3">
+					<div class="card bg-c-yellow order-card cardTag" id="todo-btn" onclick="revealFunction('todo-section', 'todo')">
+						<div class="card-block">
+							<h6 class="m-b-20">To do</h6>
+							<h2 class="text-right"><span>{{ context.todo }}</span></h2>
+						</div>
+					</div>
+		        </div>
+
+		        <div class="col-md-4 col-xl-3">
+		            <div class="card bg-c-pink order-card cardTag" id="doing-btn" onclick="revealFunction('progress-section', 'progress')">
+		                <div class="card-block">
+		                    <h6 class="m-b-20">In progress</h6>
+		                    <h2 class="text-right"><span>{{ context.doing }}</span></h2>
+		                </div>
+		            </div>
+		        </div>
+
+		        <div class="col-md-4 col-xl-3">
+		            <div class="card bg-c-green order-card cardTag" id="done-btn" onclick="revealFunction('done-section', 'done')">
+		                <div class="card-block">
+		                    <h6 class="m-b-20">Done</h6>
+		                    <h2 class="text-right"><span>{{ context.done }}</span></h2>
+		                </div>
+		            </div>
+		        </div>
+
+		        <div class="col-md-4 col-xl-3">
+		            <div class="card bg-c-pink order-card cardTag" id="overdue-btn" onclick="revealFunction('overdue-section', 'overdue')">
+		                <div class="card-block">
+		                    <h6 class="m-b-20">Overdue</h6>
+		                    <h2 class="text-right"><span>{{ context.overdue }}</span></h2>
+		                </div>
+		            </div>
+		        </div>
+			</div>
+			<!-- End of summary cards -->
+			<!-- archived page -->
+
+
+			<div class="row" style="font-size:3em; margin-left:0;">
+				<button type="button" class="btn btn-outline-info"><a href={{ url_for('tasks.newTask') }}><img style="width:40px;height:auto" src={{ url_for('static', filename='images/add.png') }} alt="add-task"</a></button>
+				<!-- <button type="button" class="btn btn-outline-info ml-4"><a href=""><img style="width:40px;height:auto" src={{ url_for('static', filename='images/archive.png') }} alt="archive"></a></button> -->
+
+				<a class="btn btn-outline-info ml-4">
+	                <button type="button" id="archived-btn" onclick="revealFunction('archived-section', 'archived')">
+	                    <img style="width:40px;height:auto" src={{ url_for('static', filename='images/archive.png') }} alt="archive">
+	                </button>
+	            </a>
+
+			</div>
+
+		</div>
+	</section>
+
+
+	<section id="todo-section">
+		<div class="container" >
+			<div class="row display-flex">
+				{% for task in context.todoTasks %}
+					<div class="col-lg-4" style="margin-top: 5%;">
+						<div class="card card-margin">
+							<div class="card-header no-border">
+								<h5 class="card-title">{{ task.taskTitle }}</h5>
+							</div>
+							<div class="card-body pt-0">
+								<div class="widget-49">
+									<div class="widget-49-title-wrapper">
+										<div class="widget-49-date-primary">
+											<img class="rounded-circle article-img" src="{{ url_for('static', filename='profilePics/' + task.owner.userImage) }}">
+										</div>
+										<div class="widget-49-meeting-info">
+											<span class="widget-49-pro-title">{{ task.owner.userFirstName }}</span>
+											<span class="widget-49-meeting-time">Due on {{ task.taskDue.strftime('%d-%m-%Y') }}</span>
+											<span class="widget-49-meeting-time">Task status {{ task.taskStatus }}</span>
+											<span class="widget-49-meeting-time">Task priority {{ task.taskPriority }}</span>
+										</div>
+									</div>
+									<ol class="widget-49-meeting-points">
+										<p> {{ task.taskDescription}}</p>
+									</ol>
+									<div class="widget-49-meeting-action">
+
+										
+									    <button type="button" class="btn btn-sm btn-flash-border-danger btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+									    <a href={{ url_for('tasks.updateTask', taskID=task.id) }} class="btn btn-sm btn-flash-border-primary btn-outline-info">Edit</a>
+
+									    <!-- Delete Modal -->
+										<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true">&times;</span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+										        Are you sure you want to delete this task? (Deleted tasks will be archived for 90 days before being permanently deleted)
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										        <form action={{ url_for('tasks.deleteTask', taskID=task.id) }} method="POST">
+										        	<input class="" type="submit" value="Yes, delete this task">
+										        </form>
+
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!-- End of delete modal -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+<!--In progress section-->
+	<section id="progress-section">
+		<div class="container" >
+			<div class="row display-flex">
+				{% for task in context.doingTasks %}
+					<div class="col-lg-4" style="margin-top: 5%;">
+						<div class="card card-margin">
+							<div class="card-header no-border">
+								<h5 class="card-title">{{ task.taskTitle }}</h5>
+							</div>
+							<div class="card-body pt-0">
+								<div class="widget-49">
+									<div class="widget-49-title-wrapper">
+										<div class="widget-49-date-primary">
+											<img class="rounded-circle article-img" src="{{ url_for('static', filename='profilePics/' + task.owner.userImage) }}">
+										</div>
+										<div class="widget-49-meeting-info">
+											<span class="widget-49-pro-title">{{ task.owner.userFirstName }}</span>
+											<span class="widget-49-meeting-time">Due on {{ task.taskDue.strftime('%d-%m-%Y') }}</span>
+											<span class="widget-49-meeting-time">Task status {{ task.taskStatus }}</span>
+											<span class="widget-49-meeting-time">Task priority {{ task.taskPriority }}</span>
+										</div>
+									</div>
+									<ol class="widget-49-meeting-points">
+										<p> {{ task.taskDescription}}</p>
+									</ol>
+									<div class="widget-49-meeting-action">
+
+										<button type="button" class="btn btn-sm btn-flash-border-danger btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+									    <a href={{ url_for('tasks.updateTask', taskID=task.id) }} class="btn btn-sm btn-flash-border-primary btn-outline-info">Edit</a>
+
+									    <!-- Delete Modal -->
+										<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true">&times;</span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+										        Are you sure you want to delete this task? (Deleted tasks will be archived for 90 days before being permanently deleted)
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										        <form action={{ url_for('tasks.deleteTask', taskID=task.id) }} method="POST">
+										        	<input class="" type="submit" value="Yes, delete this task">
+										        </form>
+
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!-- End of delete modal -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+<!--done section-->
+	<section id="done-section">
+		<div class="container" >
+			<div class="row display-flex">
+				{% for task in context.doneTasks %}
+					<div class="col-lg-4" style="margin-top: 5%;">
+						<div class="card card-margin">
+							<div class="card-header no-border">
+								<h5 class="card-title">{{ task.taskTitle }}</h5>
+							</div>
+							<div class="card-body pt-0">
+								<div class="widget-49">
+									<div class="widget-49-title-wrapper">
+										<div class="widget-49-date-primary">
+											<img class="rounded-circle article-img" src="{{ url_for('static', filename='profilePics/' + task.owner.userImage) }}">
+										</div>
+										<div class="widget-49-meeting-info">
+											<span class="widget-49-pro-title">{{ task.owner.userFirstName }}</span>
+											<span class="widget-49-meeting-time">Due on {{ task.taskDue.strftime('%d-%m-%Y') }}</span>
+											<span class="widget-49-meeting-time">Task status {{ task.taskStatus }}</span>
+											<span class="widget-49-meeting-time">Task priority {{ task.taskPriority }}</span>
+										</div>
+									</div>
+									<ol class="widget-49-meeting-points">
+										<p> {{ task.taskDescription}}</p>
+									</ol>
+									<div class="widget-49-meeting-action">
+
+										<button type="button" class="btn btn-sm btn-flash-border-danger btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+									    <a href={{ url_for('tasks.updateTask', taskID=task.id) }} class="btn btn-sm btn-flash-border-primary btn-outline-info">Edit</a>
+
+									    <!-- Delete Modal -->
+										<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true">&times;</span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+										        Are you sure you want to delete this task? (Deleted tasks will be archived for 90 days before being permanently deleted)
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										        <form action={{ url_for('tasks.deleteTask', taskID=task.id) }} method="POST">
+										        	<input class="" type="submit" value="Yes, delete this task">
+										        </form>
+
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!-- End of delete modal -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+<!--overdue section-->
+	<section id="overdue-section">
+		<div class="container" >
+			<div class="row display-flex">
+				<!--ask Chris-->
+				{% for task in context.overdueTasks %}
+					<div class="col-lg-4" style="margin-top: 5%;">
+						<div class="card card-margin">
+							<div class="card-header no-border">
+								<h5 class="card-title">{{ task.taskTitle }}</h5>
+							</div>
+							<div class="card-body pt-0">
+								<div class="widget-49">
+									<div class="widget-49-title-wrapper">
+										<div class="widget-49-date-primary">
+											<img class="rounded-circle article-img" src="{{ url_for('static', filename='profilePics/' + task.owner.userImage) }}">
+										</div>
+										<div class="widget-49-meeting-info">
+											<span class="widget-49-pro-title">{{ task.owner.userFirstName }}</span>
+											<span class="widget-49-meeting-time">Due on {{ task.taskDue.strftime('%d-%m-%Y') }}</span>
+											<span class="widget-49-meeting-time">Task status {{ task.taskStatus }}</span>
+											<span class="widget-49-meeting-time">Task priority {{ task.taskPriority }}</span>
+										</div>
+									</div>
+									<ol class="widget-49-meeting-points">
+										<p> {{ task.taskDescription}}</p>
+									</ol>
+									<div class="widget-49-meeting-action">
+
+										<button type="button" class="btn btn-sm btn-flash-border-danger btn-outline-danger" data-toggle="modal" data-target="#deleteModal">Delete</button>
+									    <a href={{ url_for('tasks.updateTask', taskID=task.id) }} class="btn btn-sm btn-flash-border-primary btn-outline-info">Edit</a>
+
+									    <!-- Delete Modal -->
+										<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+										  <div class="modal-dialog">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          <span aria-hidden="true">&times;</span>
+										        </button>
+										      </div>
+										      <div class="modal-body">
+										        Are you sure you want to delete this task? (Deleted tasks will be archived for 90 days before being permanently deleted)
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										        <form action={{ url_for('tasks.deleteTask', taskID=task.id) }} method="POST">
+										        	<input class="" type="submit" value="Yes, delete this task">
+										        </form>
+
+										      </div>
+										    </div>
+										  </div>
+										</div>
+										<!-- End of delete modal -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+	<!--archived section-->
+	<section id="archived-section">
+		<div class="container" >
+			<div class="row display-flex">
+				<!--ask Chris-->
+				{% for task in context.archivedTasks %}
+					<div class="col-lg-4" style="margin-top: 5%;">
+						<div class="card card-margin">
+							<div class="card-header no-border">
+								<h5 class="card-title">{{ task.taskTitle }}</h5>
+							</div>
+							<div class="card-body pt-0">
+								<div class="widget-49">
+									<div class="widget-49-title-wrapper">
+										<div class="widget-49-date-primary">
+											<img class="rounded-circle article-img" src="{{ url_for('static', filename='profilePics/' + task.owner.userImage) }}">
+										</div>
+										<div class="widget-49-meeting-info">
+											<span class="widget-49-pro-title">{{ task.owner.userFirstName }}</span>
+											<span class="widget-49-meeting-time">Due on {{ task.taskDue.strftime('%d-%m-%Y') }}</span>
+											<span class="widget-49-meeting-time">Task status {{ task.taskStatus }}</span>
+											<span class="widget-49-meeting-time">Task priority {{ task.taskPriority }}</span>
+										</div>
+									</div>
+									<ol class="widget-49-meeting-points">
+										<p> {{ task.taskDescription}}</p>
+									</ol>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+
+	
+{% endblock content %}
+
+
