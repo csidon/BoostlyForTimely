@@ -1,87 +1,163 @@
-# Contains all the routes specific to alerts - waitlistAlert
+# Contains all the routes specific to clients and client preferences
 #****** To change task to createUpdateTask
 
 
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, jsonify
 from boostly import db
-# from boostly.clients.forms import WaitAlertForm
-from boostly.models import User, TempWaitAlert, Client
+from boostly.models import User, TempWaitAlert, Client, ClientPref, AvailTimes
+from boostly.clients.forms import ClientForm, ClientPrefForm
 from flask_login import current_user, login_required
 from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to request.form
 from datetime import datetime
 
 
-alerts = Blueprint('alerts', __name__)
+clients = Blueprint('clients', __name__)
+
+
+@clients.route("/client/new", methods=['GET','POST'])
+@login_required             # Needed for routes that can only be accessed after login
+def newClient():
+	form = ClientForm()
+	if form.validate_on_submit():
+		client = Client(
+			firstName=form.firstName.data, 
+			lastName=form.lastName.data, 
+			email=form.email.data,
+			mobile=form.mobile.data,
+			status = "active",
+			staffid = current_user.staffers.id)
+		db.session.add(client)
+		db.session.commit()
+		flash("You have created a new client", 'success')
+		return redirect(url_for('main.dashboard'))
+	btnCreateUpdate = "Create"
+	return render_template('createClient.html', title='Create a New Client', form=form, legend="Create a New Client", btnCreateUpdate=btnCreateUpdate)
+
+
+@clients.route("/client/<int:clientID>/update", methods=['GET','POST'])
+@login_required 
+def updateClient(clientID):
+	client = Client.query.get_or_404(clientID)
+	current_staff_clientlist = current_user.staffers.clients
+	print("The current_staff_clientlist is: " + str(current_staff_clientlist) + "\n with a datatype of: " + str(type(current_staff_clientlist)))
+
+	# Checking to see if the client belongs to the staff
+	not_staffers_client = True
+	for client in current_staff_clientlist:
+		print("Looping through clients: "+ str(client) + " With clientid of : " + str(client.id))
+		if client.id == current_user.staffers.id:
+			not_staffers_client = False
+	if not_staffers_client:
+		abort(403)
+
+	form = ClientForm()
+	if form.validate_on_submit():
+		client.firstName = form.firstName.data
+		client.lastName = form.lastName.data
+		client.email = form.email.data
+		client.mobile = form.mobile.data
+		client.status = "active"
+		db.session.commit()
+		flash("Your client's details have been updated", 'success')
+		return redirect(url_for('client', clientID = current_user.staffers.id))
+
+	elif request.method == 'GET':
+		form.firstName.data = client.firstName
+		form.lastName.data = client.lastName
+		form.email.data = client.email
+		form.mobile.data = client.mobile
+	btnCreateUpdate = "Update"
+	return render_template('createClient.html', title='Update Client Details', form=form, client=client, legend="Update Client Details", btnCreateUpdate=btnCreateUpdate)
+
+
+@clients.route("/client/<int:clientID>/delete", methods=['POST'])
+@login_required 
+def deleteClient(clientID):
+	client = Client.query.get_or_404(clientID)
+	# Checking to see if the client belongs to the staff
+	not_staffers_client = True
+	for client in current_staff_clientlist:
+		if client == current_user.staffers.id:
+			not_staffers_client = False
+	if not_staffers_client:
+		abort(403)
+	client.status = "archived"
+	db.session.commit()
+	flash("We've archived your client information. You can still view it in your Recycle Bin for the next 90 days!", 'success')
+	return redirect(url_for('main.dashboard'))
+
+
+#### ROUTES TO SET CLIENT PREFERENCES #####
 
 
 
-
-# @alerts.route("/waitalert/<int:id>", methods=['GET','POST'])
-# # @login_required             # Needed for routes that can only be accessed after login
-# def newWaitAlert(id):
-#     alert = TempWaitAlert.query.get_or_404(id)
-#     # if alert.staff != current_user:                               # ** ENABLE LATER
-#     #     abort(403)
-#     form = WaitAlertForm()
-#     context = dict()
-
-#     #--- HARDCODED DATA TO BEGIN
-#     context['alertSubject'] =  'A new slot has opened up!'
-#     # 'alertReceiver' : 
-#     context['alertBody1'] = 'Hi '                                                       #[clientName]
-#     context['alertBody2'] = ',  I’m contacting everyone on my waitlist as a '           #slotLength
-#     context['alertBody3'] = 'min massage appointment is now available on '              #slotDay + slotDate
-#     context['alertBody4'] = ' starting at '                                             #slotTime   
-#     context['alertBody5'] = ' \nIf you would like to book in please do so on this link' #[staffs booking link].
-#     context['alertBody6'] = '. Look forward to seeing you, '                            #[Staff name]
-
-#     context['clientName'] = '[BobTheClient]'
-#     # context['slotLength'] = '[TempWaitAlert.slotLength]'
-#     # context['slotDay'] = 'TempWaitAlert.slotDay + conversion'
-#     # context['slotDate'] = 'TempWaitAlert.slotDateTime + conversion'
-#     # context['slotDay'] = 'TempWaitAlert.slotDateTime + conversion'
-#     # context['slotTime'] = 'TempWaitAlert.slotDateTime + conversion'
-#     context['staffName'] = '[staff.prefName]'
-#     context['bookingURL'] = '[staff.bookURL]'
-#     #--- END OF HARDCODED DATA
-
-#     if form.validate_on_submit():
-#         # Send all the form data to EmailAlert.py, which will then do the following FOR EACH CLIENT
-#         # slotDateTime = ""           # ** get the date and time, format string, then convert to datetime object **
-#         # alert = TempWaitAlert(
-#         #     slotStartDateTime=slotDateTime, 
-#         #     slotLength=form.slotLength.data, 
-#         #     msgTmpl = 1,            # Use the default message template always for now 
-#         #     staff=  # lookup staffID based on alertID, 
-#         #     client=client       # Referencing client of clients
-#         #     )
-#         # # Send alert, get send status, then update to TempWaitAlert table
-#         # db.session.add(alert)
-#         # db.session.commit()
-#         # # When all of the clients in the waitlist have been committed to database
-#         # # In theory, here we should have a success/failure flag system that would check send status and report back to client. That's for v2
-#         flash('Your waitlist notification alert is being sent!', 'success')
-#         return redirect(url_for('main.dashboard'))
-
-#     elif request.method == 'GET':
-    
-
-#         dbSlotDT = alert.slotStartDateTime
-
-#         context['slotDay'] = dbSlotDT.strftime("%A")
-#         context['slotDate'] = dbSlotDT.strftime("%d %b %Y")
-#         context['slotTime'] = dbSlotDT.strftime("%H:%M")
-#         context['slotLength'] = alert.slotLength
-
-#         form.slotStartDate.data = dbSlotDT
-#         form.slotStartTime.data = dbSlotDT
-#         form.slotLength.data = alert.slotLength
+@clients.route("/client/pref/<int:clientID>", methods=['GET','POST'])
+@login_required             # Needed for routes that can only be accessed after login
+def newClientPref(clientID):
+	cpref = ClientPref.query.get(clientID)
+	# client = Client.query.filter(Client.id==clientID)
+	# print("What is my Client? "+ str(client.id))
+	form = ClientPrefForm(data={'avtimes': cpref.avtimes})
+	form.avtimes.query = AvailTimes.query.all()
+	if form.validate_on_submit():
+		cpref.avtimes.clear()
+		cpref.avtimes.extend(form.avtimes.data)
+		db.session.commit()
+	relclientid = cpref.clientid
+	relclient = Client.query.filter(Client.id==relclientid).first()
+	clientname = relclient.firstName + " " + relclient.lastName
+	legend = clientname + "'s Preferences"
+	print("selecting preferences for " + str(clientname))
+	
+	return render_template('createClientPref.html', title='Create a New Client', form=form, legend=legend)
 
 
+# @clients.route("/clientpref/<int:clientID>/update", methods=['GET','POST'])
+# @login_required 
+# def updateClientPref(clientID):
+# 	# Checking that the client exists
+# 	client = Client.query.get_or_404(clientID)
+# 	# Need to create custom error message.. If clientID not found, prompt create new client
+# 	print("Checking what ClientPref.id gets: " + str(ClientPref.id))
+# 	cpref = ClientPref.query.filter(ClientPref.id == clientID)
+# 	print("Checking what cpref gets: " + str(type(cpref)))
+# 	print("so what is cpref.firstName? " + cpref.firstName)
+# 	current_staff_clientlist = current_user.staffers.clients
 
-#     # context['doing'] = Task.query.filter(Task.userID==current_user.id,Task.taskStatus=="doing").count()
-#     # context['done'] = Task.query.filter(Task.userID==current_user.id,Task.taskStatus=="done").count()
 
+# 	# Checking to see if the client belongs to the staff 
+# 	not_staffers_client = True
+# 	for client in current_staff_clientlist:
+# 		print("Looping through clients: "+ str(client) + " With clientid of : " + str(client.id))
+# 		if client.id == current_user.staffers.id:
+# 			not_staffers_client = False
+# 	if not_staffers_client:
+# 		abort(403)
 
-#     return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert", alert=alert)
+# 	form = ClientPrefForm()
+# 	if form.validate_on_submit():
+# 		# if form.availall.data == 1:		# Client wants to be notified for all timeslots
+# 		cpref.minDuration = form.minDuration.data
+# 		cpref.timeavail = 0
+# 		# else:
+# 		form.timesAvail.data = AvailTimes.query.all()
+
+# 		# client.lastName = form.lastName.data
+# 		# client.email = form.email.data
+# 		# client.mobile = form.mobile.data
+# 		# client.status = "active"
+# 		# db.session.commit()
+# 		# flash("Your client's details have been updated", 'success')
+# 		# return redirect(url_for('client', clientID = current_user.staffers.id))
+
+# 	# elif request.method == 'GET':
+# 		# form.firstName.data = client.firstName
+# 		# form.lastName.data = client.lastName
+# 		# form.email.data = client.email
+# 		# form.mobile.data = client.mobile
+# 	# btnCreateUpdate = "Update"
+
+# 	legend = "Update " + client.firstName + "'s Preferences"
+# 	return render_template('createClientPref.html', title='Update Client Preferences', form=form, client=client, legend=legend)
+
 

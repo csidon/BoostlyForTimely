@@ -71,3 +71,24 @@ alert2 = TempWaitAlert(slotStartDateTime="2023-06-01 11:30:00", slotLength=120, 
 
 user1 = UserTest(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="'$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
 staff1 = StaffTest(firstName="The", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid2=1)
+
+
+# Prepopulating the db with timeslots 
+# (Not sure if this is acceptable, but coded this way so that it's clear what availtime options there are)
+av1=AvailTimes(timeUnit='Monday AM')
+av2=AvailTimes(timeUnit='Monday PM')
+av3=AvailTimes(timeUnit='Tuesday AM')
+av4=AvailTimes(timeUnit='Tuesday PM')
+av5=AvailTimes(timeUnit='Wednesday AM')
+
+
+availList = [ AvailTimes('Monday AM'), AvailTimes('Monday PM'),
+        AvailTimes('Tuesday AM'), AvailTimes('Tuesday PM'),
+        AvailTimes('Wednesday AM'), AvailTimes('Wednesday PM'),
+        AvailTimes('Thursday AM'), AvailTimes('Thursday PM'),
+        AvailTimes('Friday AM'), AvailTimes('Friday PM'),
+        AvailTimes('Saturday AM'), AvailTimes('Saturday PM'),
+        AvailTimes('Sunday AM'), AvailTimes('Sunday PM')]
+for each in availList:
+    db.session.add(each)
+db.session.commit()
