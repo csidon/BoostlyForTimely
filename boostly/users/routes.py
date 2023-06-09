@@ -4,6 +4,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from boostly import db, bcrypt
 from boostly.models import User
+from boostly.staff.utils import replicateUser
 from boostly.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from boostly.users.utils import saveImage
 
@@ -13,8 +14,8 @@ users = Blueprint('users', __name__)
 
 @users.route("/register", methods=['GET','POST'])
 def register():
-    # if current_user.is_authenticated:
-        # return redirect(url_for('main.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -24,6 +25,11 @@ def register():
         user = User(userEmail=form.userEmail.data, userLastName=form.userLastName.data, userFirstName=form.userFirstName.data, userPassword=hashedPW)
         db.session.add(user)        # Adds user to db
         db.session.commit()         # Commits user to db
+        db.session.refresh(user)                                           
+        userID = user.id        # can i successfully get the id?
+        print("The User's id retrieved is : " + str(userID))
+        replicateUser(user, userID)
+
         flash('Your account has been created. Please log into your account', 'success')
         return redirect(url_for('users.login'))
 
@@ -32,11 +38,12 @@ def register():
 
 @users.route("/login", methods=['GET','POST'])
 def login(): 
-    # if current_user.is_authenticated:
-        # return redirect(url_for('main.dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(userEmail=form.userEmail.data).first()
+        print("You have filtered data from your db, user = " + str(user))
         # Decrypt the password hash and check it against the users' password in the database
         # If they match, log the user in and remember their "remember me " choice
         if user and bcrypt.check_password_hash(user.userPassword, form.userPassword.data):

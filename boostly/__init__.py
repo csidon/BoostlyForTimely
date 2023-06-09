@@ -30,11 +30,13 @@ loginManager.login_view = 'login'			# Flask function that brings user back to lo
 loginManager.login_message_category = 'info'		# Makes pretty - Assigns Bootstraps' "info" category styling to login-related messages
 
 from boostly.users.routes import users
+from boostly.staff.routes import staffers
 # from boostly.tasks.routes import tasks
 from boostly.main.routes import main
 from boostly.alerts.routes import alerts
 
 application.register_blueprint(users)
+application.register_blueprint(staffers)
 # application.register_blueprint(tasks)
 application.register_blueprint(main)
 application.register_blueprint(alerts)
