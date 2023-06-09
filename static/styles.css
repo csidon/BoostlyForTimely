@@ -19,3 +19,34 @@
   .dropbtn {
     /* background-color: aquamarine; */
   }
+
+  .btn{
+    background-color: #EECAC6;
+    color:#707070;
+  }
+
+  .btn:hover{
+    background-color:white;
+    border-width: 2px;
+    border-color: #EECAC6;
+    color:#707070;
+  }
+
+  .logoLoginPage{
+    width:240px;
+    height: 90px;
+  }
+
+.signOutBtn{
+  position: absolute;
+  right: 100px;
+}
+
+.logoNav{
+  width: 140px;
+  height: auto;
+}
+
+#messagePreview{
+  height: 400px;
+}

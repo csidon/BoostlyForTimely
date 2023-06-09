@@ -16,7 +16,9 @@ application.config['SECRET_KEY'] = 'ea3c9fdee984c581c3272cb37b6268746bc67adcdbb6
 # application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 # engine = create_engine('postgresql+psycopg2://postgresmaster:1NewPass!@host=localhost:5432/database_name')
-application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1NewPass!@localhost:5432/postgres'
+# application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1NewPass!@localhost:5432/postgres'
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Jele2789!@localhost:5432/postgres'
+
 # inspector = inspect(db.engine)
 
 
