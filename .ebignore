@@ -1,4 +1,8 @@
 venv 
 */__pycache__/*
 boostly/__pycache__/*
+boostly/alerts/__pycache__/*
+boostly/clients/__pycache__/*
+boostly/main/__pycache__/*
+boostly/staff/__pycache__/*
 .idea

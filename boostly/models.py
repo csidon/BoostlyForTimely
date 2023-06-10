@@ -39,8 +39,63 @@ class Client(db.Model):
     lastName = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     mobile = db.Column(db.Integer)
+    status = db.Column(db.String(30))
+    pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
     staffid = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)   # Attaches client to staffID
     alerts = db.relationship('TempWaitAlert', backref='alertwho', lazy=True)          # 1 Client -> * Alerts
+    clientprefer = db.relationship('ClientPref', backref='iprefer', lazy=True)          # 1 Client -> * Preferences
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fname': self.firstName,
+            'lname': self.lastName,
+            'email': self.email,
+            'mobile': self.mobile,
+            'status': self.status
+        }
+
+
+
+
+
+class ClientPref(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    minDuration = db.Column(db.Integer, nullable=False, default=60)
+    lastNotified = db.Column(db.DateTime)
+    lastClicked = db.Column(db.DateTime)         # For future if able to build SMTP tracking functionality 
+    lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    # 1 record will be created for *each* slot that the client is available for
+    # So if client available only for MondayAM, TuesAM and WedsAM, then there will be 3x client pref records
+    # timeavail = db.Column(db.Integer, nullable=False, default=0)           # 0 == Available for all slots, otherwise refer to AvailTimes table. 
+    avtimes = db.relationship("AvailTimes", secondary="preftimes", back_populates="clientprefs" )
+    prefstaffer = db.relationship('PrefStaff', backref='preferwho', lazy=True)
+    clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)   # Attaches ClientPref to Client's ID
+
+
+class AvailTimes(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    timeUnit = db.Column(db.String(30), nullable=False, unique=True)    # For now, split into AM and PM chunks. 
+    clientprefs = db.relationship("ClientPref", secondary="preftimes", back_populates="avtimes" )
+    def __str__(self):
+        return self.timeUnit
+
+
+# Association table connecting the ClientPref with AvailTimes 
+db.Table(
+    'preftimes', 
+    db.Column("clientpref_id", db.ForeignKey('client_pref.id'), primary_key=True),
+    db.Column("availtimes_id", db.ForeignKey('avail_times.id'), primary_key=True),
+)
+
+
+# This table is used to link the client's preference to staff. 
+# For the MVP, this wont be used because there's only one staff per user so the client either signs up or not. 
+# Instead, the staffPreference will default to 0 (no preference)
+class PrefStaff(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    clientprefid = db.Column(db.Integer, db.ForeignKey('client_pref.id'), nullable=False, default=0)      # 0 == no preference
+    staffprefid = db.Column(db.Integer, nullable=False)
 
 
 class Event(db.Model):
@@ -79,6 +134,7 @@ class TempWaitAlert(db.Model):
     # msgTmpl = db.Column(db.Integer, db.ForeignKey('msgtmpl.id'), nullable=False)
     staffuid = db.Column(db.Integer, nullable=False)
     clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    status = db.Column(db.String(30))
 
     def __repr__(self):
         return f"TempWaitAlert('{self.id}', '{self.slotStartDateTime}', '{self.slotLength}','{self.sendStatus}')"
