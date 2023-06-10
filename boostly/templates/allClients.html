@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+	{% block content %}
+	<div class="container">
+		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
+
+
+		<div>
+		  <h1>Client Overview</h1>
+		  <hr>
+		  <div id="table"></div>
+		</div>
+
+		<script type="module">
+			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
+			import { Grid, h } from "https://unpkg.com/gridjs?module";
+
+
+		  new Grid({
+
+
+			columns: [
+				{ id: 'fname', name: 'First Name' },
+			 	{ id: 'lname', name: 'Last Name' },
+				{ id: 'email', name: 'Email', sort: false },
+				{ id: 'mobile', name: 'Mobile Number', sort: false },
+				{ id: 'status', name: 'Status' },
+				{ id: 'clientid', name: 'id', hidden: true},
+				{ id: 'edit', name: 'Actions',
+        							formatter: (cell, row) => {
+          								return h('button', {
+            								className: 'btn btn-primary',
+            								onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`)
+											}, 'Edit');},
+          							},
+				],
+			data: [
+			  {% for client in clients %}
+				{
+				  fname: '{{ client.firstName }}',
+				  lname: '{{ client.lastName }}',
+				  email: '{{ client.email }}',
+				  mobile: '{{ client.mobile }}',
+				  status: '{{ client.status }}',
+				  clientid: '{{ client.id }}',
+				},	
+			  {% endfor %}
+			],
+			search: {
+			  selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
+			},
+			sort: true,
+			pagination: true,
+		  }).render(document.getElementById('table'));
+		</script>
+	</div>
+	
+
+
+	
+{% endblock content %}
+
+
