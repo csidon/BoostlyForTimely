@@ -11,6 +11,7 @@ from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to
 from datetime import datetime
 
 
+
 clients = Blueprint('clients', __name__)
 
 
@@ -26,7 +27,15 @@ def newClient():
 			mobile=form.mobile.data,
 			status = "active",
 			staffid = current_user.staffers.id)
+		
 		db.session.add(client)
+		db.session.commit()
+		# Also create a blank preference at the same time, so get the new clientID
+		db.session.refresh(client)                                           
+		clientID = client.id        # can i successfully get the id?
+		print("The Client's id retrieved is : " + str(clientID))
+		newpref = ClientPref(minDuration=0, clientid=clientID)
+		db.session.add(newpref)
 		db.session.commit()
 		flash("You have created a new client", 'success')
 		return redirect(url_for('main.dashboard'))
@@ -89,75 +98,39 @@ def deleteClient(clientID):
 
 #### ROUTES TO SET CLIENT PREFERENCES #####
 
-
-
-@clients.route("/client/pref/<int:clientID>", methods=['GET','POST'])
+@clients.route("/client/<int:clientID>/pref", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def newClientPref(clientID):
+	client = Client.query.get_or_404(clientID)
 	cpref = ClientPref.query.get(clientID)
-	# client = Client.query.filter(Client.id==clientID)
-	# print("What is my Client? "+ str(client.id))
-	form = ClientPrefForm(data={'avtimes': cpref.avtimes})
-	form.avtimes.query = AvailTimes.query.all()
-	if form.validate_on_submit():
-		cpref.avtimes.clear()
-		cpref.avtimes.extend(form.avtimes.data)
-		db.session.commit()
-	relclientid = cpref.clientid
-	relclient = Client.query.filter(Client.id==relclientid).first()
-	clientname = relclient.firstName + " " + relclient.lastName
-	legend = clientname + "'s Preferences"
-	print("selecting preferences for " + str(clientname))
+	# cpref = ClientPref.query.first()
+	print("What is my cpref? " + str(cpref))
 	
-	return render_template('createClientPref.html', title='Create a New Client', form=form, legend=legend)
+	# form = ClientPrefForm()
+	form = ClientPrefForm(data={'availtimes': cpref.avtimes})		# Only for updating client prefs
+	form.availtimes.query = AvailTimes.query.all()
+	if form.validate_on_submit():
 
 
-# @clients.route("/clientpref/<int:clientID>/update", methods=['GET','POST'])
-# @login_required 
-# def updateClientPref(clientID):
-# 	# Checking that the client exists
-# 	client = Client.query.get_or_404(clientID)
-# 	# Need to create custom error message.. If clientID not found, prompt create new client
-# 	print("Checking what ClientPref.id gets: " + str(ClientPref.id))
-# 	cpref = ClientPref.query.filter(ClientPref.id == clientID)
-# 	print("Checking what cpref gets: " + str(type(cpref)))
-# 	print("so what is cpref.firstName? " + cpref.firstName)
-# 	current_staff_clientlist = current_user.staffers.clients
+		cpref = ClientPref.query.first()
+		print("What is my cpref? " + str(cpref))
+		cpref.avtimes.clear()
+		cpref.avtimes.extend(form.availtimes.data)
+		db.session.commit()
+	# elif request.method == 'GET':
+		# form = ClientPrefForm(data={'avtimes': cpref.avtimes})		# Only for updating client prefs
 
 
-# 	# Checking to see if the client belongs to the staff 
-# 	not_staffers_client = True
-# 	for client in current_staff_clientlist:
-# 		print("Looping through clients: "+ str(client) + " With clientid of : " + str(client.id))
-# 		if client.id == current_user.staffers.id:
-# 			not_staffers_client = False
-# 	if not_staffers_client:
-# 		abort(403)
-
-# 	form = ClientPrefForm()
-# 	if form.validate_on_submit():
-# 		# if form.availall.data == 1:		# Client wants to be notified for all timeslots
-# 		cpref.minDuration = form.minDuration.data
-# 		cpref.timeavail = 0
-# 		# else:
-# 		form.timesAvail.data = AvailTimes.query.all()
-
-# 		# client.lastName = form.lastName.data
-# 		# client.email = form.email.data
-# 		# client.mobile = form.mobile.data
-# 		# client.status = "active"
-# 		# db.session.commit()
-# 		# flash("Your client's details have been updated", 'success')
-# 		# return redirect(url_for('client', clientID = current_user.staffers.id))
-
-# 	# elif request.method == 'GET':
-# 		# form.firstName.data = client.firstName
-# 		# form.lastName.data = client.lastName
-# 		# form.email.data = client.email
-# 		# form.mobile.data = client.mobile
-# 	# btnCreateUpdate = "Update"
-
-# 	legend = "Update " + client.firstName + "'s Preferences"
-# 	return render_template('createClientPref.html', title='Update Client Preferences', form=form, client=client, legend=legend)
+	clientname = client.firstName + " " + client.lastName
+	legend = clientname + "'s Preferences"
+	
+	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
 
 
+@clients.route("/<int:staffID>/clients/overview", methods=['GET','POST'])
+@login_required             # Needed for routes that can only be accessed after login
+def displayClients(staffID):
+	clients = Client.query.filter(Client.staffid==staffID)
+	# url = "/api/" + str(staffID) + "/clientdata",
+
+	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview", staffID=staffID)

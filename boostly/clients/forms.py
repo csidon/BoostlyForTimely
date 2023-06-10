@@ -27,7 +27,7 @@ class ClientPrefForm(FlaskForm):
     minDuration = IntegerField('Minimum timeslot (You will not be notified for anything less than this timeslot)', default=60, 
         validators=[DataRequired(), NumberRange(min=15)])
     availall = RadioField('Notify for all timeslots that become available?', choices=[(0, "No"),(1,"Yes")], default=1)
-    avtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to be notified for")
+    availtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to be notified for", allow_blank=True)
     
     delete = SubmitField(label="Delete", render_kw={'formnovalidate': True})
     submit = SubmitField('Update')

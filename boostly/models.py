@@ -45,6 +45,18 @@ class Client(db.Model):
     alerts = db.relationship('TempWaitAlert', backref='alertwho', lazy=True)          # 1 Client -> * Alerts
     clientprefer = db.relationship('ClientPref', backref='iprefer', lazy=True)          # 1 Client -> * Preferences
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fname': self.firstName,
+            'lname': self.lastName,
+            'email': self.email,
+            'mobile': self.mobile,
+            'status': self.status
+        }
+
+
+
 
 
 class ClientPref(db.Model):

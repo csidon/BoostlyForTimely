@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-
+<!-- <script src="https://unpkg.com/htmx.org@1.9.2"></script> -->
 <div class="container-fluid px-1 py-5 mx-5">
 	<div class="row d-flex justify-content-center">
 		<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
@@ -26,8 +26,8 @@
 						<div class="form-group col-sm-6 flex-column d-flex">
 							{{ form.availall.label(class="form-control-label") }}
 							{{ form.availall(class="form-control-label") }}
-							{{ form.avtimes.label(class="form-control-label") }}
-							{{ form.avtimes(class="form-control-label" ) }}					
+							{{ form.availtimes.label(class="form-control-label") }}
+							{{ form.availtimes(class="form-control-label") }}					
 							<!--@Ana can we please make this dynamic? So it's only shown when timeslot = No"-->
 
 

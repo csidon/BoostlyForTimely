@@ -81,6 +81,14 @@ av3=AvailTimes(timeUnit='Tuesday AM')
 av4=AvailTimes(timeUnit='Tuesday PM')
 av5=AvailTimes(timeUnit='Wednesday AM')
 
+db.session.add(av1)
+db.session.add(av2)
+db.session.add(av3)
+db.session.add(av4)
+db.session.add(av5)
+
+
+cp1=ClientPref(minDuration=60)
 
 availList = [ AvailTimes('Monday AM'), AvailTimes('Monday PM'),
         AvailTimes('Tuesday AM'), AvailTimes('Tuesday PM'),
