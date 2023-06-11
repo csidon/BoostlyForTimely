@@ -69,8 +69,9 @@ alert1 = TempWaitAlert(slotStartDateTime="2023-05-16 20:15:00", slotLength=45, s
 alert2 = TempWaitAlert(slotStartDateTime="2023-06-01 11:30:00", slotLength=120, staffuid=2, clientid=2)
 
 
-user1 = UserTest(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="'$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
-staff1 = StaffTest(firstName="The", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid2=1)
+user1 = User(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
+staff1 = Staff(firstName="Testy", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid=1)
+client1 = Client(firstName="Baby", lastName="Yoda", email="yoda@client.com", mobile=220220222)
 
 
 # Prepopulating the db with timeslots 
@@ -86,7 +87,7 @@ db.session.add(av2)
 db.session.add(av3)
 db.session.add(av4)
 db.session.add(av5)
-
+db.session.commit()
 
 cp1=ClientPref(minDuration=60)
 
@@ -100,3 +101,6 @@ availList = [ AvailTimes('Monday AM'), AvailTimes('Monday PM'),
 for each in availList:
     db.session.add(each)
 db.session.commit()
+
+
+<button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
