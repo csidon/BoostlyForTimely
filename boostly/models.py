@@ -43,7 +43,7 @@ class Client(db.Model):
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
     staffid = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)   # Attaches client to staffID
     alerts = db.relationship('TempWaitAlert', backref='alertwho', lazy=True)          # 1 Client -> * Alerts
-    clientprefer = db.relationship('ClientPref', backref='iprefer', lazy=True)          # 1 Client -> * Preferences
+    clientprefer = db.relationship('ClientPref', backref='iprefer', lazy=True, uselist=False)          # 1 Client -> * Preferences
 
     def to_dict(self):
         return {
@@ -68,6 +68,7 @@ class ClientPref(db.Model):
     # 1 record will be created for *each* slot that the client is available for
     # So if client available only for MondayAM, TuesAM and WedsAM, then there will be 3x client pref records
     # timeavail = db.Column(db.Integer, nullable=False, default=0)           # 0 == Available for all slots, otherwise refer to AvailTimes table. 
+    availall = db.Column(db.Integer, nullable=False)
     avtimes = db.relationship("AvailTimes", secondary="preftimes", back_populates="clientprefs" )
     prefstaffer = db.relationship('PrefStaff', backref='preferwho', lazy=True)
     clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)   # Attaches ClientPref to Client's ID

@@ -2,9 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\boostly",
+    "\\boostly\\clients",
     "\\boostly\\tasks",
     "\\boostly\\templates",
     "\\boostly\\users"
   ],
+  "SelectedNode": "\\boostly\\models.py",
   "PreviewInSolutionExplorer": false
 }

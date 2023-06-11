@@ -34,11 +34,11 @@ def newClient():
 		db.session.refresh(client)                                           
 		clientID = client.id        # can i successfully get the id?
 		print("The Client's id retrieved is : " + str(clientID))
-		newpref = ClientPref(minDuration=0, clientid=clientID)
-		db.session.add(newpref)
-		db.session.commit()
-		flash("You have created a new client", 'success')
-		return redirect(url_for('main.dashboard'))
+		# newpref = ClientPref(minDuration=0, clientid=clientID, availall=1)
+		# db.session.add(newpref)
+		# db.session.commit()
+		flash("You have created a new client! Now let's set their preferences", 'success')
+		return redirect(url_for('clients.newClientPref', clientID=clientID))
 	btnCreateUpdate = "Create"
 	return render_template('createClient.html', title='Create a New Client', form=form, legend="Create a New Client", btnCreateUpdate=btnCreateUpdate)
 
@@ -68,7 +68,7 @@ def updateClient(clientID):
 		client.status = "active"
 		db.session.commit()
 		flash("Your client's details have been updated", 'success')
-		return redirect(url_for('client', clientID = current_user.staffers.id))
+		return redirect(url_for('clients.updateClient', clientID=client.id))
 
 	elif request.method == 'GET':
 		form.firstName.data = client.firstName
@@ -95,42 +95,113 @@ def deleteClient(clientID):
 	flash("We've archived your client information. You can still view it in your Recycle Bin for the next 90 days!", 'success')
 	return redirect(url_for('main.dashboard'))
 
-
+###########################################
 #### ROUTES TO SET CLIENT PREFERENCES #####
 
-@clients.route("/client/<int:clientID>/pref", methods=['GET','POST'])
+	minDuration = IntegerField('Minimum timeslot (You will not be notified for anything less than this timeslot)', default=60,
+						validators=[DataRequired(), NumberRange(min=15)])
+	availall = RadioField('Notify for all timeslots that become available?', choices=[(0, "No"),(1,"Yes")])
+	availtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to be notified for", allow_blank=True)
+	
+	delete = SubmitField(label="Delete", render_kw={'formnovalidate': True})
+
+
+@clients.route("/clientpref/<int:clientID>/new", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def newClientPref(clientID):
-	client = Client.query.get_or_404(clientID)
-	cpref = ClientPref.query.get(clientID)
-	# cpref = ClientPref.query.first()
-	print("What is my cpref? " + str(cpref))
-	
-	# form = ClientPrefForm()
-	form = ClientPrefForm(data={'availtimes': cpref.avtimes})		# Only for updating client prefs
+	# Check if client has existing preferences, and if yes route to update form
+	if ClientPref.query.get(clientID):
+		print("Existing client preferences found")
+		# return redirect(url_for('clients.updateClientPref', clientID=clientID))
+		return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
+
+	form = ClientPrefForm()
 	form.availtimes.query = AvailTimes.query.all()
 	if form.validate_on_submit():
-
-
-		cpref = ClientPref.query.first()
-		print("What is my cpref? " + str(cpref))
-		cpref.avtimes.clear()
-		cpref.avtimes.extend(form.availtimes.data)
+		# First create a client preference record:
+		print("Checking -- What's the clientID? " + str(clientID))
+		newclientpref = ClientPref(
+			minDuration = form.minDuration.data,
+			availall = int(form.availall.data),
+			clientid = clientID)
+		db.session.add(newclientpref)
 		db.session.commit()
-	# elif request.method == 'GET':
-		# form = ClientPrefForm(data={'avtimes': cpref.avtimes})		# Only for updating client prefs
+		print("New client preferences created in db")
+		if int(form.availall.data)==0:
+			print("Entering time preferences in table preftimes")
+			clientpref = ClientPref.query.get(clientID)
+			clientpref.avtimes.clear()
+			clientpref.avtimes.extend(form.availtimes.data)
+			db.session.commit()
+		flash("Preferences added!", 'success')
+		# Bring the user/staff back to their client overview page
 
+		return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
 
+	client = Client.query.get(clientID)
 	clientname = client.firstName + " " + client.lastName
 	legend = clientname + "'s Preferences"
 	
 	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
 
 
+# @clients.route("/client/<int:clientID>/pref", methods=['GET','POST'])
+# @login_required             # Needed for routes that can only be accessed after login
+# def updateClientPref(clientID):
+# 	client = Client.query.get_or_404(clientID)
+# 	cpref = ClientPref.query.get(clientID)
+# 	# cpref = ClientPref.query.first()
+# 	print("What is my cpref? " + str(cpref))
+	
+# 	# form = ClientPrefForm()
+# 	form = ClientPrefForm(data={'availtimes': cpref.avtimes, 'minDuration':cpref.minDuration})		# Only for updating client prefs
+# 	form.availtimes.query = AvailTimes.query.all()
+# 	if form.validate_on_submit():
+# 		cpref = ClientPref.query.first()
+# 		print("What is my cpref? " + str(cpref))
+		
+# 		if form.availall.data:
+# 			print("Yes, notify for all days")
+# 			selectall = AvailTimes.query.all()
+# 			print("What is selall" + str(selectall) + " and datatype " + str(type(selectall)))
+# 			cpref.availall
+# 			cpref.avtimes.clear()
+# 			cpref.avtimes.extend(selectall)
+# 			cpref.minDuration = form.minDuration.data
+# 			db.session.commit()
+# 		else:
+# 			cpref.avtimes.clear()
+# 			cpref.avtimes.extend(form.availtimes.data)
+# 			cpref.minDuration = form.minDuration.data
+# 			db.session.commit()
+# 	# elif request.method == 'GET':
+# 		# form = ClientPrefForm(data={'avtimes': cpref.avtimes})		# Only for updating client prefs
+
+
+# 	clientname = client.firstName + " " + client.lastName
+# 	legend = clientname + "'s Preferences"
+	
+# 	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
+
+
+
+
 @clients.route("/<int:staffID>/clients/overview", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def displayClients(staffID):
 	clients = Client.query.filter(Client.staffid==staffID)
-	# url = "/api/" + str(staffID) + "/clientdata",
 
 	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview", staffID=staffID)
+
+
+@clients.route("/<int:staffID>/clients/pref/overview", methods=['GET','POST'])
+@login_required             # Needed for routes that can only be accessed after login
+def displayClientPrefs(staffID):
+	clients = Client.query.filter(Client.staffid==staffID)
+	for client in clients:
+		print(client.firstName)
+		# print(str(client.clientprefer.minDuration))
+
+	# url = "/api/" + str(staffID) + "/clientdata",
+
+	return render_template('allClientPrefs.html', title='Client Preferences Overview', clients=clients, legend="Client Preferences Overview", staffID=staffID)
