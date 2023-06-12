@@ -1,87 +1,87 @@
 {% extends "layout.html" %}
 {% block content %}
-
-<section class="vh-40">
+  <!-- Custom CSS -->
+  <style>
+    /* Center the container */
+    html, body {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      background-image: url('static/images/back_home.png');
+      background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: cover;
+    }
+  </style>
 <!--		Container settings-->
-		<div class="container-fluid py-5 h-100">
-			<div class="row d-flex justify-content-center align-items-center h-100 g-0 py-3" style="background-color: #F2D1CE;">
-				<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-					<!--form-->
-					<form method="POST" action="">
-						<!-- # Hidden tag method adds a CSRF token -->
-						{{ form.hidden_tag() }}
-						<legend class="border-bottom text-center mt-3 mb-2" style = "font-weight: bold; font-size: 1.8em; color: #5E5E5E;">Get started with Boostly</legend>
-						<div class="form-outline mb-2">
-							{{ form.userFirstName.label(class="form-control-label") }}
-							{{ form.userFirstName(class="form-control form-control-md") }}
-						</div>
-						<div class="form-outline mb-2">
-							{{ form.userLastName.label(class="form-control-label") }}
-							{{ form.userLastName(class="form-control form-control-md") }}
-						</div>
-						<div class="form-outline mb-2">
-							{{ form.userEmail.label(class="form-control-label") }}
-
-							{% if form.userEmail.errors %}
-								{{ form.userEmail(class="form-control form-control-md is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.userEmail.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.userEmail(class="form-control form-control-md") }}
-							{% endif %}
-
-						</div>
-						<!-- Password label and error messages -->
-						<div class="form-outline mb-2">
-							{{ form.userPassword.label(class="form-control-label") }}
-							{% if form.userPassword.errors %}
-								{{ form.userPassword(class="form-control form-control-md is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.userPassword.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.userPassword(class="form-control form-control-md") }}
-							{% endif %}
-						</div>
-						<div class="form-outline mb-1">
-							{{ form.confirmPassword.label(class="form-control-label") }}
-							{% if form.confirmPassword.errors %}
-								{{ form.confirmPassword(class="form-control form-control-md is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.confirmPassword.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.confirmPassword(class="form-control form-control-md") }}
-							{% endif %}
-						</div>
-
-						<div class="text-center text-lg-start mt-1 pt-2">
-						{{ form.submit(class="btn btn-outline-secondary btn-lg btn-block login-btn") }}
-						</div>
-						<div class="text-center text-lg-start mt-1 pt-2">
-							<small class="small mt-1 pt-0 mb-3">
-							Already have an account? <a class="link-primary" href="{{ url_for('users.login') }}">Log in here</a>
-							</small>
-						</div>
-					</form>
-				</div>
-				<div class="col-lg-6 px-0 d-none d-lg-block">
-        			<img src="../static/images/rocket.png"
-          				alt="Login image" class ="img-fluid" style="object-position: right;">
-          				<div class="text-center text-lg-start mt-0 pt-0">
-							<small class="small mb-0">
-								Image by <a href="https://pixabay.com/users/satheeshsankaran-11196627/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5816644">Satheesh Sankaran</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5816644">Pixabay</a>
-							</small>
-						</div>
-				</div>
+<div class="container mx-2 my-2">
+	<img class = "logoLoginPage" src="../static/images/logo-03.png" alt="Logo">
+	<!--form-->
+	<form method="POST" action="">
+		<!-- # Hidden tag method adds a CSRF token -->
+		{{ form.hidden_tag() }}
+		<legend class="border-bottom text-center mt-3 mb-2" style = "font-weight: bold; font-size: 1.8em; color: #5E5E5E;">Get started with Boostly</legend>
+		<div class="form-group">
+			{{ form.userFirstName.label(class="form-control-label") }}
+			{{ form.userFirstName(class="form-control form-control-md") }}
 		</div>
-	</div>
-</section>
+		<div class="form-group">
+			{{ form.userLastName.label(class="form-control-label") }}
+			{{ form.userLastName(class="form-control form-control-md") }}
+		</div>
+		<div class="form-group">
+			{{ form.userEmail.label(class="form-control-label") }}
+
+			{% if form.userEmail.errors %}
+				{{ form.userEmail(class="form-control form-control-md is-invalid")}}
+				<div class="invalid-feedback">
+					{% for error in form.userEmail.errors %}
+						<span> {{ error }} </span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ form.userEmail(class="form-control form-control-md") }}
+			{% endif %}
+
+		</div>
+		<!-- Password label and error messages -->
+		<div class="form-group">
+			{{ form.userPassword.label(class="form-control-label") }}
+			{% if form.userPassword.errors %}
+				{{ form.userPassword(class="form-control form-control-md is-invalid")}}
+				<div class="invalid-feedback">
+					{% for error in form.userPassword.errors %}
+						<span> {{ error }} </span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ form.userPassword(class="form-control form-control-md") }}
+			{% endif %}
+		</div>
+		<div class="form-group">
+			{{ form.confirmPassword.label(class="form-control-label") }}
+			{% if form.confirmPassword.errors %}
+				{{ form.confirmPassword(class="form-control form-control-md is-invalid")}}
+				<div class="invalid-feedback">
+					{% for error in form.confirmPassword.errors %}
+						<span> {{ error }} </span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ form.confirmPassword(class="form-control form-control-md") }}
+			{% endif %}
+		</div>
+
+		<div class="pt-3">
+		{{ form.submit(class="btn btn-block loginbtn") }}
+		</div>
+		<div class="text-center text-lg-start mt-1 pt-2">
+			<small class="small mt-1 pt-0 mb-3">
+			Already have an account? <a class="link-primary" href="{{ url_for('users.login') }}">Log in here</a>
+			</small>
+		</div>
+	</form>
+</div>
 {% endblock content %}

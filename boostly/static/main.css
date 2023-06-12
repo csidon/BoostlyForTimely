@@ -7,6 +7,14 @@ body.page-background {
   width: 70%;
 }
 
+@mixin make-container($padding-x: $container-padding-x) {
+  width: 50%;
+  padding-right: $padding-x;
+  padding-left: $padding-x;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .back-color-nav{
 background: #F2D1CE;
 text-color: black;
@@ -292,4 +300,71 @@ ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropbtn {
+    /* background-color: aquamarine; */
+  }
+
+  .btn{
+    background-color: #EECAC6;
+    color:#707070;
+  }
+
+  .btn:hover{
+    background-color:white;
+    border-width: 2px;
+    border-color: #EECAC6;
+    color:#707070;
+  }
+
+  .logoLoginPage{
+    width:240px;
+    height: 90px;
+  }
+
+.signOutBtn{
+  position: absolute;
+  right: 100px;
+}
+
+.logoNav{
+  width: 140px;
+  height: auto;
+}
+
+#messagePreview{
+  height: 400px;
+}
+
+.custom-container {
+  @include make-container();
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.account-head{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
