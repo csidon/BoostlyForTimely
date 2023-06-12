@@ -76,17 +76,21 @@ client1 = Client(firstName="Baby", lastName="Yoda", email="yoda@client.com", mob
 
 # Prepopulating the db with timeslots 
 # (Not sure if this is acceptable, but coded this way so that it's clear what availtime options there are)
-av1=AvailTimes(timeUnit='Monday AM')
-av2=AvailTimes(timeUnit='Monday PM')
-av3=AvailTimes(timeUnit='Tuesday AM')
-av4=AvailTimes(timeUnit='Tuesday PM')
-av5=AvailTimes(timeUnit='Wednesday AM')
+av1=AvailTimes(timeUnit='Monday')
+av2=AvailTimes(timeUnit='Tuesday')
+av3=AvailTimes(timeUnit='Wednesday')
+av4=AvailTimes(timeUnit='Thursday')
+av5=AvailTimes(timeUnit='Friday')
+av6=AvailTimes(timeUnit='Saturday')
+av7=AvailTimes(timeUnit='Sunday')
 
 db.session.add(av1)
 db.session.add(av2)
 db.session.add(av3)
 db.session.add(av4)
 db.session.add(av5)
+db.session.add(av6)
+db.session.add(av7)
 db.session.commit()
 
 cp1=ClientPref(minDuration=60)

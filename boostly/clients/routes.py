@@ -115,6 +115,7 @@ def newClientPref(clientID):
 		# return redirect(url_for('clients.updateClientPref', clientID=clientID))
 		return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
 
+	print("Checking -- What's the clientID? " + str(clientID))
 	form = ClientPrefForm()
 	form.availtimes.query = AvailTimes.query.all()
 	if form.validate_on_submit():
@@ -144,6 +145,8 @@ def newClientPref(clientID):
 	
 	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
 
+
+# To create route for updating client preferences
 
 # @clients.route("/client/<int:clientID>/pref", methods=['GET','POST'])
 # @login_required             # Needed for routes that can only be accessed after login
@@ -198,9 +201,15 @@ def displayClients(staffID):
 @login_required             # Needed for routes that can only be accessed after login
 def displayClientPrefs(staffID):
 	clients = Client.query.filter(Client.staffid==staffID)
+
+	clientpref = ClientPref.query
 	for client in clients:
 		print(client.firstName)
-		# print(str(client.clientprefer.minDuration))
+		# Get the client
+
+		print(str(client.clientprefer))
+		# Get the clientpref id
+
 
 	# url = "/api/" + str(staffID) + "/clientdata",
 
