@@ -118,6 +118,8 @@ def newClientPref(clientID):
 	form = ClientPrefForm()
 	form.availtimes.query = AvailTimes.query.all()
 	if form.validate_on_submit():
+		if form.availall.data == 0:
+			form.availtimes.choices = []
 		# First create a client preference record:
 		print("Checking -- What's the clientID? " + str(clientID))
 		newclientpref = ClientPref(
@@ -135,7 +137,6 @@ def newClientPref(clientID):
 			db.session.commit()
 		flash("Preferences added!", 'success')
 		# Bring the user/staff back to their client overview page
-
 		return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
 
 	client = Client.query.get(clientID)

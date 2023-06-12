@@ -32,7 +32,7 @@
 				{ id: 'sun', name: 'Sun', sort: false },
 
 				{ id: 'clientid', name: 'id', hidden: true},
-				{ id: 'edit', name: 'Actions', width: '5%',
+				{ id: 'edit', name: '',
         							formatter: (cell, row) => {
           								return h('button', {
             								className: 'btn btn-success btn-sm rounded-0 fa fa-edit',
@@ -66,6 +66,7 @@
 			sort: true,
 			pagination: true,
 		  }).render(document.getElementById('table'));
+
 		</script>
 	</div>
 	

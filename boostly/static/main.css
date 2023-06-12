@@ -134,150 +134,6 @@ body{
 }
 
 
-.card-margin {
-    margin-bottom: 1.875rem;
-}
-
-.card {
-    border: 0;
-    box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
-    -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
-    -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
-    -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
-}
-.card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #ffffff;
-    background-clip: border-box;
-    border: 1px solid #e6e4e9;
-    border-radius: 8px;
-}
-
-.card .card-header.no-border {
-    border: 0;
-}
-.card .card-header {
-    background: none;
-    padding: 0 0.9375rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    min-height: 50px;
-}
-.card-header:first-child {
-    border-radius: calc(8px - 1px) calc(8px - 1px) 0 0;
-}
-
-.widget-49 .widget-49-title-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.widget-49 .widget-49-title-wrapper .widget-49-date-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-color: #edf1fc;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-}
-
-
-
-
-.widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-day {
-  color: ##fc5f64;
-  font-weight: 500;
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.widget-49 .widget-49-title-wrapper .widget-49-date-base .widget-49-date-month {
-  color: ##fc5f64;
-  line-height: 1;
-  font-size: 1rem;
-  text-transform: uppercase;
-}
-
-.widget-49 .widget-49-title-wrapper .widget-49-meeting-info {
-  display: flex;
-  flex-direction: column;
-  margin-left: 1rem;
-}
-
-
-
-.widget-49 .widget-49-title-wrapper .widget-49-meeting-info .widget-49-meeting-time {
-  color: #c5b1b7;
-  font-size: 13px;
-}
-
-.widget-49 .widget-49-meeting-points {
-  font-weight: 400;
-  font-size: 13px;
-  margin-top: .5rem;
-}
-
-
-
-.widget-49 .widget-49-meeting-points .widget-49-meeting-item span {
-  margin-left: .5rem;
-}
-
-.widget-49 .widget-49-meeting-action {
-  text-align: right;
-}
-
-.widget-49 .widget-49-meeting-action a {
-  text-transform: uppercase;
-}
-/*DashBoard*/
-/*Tags*/
-.order-card {
-    color: #fff;
-}
-
-.bg-c-blue {
-    background: #8FCEFF;
-}
-
-.bg-c-green {
-    background: #D4FFD7;
-}
-
-.bg-c-yellow {
-    background: #FCFFB2;
-}
-
-.bg-c-pink {
-    background: #FFACAC;
-}
-
-
-.cardTag {
-    border-radius: 5px;
-    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
-    border: none;
-    margin-bottom: 30px;
-    -webkit-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-}
-
-.cardTag .card-block {
-    padding: 25px;
-}
-
-.order-card i {
-    font-size: 26px;
-}
-
 .f-left {
     float: left;
 }
@@ -324,12 +180,26 @@ ul {
     /* background-color: aquamarine; */
   }
 
-  .btn{
+  .btn-submit{
     background-color: #EECAC6;
+    color:white;
+    border-width: 2px;
+  }
+  .cancel-btn{
+    background-color:white;
+    border-width: 2px;
+
     color:#707070;
   }
 
-  .btn:hover{
+  .cancel-btn:hover{
+    background-color: white;
+    color:#707070;
+    border-width: 2px;
+    border-color: #B51D2C;
+  }
+
+  .btn-submit:hover{
     background-color:white;
     border-width: 2px;
     border-color: #EECAC6;
