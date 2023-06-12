@@ -1,48 +1,66 @@
 {% extends "layout.html" %}
 {% block content %}
 <!-- <script src="https://unpkg.com/htmx.org@1.9.2"></script> -->
-<div class="container-fluid px-1 py-5 mx-5">
-	<div class="row d-flex justify-content-center">
-		<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
-			<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
-			 <div class="card">
-				<form class="form-card py-3 mx-5" method="POST">
-					{{ form.hidden_tag() }}
-					<div class="row justify-content-between text-left">
-						<div class="form-group col-sm-6 flex-column d-flex">
-							{{ form.minDuration.label(class="form-control-label") }}
-							{% if form.minDuration.errors %}
-								{{ form.minDuration(class="form-control form-control-lg is-invalid")}}
-								<div class="invalid-feedback">
-									{% for error in form.minDuration.errors %}
-										<span> {{ error }} </span>
-									{% endfor %}
-								</div>
-							{% else %}
-								{{ form.minDuration(class="form-control form-control-lg") }}
-							{% endif %}
-						</div>
-
+ <style>
+    /* Center the container */
+    html, body {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      background-image: url('static/images/back_home.png');
+      background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: cover;
+    }
+  </style>
+<div class="container pt-5">
+			<legend class="border-bottom text-center pt-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+			<form method="POST">
+				{{ form.hidden_tag() }}
+					<div class="form-group col-sm-6 flex-column d-flex">
+						{{ form.minDuration.label(class="form-control-label") }}
+						{% if form.minDuration.errors %}
+							{{ form.minDuration(class="form-control form-control-lg is-invalid")}}
+							<div class="invalid-feedback">
+								{% for error in form.minDuration.errors %}
+									<span> {{ error }} </span>
+								{% endfor %}
+							</div>
+						{% else %}
+							{{ form.minDuration(class="form-control form-control-lg") }}
+						{% endif %}
+					</div>
+					<div class="row">
+					<div class="col">
 						<div class="form-group col-sm-6 flex-column d-flex">
 							{{ form.availall.label(class="form-control-label") }}
-							{{ form.availall(class="form-control-label") }}
-							{{ form.availtimes.label(class="form-control-label") }}
-							{{ form.availtimes(class="form-control-label") }}					
-							<!--@Ana can we please make this dynamic? So it's only shown when timeslot = No"-->
-
-
-						</div>
-
-					<div class="row justify-content-end">
-						<div class="form-group mr-3">
-							<a href={{ url_for('main.dashboard') }} class="btn btn-info">Cancel</a>
-							<button type="submit" class="btn btn-outline-info">Save Preferences</button>
+							{{ form.availall(class="form-control-label", id="availall-radio") }}
 						</div>
 					</div>
-				</form>
-			 </div>
-		</div>
-	</div>
+					<div class="col" id="avail-days" style="display: none;">
+						<div class="form-group col-sm-6 flex-column d-flex">
+							{{ form.availtimes.label(class="form-control-label") }}
+							{{ form.availtimes(class="form-control-label") }}
+						</div>
+					</div>
+						<script>
+<!--						 Add an event listener to the radio button-->
+						document.getElementById("availall-radio").addEventListener("change", function() {
+							var availDays = document.getElementById("avail-days");
+							availDays.style.display = this.value == 0 ? "none" : "block";
+						});
+					</script>
+				</div>
+				<div class="row justify-content-end">
+					<div class="form-group mr-3">
+						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
+						<button type="submit" class="btn btn-submit">Save Preferences</button>
+					</div>
+				</div>
+			</form>
+
 </div>
 <!-- 	<script>
 
