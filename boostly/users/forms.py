@@ -5,11 +5,12 @@ from flask_wtf.file import FileField, FileAllowed	# Provides ability for the for
 from flask_login import current_user				
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from boostly.models import User
+from boostly.models import User, Company
 
 
 
 class RegistrationForm(FlaskForm):
+	companyName = StringField('Company Name', validators=[DataRequired()])	# At this stage there is no company validation check. 
 	userFirstName = StringField('First Name', validators=[DataRequired()])
 	userLastName = StringField('Last Name', validators=[DataRequired()])
 	userEmail = StringField('Email (This will also be your username)', validators=[DataRequired(), Email()])
@@ -35,6 +36,7 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Login')
 
 class UpdateAccountForm(FlaskForm):
+	companyName = StringField('Company Name', validators=[DataRequired()])
 	userFirstName = StringField('First Name', validators=[DataRequired()])
 	userLastName = StringField('Last Name', validators=[DataRequired()])
 	userEmail = StringField('Email (This will also be your username)', validators=[DataRequired(), Email()])

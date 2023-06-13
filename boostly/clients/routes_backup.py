@@ -47,6 +47,20 @@ def newClient():
 	btnCreateUpdate = "Create"
 	return render_template('createClient.html', title='Create a New Client', form=form, legend="Create a New Client", btnCreateUpdate=btnCreateUpdate)
 
+##############
+# class Client(db.Model):
+# 	id = db.Column(db.Integer, primary_key = True)
+# 	firstName = db.Column(db.String(100), nullable=False)
+# 	lastName = db.Column(db.String(100), nullable=False)
+# 	email = db.Column(db.String(120), nullable=False)
+# 	mobile = db.Column(db.Integer)
+# 	status = db.Column(db.String(30))
+# 	pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
+# 	companies = db.relationship('Company', secondary=ClientCompany, backref='clientsof')         # Refer to client_company table for client/company relsp
+# 	clientprefs = db.relationship('ClientPref', backref='client')           # Forming a 1 Client --> * ClientPref relationship
+# #######################
+
+
 
 
 @clients.route("/client/<int:clientID>/update", methods=['GET','POST'])
@@ -97,6 +111,64 @@ def deleteClient(clientID):
 ###########################################
 #### ROUTES TO SET CLIENT PREFERENCES #####
 
+	# minDuration = IntegerField('Minimum timeslot (You will not be notified for anything less than this timeslot)', default=60,
+	# 					validators=[DataRequired(), NumberRange(min=15)])
+	# availall = RadioField('Notify for all timeslots that become available?', choices=[(0, "No"),(1,"Yes")])
+	# availtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to be notified for", allow_blank=True)
+	
+	# delete = SubmitField(label="Delete", render_kw={'formnovalidate': True})
+
+
+# @clients.route("/clientpref/<int:clientID>/new", methods=['GET','POST'])
+# @login_required             # Needed for routes that can only be accessed after login
+# def newClientPref(clientID):
+# 	# Checks to make sure that the clientID belongs to the logged in user's company
+# 	client = Client.query.get_or_404(clientID)
+# 	clients_with_company=Client.query.join(ClientCompany).join(Company).filter(Company.id==current_user.companyid).all()
+# 	if client not in clients_with_company:
+# 		abort(403)
+
+# 	# # Check if client has existing preferences, and if yes route to update form
+# 	if ClientPref.query.filter(ClientPref.clientid==clientID).all():
+# 		print("Existing client preferences found")
+# 		flash("Existing client preferences found", 'success')
+# 		return redirect(url_for('clients.updateClientPref', clientID=clientID))
+# 	# 	return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
+
+# 	print("Checking -- What's the clientID? " + str(clientID))
+# 	form = ClientPrefForm()
+# 	form.availtimes.query = AvailTimes.query.all()
+# 	if form.validate_on_submit():
+# 		# First create a client preference record:
+# 		print("Checking -- What's the clientID? " + str(clientID))
+# 		newclientpref = ClientPref(
+# 			minDuration = form.minDuration.data,
+# 			availall = int(form.availall.data),
+# 			clientid = clientID)
+# 		db.session.add(newclientpref)
+# 		db.session.commit()
+# 		print("New client preferences created in db")
+# 		if int(form.availall.data)==0:
+# 			print("Entering time preferences in table preftimes")
+# 			clientpref = ClientPref.query.get(clientID)
+# 			print("The Client's prefs are: " + str(clientpref))
+# 			clientpref.avtimes.clear()
+# 			clientpref.avtimes.extend(form.availtimes.data)
+# 			db.session.commit()
+# 		flash("Preferences added!", 'success')
+# 		# Bring the user/staff back to their client overview page
+
+# 		return redirect(url_for('clients.newClientPref', clientID=clientID))
+
+# 		# return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
+
+# 	client = Client.query.get(clientID)
+# 	clientname = client.firstName + " " + client.lastName
+# 	legend = clientname + "'s Preferences"
+	
+# 	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
+
+
 @clients.route("/clientpref/<int:clientID>/update", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def updateClientPref(clientID):
@@ -113,7 +185,14 @@ def updateClientPref(clientID):
 	print("Let's just check what's in clientpref.avtimes: "+ str(clientpref.avtimes))
 	form.availtimes.query = AvailTimes.query.all()
 	if form.validate_on_submit():
-
+		# # First create a client preference record:
+		# print("Checking -- What's the clientID? " + str(clientID))
+		# newclientpref = ClientPref(
+		# 	minDuration = form.minDuration.data,
+		# 	availall = int(form.availall.data),
+		# 	clientid = clientID)
+		# db.session.commit()
+		# print("New client preferences created in db")
 		clientpref.minDuration = form.minDuration.data,
 		clientpref.availall = int(form.availall.data),
 		print("Min dur is " + str(type(form.minDuration.data)) + " and availaAll is " + str(type(form.availall.data)))
@@ -121,7 +200,13 @@ def updateClientPref(clientID):
 		if int(form.availall.data)==0:
 			clientpref.avtimes.clear()
 			clientpref.avtimes.extend(form.availtimes.data)
-
+			# if clientpref.avtimes: 		#PrefTimes table is populated, clear and update
+			# 	db.session.commit()
+			# else:
+			# 	db.session.add()
+			# print("The Client's prefs are: " + str(clientpref))
+			# clientpref.avtimes.clear()
+			# clientpref.avtimes.extend(form.availtimes.data)
 			db.session.commit()
 
 		flash("Preferences added!", 'success')
@@ -129,6 +214,7 @@ def updateClientPref(clientID):
 
 		return redirect(url_for('clients.updateClientPref', clientID=clientID))
 
+		# return redirect(url_for('clients.displayClientPrefs', staffID=current_user.staffers.id))
 
 	client = Client.query.get(clientID)
 	clientname = client.firstName + " " + client.lastName
@@ -188,29 +274,17 @@ def displayClients(staffID):
 	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview", staffID=staffID)
 
 
-@clients.route("/clients/pref/overview", methods=['GET','POST'])
+@clients.route("/<int:staffID>/clients/pref/overview", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
-def displayClientPrefs():
-	curr_companyid = current_user.companyid
-	print("The current company is " + str(curr_companyid))
-	# client = Client.query.get_or_404(clientID)
-	# Checks to make sure that the clientID belongs to the logged in user's company
-	# clients_with_company=Client.query.join(ClientCompany).join(Company).filter(Company.id==current_user.companyid).all()
-	# if client not in clients_with_company:
-	# 	abort(403)
+def displayClientPrefs(staffID):
+	# curr_company = current_user.company
 
-	# clients = Client.query.filter(Client.staffid==staffID)
-
-	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid).all()
+	clients = Client.query.filter(Client.staffid==staffID)
 	print("The clients are: " + str(clients))
 
-	MonDic={}
-	TueDic={}
-	WedDic={}
-	ThurDic={}
-	FriDic={}
-	SatDic={}
-	SunDic={}
+	MondayDic={}
+
+	TuesdayDic={}
 	
 	for client in clients:
 
@@ -220,13 +294,7 @@ def displayClientPrefs():
 
 		# availabilities = preftimes.query.filter()
 		print("The availabilities are " + str(availabilities) + " with length " + str(len(availabilities)))
-		MonDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Monday',availabilities))) >0 else 0
-		TueDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Tuesday',availabilities))) >0 else 0
-		WedDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Wednesday',availabilities))) >0 else 0
-		ThurDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Thursday',availabilities))) >0 else 0
-		FriDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else 0
-		SatDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else 0
-		SunDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else 0
+		MondayDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Monday AM',availabilities))) >0 else 0
 
 		
 		# MondayDic[client] = list(filter(lambda i : i.timeUnit=='Monday AM',availabilities))
@@ -239,17 +307,15 @@ def displayClientPrefs():
 		# TuesdayDic[client] = list(filter(lambda i : i.timeUnit=='Tuesday AM',availabilities))
 
 
-		# print(client.firstName)
-		# # Get the client
+		print(client.firstName)
+		# Get the client
 
-		# print(str(client.clientprefer))
+		print(str(client.clientprefer))
 		# Get the clientpref id
 
 
 
-	return render_template('allClientPrefs.html', title='Client Preferences Overview', availabilities=availabilities, \
-			Mon=MonDic, Tue=TueDic, Wed=WedDic, Thur=ThurDic, Fri=FriDic, Sat=SatDic, Sun=SunDic,\
-			 clients=clients, legend="Client Preferences Overview")
+	return render_template('allClientPrefs.html', title='Client Preferences Overview', Monday=MondayDic, Tuesday=TuesdayDic, clients=clients, legend="Client Preferences Overview", staffID=staffID)
 
 # avtime = avialtimes.query.join(clientPref).filter(clientPRef.clientid == clientid)
 # select * from avialtime a inner join clientpref c on c.avtimeid= a.id where c.clientid = clietnid
