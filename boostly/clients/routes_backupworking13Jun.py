@@ -129,6 +129,7 @@ def updateClientPref(clientID):
 
 		return redirect(url_for('clients.updateClientPref', clientID=clientID))
 
+
 	client = Client.query.get(clientID)
 	clientname = client.firstName + " " + client.lastName
 	legend = clientname + "'s Preferences"

@@ -48,15 +48,23 @@
           							},
 				],
 			data: [
-			  {% for client in clients %}
+				{% for client in clients %}
 				{
 					name: '{{ client.firstName }}' + ' ' + '{{ client.lastName}}',
-					minDuration:'{{ client.clientprefer.minDuration }}',
-				  wed: '{{ client.clientprefer}}',
-				  email: '{{ client.email }}',
-				  mobile: '{{ client.mobile }}',
-				  status: '{{ client.status }}',
-				  clientid: '{{ client.id }}',
+					minDuration:'{{ client.clientprefs.minDuration }}',
+					mon: '{{ Mon[client] }}',
+					tue: '{{ Tue[client] }}',
+					wed: '{{ Wed[client] }}',
+					thur: '{{ Thur[client] }}',
+					fri: '{{ Fri[client] }}',
+					sat: '{{ Sat[client] }}',
+					sun: '{{ Sun[client] }}',
+
+					email: '{{ client.email }}',
+					  mobile: '{{ client.mobile }}',
+					  status: '{{ client.status }}',
+					  clientid: '{{ client.id }}',
+
 				},	
 			  {% endfor %}
 			],
@@ -76,3 +84,18 @@
 {% endblock content %}
 
 
+	for client in clients:
+		print(str(ClientPref.avtimes))
+		availabilities = AvailTimes.query.join(PrefTimes).join(ClientPref).filter(ClientPref.clientid==client.id).all()
+
+		print("The availabilities are " + str(availabilities) + " with length " + str(len(availabilities)))
+
+		dictavail[client] = availabilities
+		print("The dictavail  " + str(dictavail[client])) 
+		# mondayTimes =[x for x in dictavail[client] if x.day=="Monday AM"]
+
+		print(client.firstName)
+		# Get the client
+
+		print(str(client.clientprefer))
+		# Get the clientpref id

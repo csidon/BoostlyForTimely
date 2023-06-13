@@ -59,10 +59,17 @@ db.session.commit()
 
 ## To clear db of all entries, use
 db.drop_all()
-
+from boostly.models import AvailTimes, Client, ClientCompany, ClientPref, Company, Event, PrefTimes, TempWaitAlert, User
 
 # Some adds
-user1 = User(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu")
+from boostly import db
+db.create_all()
+coy1 = Company(companyName="Lena Massage")
+db.session.add(coy1)
+db.session.commit()
+user1 = User(userFirstName="Testy", userLastName="Tester", userEmail="test@test.com", userPassword="$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu", companyid=1)
+db.session.add(user1)
+db.session.commit()
 staff1 = Staff(firstName="The", lastName="Therapist", prefName="Terry", email="terry@pist.com", service="", bookURL="", userid=1)
 client1 = Client(firstName="Richie", lastName="Rich", email="richie@rich.com", staffid=2)
 alert1 = TempWaitAlert(slotStartDateTime="2023-05-16 20:15:00", slotLength=45, staffuid=2, clientid=2)
@@ -76,17 +83,21 @@ client1 = Client(firstName="Baby", lastName="Yoda", email="yoda@client.com", mob
 
 # Prepopulating the db with timeslots 
 # (Not sure if this is acceptable, but coded this way so that it's clear what availtime options there are)
-av1=AvailTimes(timeUnit='Monday AM')
-av2=AvailTimes(timeUnit='Monday PM')
-av3=AvailTimes(timeUnit='Tuesday AM')
-av4=AvailTimes(timeUnit='Tuesday PM')
-av5=AvailTimes(timeUnit='Wednesday AM')
+av1=AvailTimes(timeUnit='Monday')
+av2=AvailTimes(timeUnit='Tuesday')
+av3=AvailTimes(timeUnit='Wednesday')
+av4=AvailTimes(timeUnit='Thursday')
+av5=AvailTimes(timeUnit='Friday')
+av6=AvailTimes(timeUnit='Saturday')
+av7=AvailTimes(timeUnit='Sunday')
 
 db.session.add(av1)
 db.session.add(av2)
 db.session.add(av3)
 db.session.add(av4)
 db.session.add(av5)
+db.session.add(av6)
+db.session.add(av7)
 db.session.commit()
 
 cp1=ClientPref(minDuration=60)

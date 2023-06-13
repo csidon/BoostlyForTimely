@@ -3,8 +3,8 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from boostly import db, bcrypt
-from boostly.models import User
-from boostly.staff.utils import replicateUser
+from boostly.models import User, Company
+# from boostly.staff.utils import replicateUser
 from boostly.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from boostly.users.utils import saveImage
 
@@ -19,16 +19,20 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
+        # First create a new company
+        company = Company(companyName=form.companyName.data)
+        db.session.add(company)        # Adds company to db
+        db.session.commit()         # Commits company to db
+        db.session.refresh(company)     # Allows me to get the companyID
+        coyID = company.id        # can i successfully get the id?
+        print("The Companys id retrieved is : " + str(coyID))
+
         # Using Bcrypt to hash the password so that we don't store passwords in plain text
         hashedPW = bcrypt.generate_password_hash(form.userPassword.data).decode('utf-8')
         # Create an object user with the data collected from the form, passing in the hashed password (instead of cleartext) 
-        user = User(userEmail=form.userEmail.data, userLastName=form.userLastName.data, userFirstName=form.userFirstName.data, userPassword=hashedPW)
+        user = User(userEmail=form.userEmail.data, userLastName=form.userLastName.data, userFirstName=form.userFirstName.data, userPassword=hashedPW, companyid=coyID)
         db.session.add(user)        # Adds user to db
-        db.session.commit()         # Commits user to db
-        db.session.refresh(user)                                           
-        userID = user.id        # can i successfully get the id?
-        print("The User's id retrieved is : " + str(userID))
-        replicateUser(user, userID)
+        db.session.commit()         # Commits user to db                   
 
         flash('Your account has been created. Please log into your account', 'success')
         return redirect(url_for('users.login'))
@@ -67,23 +71,29 @@ def logout():
 @login_required
 def account():
     form = UpdateAccountForm()
+    coyID = current_user.companyid
+    print("The coyID pulled is "+ str(coyID))
+    current_company=Company.query.get(coyID)
+    print("The current_company pulled is "+ str(current_company))
     if form.validate_on_submit():
         if form.uploadImage.data:
             # Saving the picture and updating the database with the hex-ed filename
             hexedImage = saveImage(form.uploadImage.data)
             current_user.userImage = hexedImage
-
         current_user.userFirstName = form.userFirstName.data
         current_user.userLastName = form.userLastName.data
         current_user.userEmail = form.userEmail.data
+        current_company.companyName = form.companyName.data
 
         db.session.commit()
         flash('Your account has been updated', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
+        form.companyName.data = current_company.companyName
         form.userFirstName.data = current_user.userFirstName
         form.userLastName.data = current_user.userLastName
         form.userEmail.data = current_user.userEmail
 
     userImage = url_for('static', filename='profilePics/' + current_user.userImage)
     return render_template('account.html', title='Your Boostly User Account', userImage=userImage, form=form)
+
