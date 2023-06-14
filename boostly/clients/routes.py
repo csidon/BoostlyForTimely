@@ -207,6 +207,7 @@ def displayClientPrefs():
 	FriDic={}
 	SatDic={}
 	SunDic={}
+	clientIDlist=[]
 	
 	for client in clients:
 
@@ -223,10 +224,14 @@ def displayClientPrefs():
 		FriDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else 0
 		SatDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else 0
 		SunDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else 0
+		print("clientid is " + str(client.id))
+		clientIDlist.append(client.id)
+		# clientIDdic[client] += client.id 
+		print(str(clientIDlist))
 
 
 	return render_template('allClientPrefs.html', title='Client Preferences Overview', availabilities=availabilities, \
 			Mon=MonDic, Tue=TueDic, Wed=WedDic, Thur=ThurDic, Fri=FriDic, Sat=SatDic, Sun=SunDic,\
-			 clients=clients, legend="Client Preferences Overview")
+			 clients=clients, legend="Client Preferences Overview", clientidlist=clientIDlist)
 
 
