@@ -179,12 +179,16 @@ def updateClientPref(clientID):
 
 
 
-@clients.route("/<int:staffID>/clients/overview", methods=['GET','POST'])
+@clients.route("/clients/overview", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
-def displayClients(staffID):
-	clients = Client.query.filter(Client.staffid==staffID)
+def displayClients():
+	
+	curr_companyid = current_user.companyid
+	print("The current company is " + str(curr_companyid))
+	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid).all()
+	print("The clients are: " + str(clients))
 
-	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview", staffID=staffID)
+	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview")
 
 
 @clients.route("/clients/pref/overview", methods=['GET','POST'])
@@ -192,13 +196,6 @@ def displayClients(staffID):
 def displayClientPrefs():
 	curr_companyid = current_user.companyid
 	print("The current company is " + str(curr_companyid))
-	# client = Client.query.get_or_404(clientID)
-	# Checks to make sure that the clientID belongs to the logged in user's company
-	# clients_with_company=Client.query.join(ClientCompany).join(Company).filter(Company.id==current_user.companyid).all()
-	# if client not in clients_with_company:
-	# 	abort(403)
-
-	# clients = Client.query.filter(Client.staffid==staffID)
 
 	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid).all()
 	print("The clients are: " + str(clients))
