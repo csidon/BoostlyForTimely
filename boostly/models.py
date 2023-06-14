@@ -37,6 +37,8 @@ class User(db.Model, UserMixin):
     userPassword = db.Column(db.String(60), nullable=False)
     # Each User can only belong to a Company. So 1 Company --> * Users
     companyid = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)   # Attaches user to company.id
+    # Linking User with their alerts (1 User --> * Alerts)
+    waitalerts = db.relationship('TempWaitAlert', backref='alertbelongsto', lazy=True, uselist=False) 
 
     def __repr__(self):
         return f"User('{self.userEmail}', '{self.userPassword}', '{self.userImage}')"
@@ -80,7 +82,7 @@ class ClientPref(db.Model):
     lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
     # 1 record will be created for *each* slot that the client is available for
     # So if client available only for MondayAM, TuesAM and WedsAM, then there will be 3x client pref records
-    availall = db.Column(db.Integer)        # If client checks availall, then no need to check AvailTimes table
+    # availall = db.Column(db.Integer)        # If client checks availall, then no need to check AvailTimes table
     clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)   # Attaches ClientPref to Client's ID
     
     avtimes = db.relationship("AvailTimes", secondary=PrefTimes, back_populates="clientprefs" ) # * clientprefs --> * AvailTimes
@@ -97,15 +99,6 @@ class AvailTimes(db.Model):
 
 
 
-# REMOVE STAFF PREFERENCE TABLE
-# # This table is used to link the client's preference to staff. 
-# # For the MVP, this wont be used because there's only one staff per user so the client either signs up or not. 
-# # Instead, the staffPreference will default to 0 (no preference)
-# class PrefStaff(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     clientprefid = db.Column(db.Integer, db.ForeignKey('client_pref.id'), nullable=False, default=0)      # 0 == no preference
-#     staffprefid = db.Column(db.Integer, nullable=False)
-
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -117,32 +110,43 @@ class Event(db.Model):
     eventUpdated = db.Column(db.DateTime, nullable=False)
 
 
-# class MsgTmpl(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     subj = db.Column(db.String(120), nullable=False)
-#     part1 = db.Column(db.String(120), nullable=False)
-#     part2 = db.Column(db.String(120), nullable=False)
-#     part3 = db.Column(db.String(120), nullable=False)
-#     part4 = db.Column(db.String(120), nullable=False)
-#     part5 = db.Column(db.String(120), nullable=False)           # 1 Staff -> * Alerts
-#     wAlert = db.relationship('TempWaitAlert', backref='msgtmpl', lazy=True) 
-
+# The Message template table store default "canned messages" that are used to alert clients, 
+# broken down into parts to allow inserting i.e. date/time/username data in between
+class MsgTmpl(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    subj1 = db.Column(db.String(120))
+    subj2 = db.Column(db.String(120))
+    part1 = db.Column(db.String(120))
+    part2 = db.Column(db.String(120))
+    part3 = db.Column(db.String(120))
+    part4 = db.Column(db.String(120))
+    part5 = db.Column(db.String(120))           
+    part6 = db.Column(db.String(120))
+    part7 = db.Column(db.String(120))
+    part8 = db.Column(db.String(120))
+    waitalerts = db.relationship('TempWaitAlert', backref='msgtemplate', lazy=True, uselist=False) 
 #     def __repr__(self):
 #         return f"MsgTmpl('{self.id}', '{self.part1}', '{self.part2}','{self.part3}')"
 
 
 
 # This is a table that stores temporary alert data. A cron job can be run daily to remove data that is no longer useful/necessary
+# There are 2 types of temp alerts --> One registers that a slot available, 
+# the other registers that an alert has been sent (and who it's been sent to)
 class TempWaitAlert(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    # Alert data
     slotStartDateTime = db.Column(db.DateTime, nullable=False)
     slotLength = db.Column(db.Integer, nullable=False)
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'))        # Attached when business owner submits waitAlert form part 1
+    msgTmpl = db.Column(db.Integer, db.ForeignKey('msg_tmpl.id'))    # Attached when business owner submits waitAlert form part 1
+
+    # Send data
+    clientid = db.Column(db.Integer)        # This will be null if not sent, otherwise there will be multiple records for each batch notification, 1 for each alert
     sendStatus = db.Column(db.String(30))
     sendFlag = db.Column(db.Integer)
+    # For cron job to look at to know whether to clear out or not
     lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    # msgTmpl = db.Column(db.Integer, db.ForeignKey('msgtmpl.id'), nullable=False)
-    # staffuid = db.Column(db.Integer, nullable=False)
-    clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     status = db.Column(db.String(30))
 
     def __repr__(self):
