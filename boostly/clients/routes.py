@@ -133,7 +133,7 @@ def updateClientPref(clientID):
 	clientname = client.firstName + " " + client.lastName
 	legend = clientname + "'s Preferences"
 	
-	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend)
+	return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend, clientID=clientID)
 
 
 # To create route for updating client preferences

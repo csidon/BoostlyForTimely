@@ -12,13 +12,12 @@
 		</div>
 
 		<script type="module">
+
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
 
 		  new Grid({
-
-
 
 			  columns: [
 				  { id: 'name', name: 'Name' },
@@ -33,12 +32,37 @@
 
 				{ id: 'clientid', name: 'id', hidden: true},
 				{ id: 'edit', name: '',
-        							formatter: (cell, row) => {
-          								return h('button', {
-            								className: 'btn btn-success btn-sm rounded-0 fa fa-edit',
-            								onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`)
-											}, '');},
-          							},
+									formatter: (cell, row, rowIndex) => {
+									const clientID = (rowIndex + 1).toString();
+
+										return h('div', {}, [
+											h('div', {
+												className: 'btn-group',
+											}, [
+												h('button', {
+													className: 'btn btn-success btn-sm rounded-0 fa fa-edit dropdown-toggle',
+													type: 'button',
+													'data-toggle': 'dropdown',
+													'aria-haspopup': 'true',
+													'aria-expanded': 'false',
+												}),
+												h('div', {
+													className: 'dropdown-menu',
+												}, [
+													h('a', {
+
+														className: 'dropdown-item',
+														href: `/clientpref/${row.cells[9].data}/update`,
+													}, 'Update client details'),
+													h('a', {
+														className: 'dropdown-item',
+														href: '#',
+														onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`),
+													}, 'Update client preference'),
+												]),
+											]),
+										]);},
+									},
           		{ id: 'delete', name: '',
         							formatter: (cell, row) => {
           								return h('button', {
@@ -65,7 +89,7 @@
 					  status: '{{ client.status }}',
 					  clientid: '{{ client.id }}',
 
-				},	
+				},
 			  {% endfor %}
 			],
 			search: {
@@ -91,7 +115,7 @@
 		print("The availabilities are " + str(availabilities) + " with length " + str(len(availabilities)))
 
 		dictavail[client] = availabilities
-		print("The dictavail  " + str(dictavail[client])) 
+		print("The dictavail  " + str(dictavail[client]))
 		# mondayTimes =[x for x in dictavail[client] if x.day=="Monday AM"]
 
 		print(client.firstName)
