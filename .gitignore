@@ -5,6 +5,7 @@ boostly/alerts/__pycache__/*
 boostly/clients/__pycache__/*
 boostly/main/__pycache__/*
 boostly/staff/__pycache__/*
+boostly/users/__pycache__/*
 .idea
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

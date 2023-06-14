@@ -127,7 +127,7 @@ def updateClientPref(clientID):
 		flash("Preferences added!", 'success')
 		# Bring the user/staff back to their client overview page
 
-		return redirect(url_for('clients.updateClientPref', clientID=clientID))
+		return redirect(url_for('clients.displayClients', clientID=clientID))
 
 	client = Client.query.get(clientID)
 	clientname = client.firstName + " " + client.lastName
@@ -223,24 +223,6 @@ def displayClientPrefs():
 		FriDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else 0
 		SatDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else 0
 		SunDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else 0
-
-		
-		# MondayDic[client] = list(filter(lambda i : i.timeUnit=='Monday AM',availabilities))
-		# if len(MondayDic[client])==0:
-		# 	MondayDic[client]=0
-		# else:
-		# 	MondayDic[client]=1
-		# print("MonDic is " + str(MondayDic[client]))
-
-		# TuesdayDic[client] = list(filter(lambda i : i.timeUnit=='Tuesday AM',availabilities))
-
-
-		# print(client.firstName)
-		# # Get the client
-
-		# print(str(client.clientprefer))
-		# Get the clientpref id
-
 
 
 	return render_template('allClientPrefs.html', title='Client Preferences Overview', availabilities=availabilities, \
