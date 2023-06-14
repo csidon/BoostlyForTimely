@@ -52,7 +52,7 @@ class Client(db.Model):
     status = db.Column(db.String(30))
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
     companies = db.relationship('Company', secondary=ClientCompany, backref='clientsof')         # Refer to client_company table for client/company relsp
-    clientprefs = db.relationship('ClientPref', backref='client')           # Forming a 1 Client --> * ClientPref relationship
+    clientprefs = db.relationship('ClientPref', backref='client', uselist=False)           # Forming a 1 Client --> * ClientPref relationship
 
     def to_dict(self):
         return {
