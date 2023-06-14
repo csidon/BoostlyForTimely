@@ -109,20 +109,20 @@ def updateClientPref(clientID):
 	print("Existing client preferences found for clientID: " + str(clientID))
 	clientpref = ClientPref.query.filter(ClientPref.clientid==clientID).first()
 	# clientpref = ClientPref.query.filter(ClientPref.clientid==clientID).all()[0]
-	form = ClientPrefForm(data={'minDuration':clientpref.minDuration,'availall':clientpref.availall, 'availtimes':clientpref.avtimes})
+	form = ClientPrefForm(data={'minDuration':clientpref.minDuration, 'availtimes':clientpref.avtimes})
 	print("Let's just check what's in clientpref.avtimes: "+ str(clientpref.avtimes))
 	form.availtimes.query = AvailTimes.query.all()
 	if form.validate_on_submit():
 
 		clientpref.minDuration = form.minDuration.data,
-		clientpref.availall = int(form.availall.data),
-		print("Min dur is " + str(type(form.minDuration.data)) + " and availaAll is " + str(type(form.availall.data)))
+		# clientpref.availall = int(form.availall.data),
+		# print("Min dur is " + str(type(form.minDuration.data)) + " and availaAll is " + str(type(form.availall.data)))
 		db.session.commit()
-		if int(form.availall.data)==0:
-			clientpref.avtimes.clear()
-			clientpref.avtimes.extend(form.availtimes.data)
+		# if int(form.availall.data)==0:
+		clientpref.avtimes.clear()
+		clientpref.avtimes.extend(form.availtimes.data)
 
-			db.session.commit()
+		db.session.commit()
 
 		flash("Preferences added!", 'success')
 		# Bring the user/staff back to their client overview page
@@ -207,6 +207,7 @@ def displayClientPrefs():
 	FriDic={}
 	SatDic={}
 	SunDic={}
+	clientIDlist=[]
 	
 	for client in clients:
 
@@ -223,49 +224,14 @@ def displayClientPrefs():
 		FriDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else 0
 		SatDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else 0
 		SunDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else 0
+		print("clientid is " + str(client.id))
+		clientIDlist.append(client.id)
+		# clientIDdic[client] += client.id 
+		print(str(clientIDlist))
 
 
 	return render_template('allClientPrefs.html', title='Client Preferences Overview', availabilities=availabilities, \
 			Mon=MonDic, Tue=TueDic, Wed=WedDic, Thur=ThurDic, Fri=FriDic, Sat=SatDic, Sun=SunDic,\
-			 clients=clients, legend="Client Preferences Overview")
-
-# avtime = avialtimes.query.join(clientPref).filter(clientPRef.clientid == clientid)
-# select * from avialtime a inner join clientpref c on c.avtimeid= a.id where c.clientid = clietnid
-
-# userList = users.query\
-#     .join(friendships, users.id==friendships.user_id)\
-#     .add_columns(users.userId, users.name, users.email, friends.userId, friendId)\
-#     .filter(users.id == friendships.friend_id)\
-#     .filter(friendships.user_id == userID)\
-#     .paginate(page, 1, False)
-
-# select * from avialtime a inner join clientpref c on c.avtimeid= a.id where c.clientid = clietnid
-
-# class ClientPref(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     minDuration = db.Column(db.Integer, nullable=False, default=60)
-#     lastNotified = db.Column(db.DateTime)
-#     lastClicked = db.Column(db.DateTime)         # For future if able to build SMTP tracking functionality 
-#     lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
-#     # 1 record will be created for *each* slot that the client is available for
-#     # So if client available only for MondayAM, TuesAM and WedsAM, then there will be 3x client pref records
-#     # timeavail = db.Column(db.Integer, nullable=False, default=0)           # 0 == Available for all slots, otherwise refer to AvailTimes table. 
-#     avtimes = db.relationship("AvailTimes", secondary="preftimes", back_populates="clientprefs" )
-#     prefstaffer = db.relationship('PrefStaff', backref='preferwho', lazy=True)
-#     clientid = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)   # Attaches ClientPref to Client's ID
+			 clients=clients, legend="Client Preferences Overview", clientidlist=clientIDlist)
 
 
-# class AvailTimes(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     timeUnit = db.Column(db.String(30), nullable=False, unique=True)    # For now, split into AM and PM chunks. 
-#     clientprefs = db.relationship("ClientPref", secondary="preftimes", back_populates="avtimes" )
-#     def __str__(self):
-#         return self.timeUnit
-
-
-# # Association table connecting the ClientPref with AvailTimes 
-# db.Table(
-#     'preftimes', 
-#     db.Column("clientpref_id", db.ForeignKey('client_pref.id'), primary_key=True),
-#     db.Column("availtimes_id", db.ForeignKey('avail_times.id'), primary_key=True),
-# )
