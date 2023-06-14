@@ -64,6 +64,7 @@ from boostly.models import AvailTimes, Client, ClientCompany, ClientPref, Compan
 # Some adds
 from boostly import db
 db.create_all()
+from boostly.models import AvailTimes, Client, ClientCompany, ClientPref, Company, Event, PrefTimes, TempWaitAlert, User
 coy1 = Company(companyName="Lena Massage")
 db.session.add(coy1)
 db.session.commit()
