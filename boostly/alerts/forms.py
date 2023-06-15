@@ -25,12 +25,14 @@ class WaitAlertForm(FlaskForm):
 
     # clients = []
 
-    # availtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to ", allow_blank=True)
+    # availtimes = 
 
 
 	submit = SubmitField(label='Send Alert')
 
-
+class SelectAlerteesForm(FlaskForm):
+    selected = QuerySelectMultipleFieldWithCheckbox("Alert", allow_blank=True)
+    # selected=
 
 
 
