@@ -29,9 +29,17 @@
 							{{ form.slotLength(class="form-control form-control-lg") }}		
 
 							Message template
-							{{ context.alertSubject1 }} {{ context.companyName }} {{ context. alertSubject2 }}
+							Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context. alertSubject2 }}
 
-							{{ context. alertBody1 }} [Client Name] {{ context.alertBody2 }}
+							Message body:
+							{{ context. alertBody1 }} [Client Name] 
+							{{ context.alertBody2 }} {{ context.slotLength }} {{ context.alertBody3 }} {{ context.bizType }}
+							{{ context.alertBody4 }} 
+							{{ context.slotDay }} {{ context.slotDate }}
+							{{ context.alertBody5 }} {{ context.slotStartTime }} {{ context.alertBody6 }}
+							{{ context.alertBody7 }} 
+
+							{{ context.alertBody8 }} 
 
 
 
@@ -39,7 +47,7 @@
 					<div class="row justify-content-end">
 						<div class="form-group mr-3">
 							<a href={{ url_for('main.dashboard') }} class="btn btn-info">Cancel</a>
-							<button type="submit" class="btn btn-outline-info">Create</button>
+							<button type="submit" class="btn btn-outline-info">Select Alert Recipients</button>
 						</div>
 					</div>
 				</form>

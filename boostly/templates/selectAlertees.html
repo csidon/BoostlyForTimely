@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+	{% block content %}
+	<div class="container">
+		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
+
+
+		<div>
+			<h1>Select clients to alert</h1>
+			{% for human in availhumans %}
+
+				name: {{ human.firstName }},
+
+
+
+			{% endfor %}
+			<hr>
+			<div id="table"></div>
+		</div>
+
+		<script type="module">
+
+
+			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
+			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
+
+
+			var selected=[]
+
+			function onSelectorSelect(id) {
+				console.log("Selected" +  id.toString())
+				// if selected.includes(id){
+				// 	var index = selected.indexOf(id);
+				//   if (index > -1) {
+				//     selected.splice(index, 1);
+				//   }
+				// }
+				// else {
+				// 	selected.append(id)
+				// }
+			}
+			
+			// function onSubmit(){
+			// 	console.log("Submitted " + selected)
+			// 	$(selector).post(URL,data,function(data,status,xhr))
+			// }
+
+
+			new Grid({
+
+				columns: [
+					{ id: 'name', name: 'Name' },
+					{ id: 'slotDay', name: '{{ alertDayOfWeek }}', sort: true },
+					{ id: 'clientid', name: 'id', hidden: true},
+					{ id: 'selected', name: 'Alert?',
+									formatter: (cell, row, rowIndex) => {
+									let clientID = (rowIndex + 1).toString();
+
+										return h('div', {}, [
+											h('div', {
+												className: 'select-group',
+											}, [
+												h('input', {
+													className: 'form-check',
+													type: 'checkbox',
+													onClick: () => onSelectorSelect(row.cells[2].data)
+
+												}),
+
+											]),
+										])
+										;},
+									},
+
+				],
+			data: [
+				{% for human in availhumans %}
+				{
+					name: '{{ human.firstName }}',
+					slotDay: "Test",
+					clientid: '{{ human.id }}',
+
+
+
+
+				},
+				{% endfor %}
+			],
+			search: {
+				selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
+			},
+			sort: true,
+			pagination: true,
+			}).render(document.getElementById('table'));
+
+		</script>
+	</div>
+	
+
+
+	
+{% endblock content %}
+
