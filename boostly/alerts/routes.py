@@ -111,7 +111,7 @@ def newWaitAlert(tempalertid, owneremail):
 		# [(clientpref_id, availtimes_id)]
 
 		flash('Please select the alert recipients', 'success')
-		return redirect(url_for('alert.selectAlertees', tempalertid))
+		return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
 
 	elif request.method == 'GET':
 
