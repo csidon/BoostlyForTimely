@@ -56,7 +56,7 @@
 													}, 'Update client details'),
 													h('a', {
 														className: 'dropdown-item',
-														href: '#',
+														href: `/client/${row.cells[9].data}/update`,
 														onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`),
 													}, 'Update client preference'),
 												]),
@@ -97,6 +97,7 @@
 			},
 			sort: true,
 			pagination: true,
+
 		  }).render(document.getElementById('table'));
 
 		</script>

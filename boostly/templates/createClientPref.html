@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
 <!-- <script src="https://unpkg.com/htmx.org@1.9.2"></script> -->
+<script>
+  $(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+      var isChecked = $(this).is(':checked');
+      $('input[name="availtimes"]').prop('checked', isChecked);
+    });
+  });
+</script>
  <style>
     /* Center the container */
     html, body {
@@ -32,33 +40,24 @@
 							{{ form.minDuration(class="form-control form-control-lg") }}
 						{% endif %}
 					</div>
-					<div class="row">
-					<div class="col">
-<!-- 						<div class="form-group col-sm-6 flex-column d-flex">
-							{{ form.availall.label(class="form-control-label") }}
-							{{ form.availall(class="form-control-label", id="availall-radio") }}
-						</div> -->
-					</div>
-					<div class="col" id="avail-days" style="display: none;">
+<!--					<div class="form-group col-sm-6 flex-column d-flex">-->
+<!--							{{ form.availall.label(class="form-control-label") }}-->
+<!--							{{ form.availall(class="form-control-label", id="availall-radio") }}-->
+<!--						</div>-->
+<!--					</div>-->
+					<div id="avail-days" style="">
 						<div class="form-group col-sm-6 flex-column d-flex">
 							{{ form.availtimes.label(class="form-control-label") }}
+							  <div>
+								<input type="checkbox" id="selectAllCheckbox" style="margin-left: 20px;"> Select All
+							  </div>
 							{{ form.availtimes(class="form-control-label") }}
 						</div>
 					</div>
-						<script>
-<!--						 Add an event listener to the radio button-->
-						document.getElementById("availall-radio").addEventListener("change", function() {
-							var availDays = document.getElementById("avail-days");
-							availDays.style.display = this.value == 0 ? "none" : "block";
-						});
-					</script>
-				</div>
-				<div class="row justify-content-end">
 					<div class="form-group mr-3">
-						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
 						<button type="submit" class="btn btn-submit">Save Preferences</button>
+						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
 					</div>
-				</div>
 			</form>
 
 </div>

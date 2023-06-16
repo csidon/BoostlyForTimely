@@ -185,6 +185,7 @@ ul {
     color:white;
     border-width: 2px;
   }
+
   .cancel-btn{
     background-color:white;
     border-width: 2px;
@@ -238,3 +239,10 @@ ul {
   align-items: center;
   justify-content: center;
 }
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+  }

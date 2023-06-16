@@ -214,16 +214,15 @@ def displayClientPrefs():
 		# clientpref = ClientPref.query.filter(ClientPref.clientid==client.id)		# ALso include company ID .filter companyID
 		print(str(ClientPref.avtimes))
 		availabilities = AvailTimes.query.join(PrefTimes).join(ClientPref).filter(ClientPref.clientid==client.id).all()
-
 		# availabilities = preftimes.query.filter()
 		print("The availabilities are " + str(availabilities) + " with length " + str(len(availabilities)))
-		MonDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Monday',availabilities))) >0 else 0
-		TueDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Tuesday',availabilities))) >0 else 0
-		WedDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Wednesday',availabilities))) >0 else 0
-		ThurDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Thursday',availabilities))) >0 else 0
-		FriDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else 0
-		SatDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else 0
-		SunDic[client] = 1 if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else 0
+		MonDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Monday',availabilities))) >0 else "⚪"
+		TueDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Tuesday',availabilities))) >0 else "⚪"
+		WedDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Wednesday',availabilities))) >0 else "⚪"
+		ThurDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Thursday',availabilities))) >0 else "⚪"
+		FriDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Friday',availabilities))) >0 else "⚪"
+		SatDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Saturday',availabilities))) >0 else "⚪"
+		SunDic[client] = "⚫" if len(list(filter(lambda i : i.timeUnit=='Sunday',availabilities))) >0 else "⚪"
 		print("clientid is " + str(client.id))
 		clientIDlist.append(client.id)
 		# clientIDdic[client] += client.id 
