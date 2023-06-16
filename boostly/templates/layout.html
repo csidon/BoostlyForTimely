@@ -50,6 +50,16 @@
 		        <div class="navbar-nav">
 		        	<!-- # Using ginja2 conditional and using current_user.is_authenticated to check if user is logged in or not -->
 		        	{% if current_user.is_authenticated %}
+					<div class="dropdown">
+						  <button class="btn dropdown-toggle" type="button" id="clientDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Your clients
+						  </button>
+						  <div class="dropdown-menu" aria-labelledby="clientDropdown">
+						  	<a class="dropdown-item" href="{{ url_for('clients.newClient') }}">Add new client</a>
+							<a class="dropdown-item" href="{{ url_for('clients.displayClients') }}">Client Information</a>
+							<a class="dropdown-item" href="{{ url_for('clients.displayClientPrefs') }}">Client Preferences</a>
+						  </div>
+					</div>
 		        		<a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.account') }}">Account</a>
 		        		<a class="nav-item nav-link"  style="color:#424242;" href="{{ url_for('users.logout') }}">Logout</a>
 		        	{% else %}

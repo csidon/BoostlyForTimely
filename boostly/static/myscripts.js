@@ -136,5 +136,3 @@ import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 //			pagination: true,
 //}).render(document.getElementById('table'));
 
-
-
