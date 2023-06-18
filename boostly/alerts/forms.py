@@ -35,7 +35,6 @@ class SelectAlerteesForm(FlaskForm):
     # selected=
 
 
-
     # id = db.Column(db.Integer, primary_key = True)
     # slotStartDateTime = db.Column(db.DateTime, nullable=False)
     # slotLength = db.Column(db.Integer, nullable=False)
@@ -45,3 +44,4 @@ class SelectAlerteesForm(FlaskForm):
     # msgTmpl = db.Column(db.Integer, db.ForeignKey('msgtmpl.id'), nullable=False)
     # staff = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)
     # client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+

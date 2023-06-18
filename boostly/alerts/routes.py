@@ -3,6 +3,7 @@
 
 
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, jsonify
+from flask_cors import CORS
 from boostly import db
 from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
 from boostly.models import User, TempWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
@@ -12,6 +13,7 @@ from datetime import datetime
 
 
 alerts = Blueprint('alerts', __name__)
+# CORS(alerts)
 
 
 
@@ -114,7 +116,6 @@ def newWaitAlert(tempalertid, owneremail):
 		return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
 
 	elif request.method == 'GET':
-
 		dbSlotDT = alert.slotStartDateTime
 
 		context['slotDay'] = dbSlotDT.strftime("%A")
@@ -134,6 +135,24 @@ def newWaitAlert(tempalertid, owneremail):
 ##  Routes for selecting clients that we want to alert/notify
 ##----------------------------------------------------------------------------------------------------
 
+# @alerts.route('/save_clients', methods=['POST'])
+# def save_clients():
+# 	if request.method == 'OPTIONS':
+# 		# Handle CORS preflight request
+# 		return build_preflight_response()
+# 	data = request.json
+# 	checked_clients = data['checkedClients']
+# 	print("The clients are: " + checked_clients)
+# 	# Perform the necessary operations to store the checked clients in the database
+# 	# ...
+#
+# 	# Return a response to the frontend
+# 	return jsonify({testing})
+# def build_preflight_response():
+#     response = make_response()
+#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+#     response.headers.add('Access-Control-Allow-Methods', 'POST')
+#     return response
 @alerts.route("/waitalert/<int:tempalertid>/alertees", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def selectAlertees(tempalertid):
@@ -173,7 +192,7 @@ def selectAlertees(tempalertid):
 	# context['name'] =  msg.subj1
 	context['slotAvailDay'] =  alert.slotStartDateTime.strftime("%A")  
 	# context['lastAlerted'] =  		# To add last alerted
-	# context['alertyesno'] = msg.part1     
+	# context['alertyesno'] = msg.part1
 
 
 

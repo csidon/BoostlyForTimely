@@ -13,6 +13,7 @@ html, body {
 }
 </style>
 
+
 <div class="container">
 		<h2>Kia ora {{ current_user.userFirstName }}!</h2>
 		<p>Notify Your Waitlist of Slot Availability</p> 
@@ -20,35 +21,37 @@ html, body {
 <div class="container justify-content-center pt-4">
 	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
 	 <div class="card pt-4 px-4" style="width: 45rem;">
-		<form class="form-group" method="POST">
+		<form class="form-group" action="" method="POST">
 			{{ form.hidden_tag() }}
 
-			<div class="form-group">
+			<div class="form-group" >
 
 				<div class="row text-left">
 					<div class="col">
 						<!-- Display of content -->
 						{{ form.slotStartDate.label(class="form-control-label") }}
-						{{ form.slotStartDate(class="form-control form-control-lg") }}
+						{{ form.slotStartDate(class="form-control form-control-lg", id="data-input") }}
 
 						{{ form.slotStartTime.label(class="form-control-label") }}
-						{{ form.slotStartTime(class="form-control form-control-lg") }}
+						{{ form.slotStartTime(class="form-control form-control-lg", id="timeInput") }}
 
 						{{ form.slotLength.label(class="form-control-label") }}
-						{{ form.slotLength(class="form-control form-control-lg") }}
+						{{ form.slotLength(class="form-control form-control-lg", id="availabilityInput") }}
+						<div class="row justify-content-center pt-4">
+							<button type="submit" class="btn btn-submit" id="refresh-button">Generate template</button>
+						</div>
 					</div>
 
-					<div class="col">
+					<div class="col" id="message-preview">
 						<h2>Message template</h2>
 						<p class="subject">Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context.alertSubject2 }}</p>
 
-						<div class="message-body">
+						<div class="card px-2 message-body" style="background-color:#F4E4E2;">
 							<p>{{ context.alertBody1 }} [Client Name]</p>
 							<div class="slot-details">
-								<p>{{ context.alertBody2 }} {{ context.slotLength }} {{ context.alertBody3 }} {{ context.bizType }}</p>
-								<p>{{ context.alertBody4 }}</p>
-								<p>{{ context.slotDay }} {{ context.slotDate }}</p>
-								<p>{{ context.alertBody5 }} {{ context.slotStartTime }} {{ context.alertBody6 }}</p>
+								<p>{{ context.alertBody2 }} <strong>{{ context.slotLength }} {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
+								<strong>{{ context.slotDay }}, {{ context.slotDate }}</strong>
+								<p>{{ context.alertBody5 }} <strong> {{ context.slotStartTime }}</strong> {{ context.alertBody6 }}</p>
 							</div>
 							<div class="alert-body">
 								<p>{{ context.alertBody7 }}</p>
@@ -82,8 +85,6 @@ html, body {
         //     // show the output:
         //     // output.innerText = selectedStatus ? `You selected ${selectedStatus}` : `You haven't selected any status`;
         // });
-
-
 	</script>
 
 

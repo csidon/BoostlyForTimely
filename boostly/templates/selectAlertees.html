@@ -25,20 +25,7 @@
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
 
-			var selected=[]
 
-			function onSelectorSelect(id) {
-				console.log("Selected" +  id.toString())
-				// if selected.includes(id){
-				// 	var index = selected.indexOf(id);
-				//   if (index > -1) {
-				//     selected.splice(index, 1);
-				//   }
-				// }
-				// else {
-				// 	selected.append(id)
-				// }
-			}
 			
 			// function onSubmit(){
 			// 	console.log("Submitted " + selected)
@@ -93,7 +80,14 @@
 			pagination: true,
 			}).render(document.getElementById('table'));
 
+
 		</script>
+
+			<div class="row pt-5 justify-content-end pr-1">
+				<a href={{ url_for('main.dashboard') }} class="btn cancel-btn pr-1">Cancel</a>
+				<button type="submit" class="btn btn-submit">Send Alert</button>
+			</div>
+
 	</div>
 	
 
