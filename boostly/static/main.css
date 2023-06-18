@@ -246,3 +246,35 @@ ul {
     border-radius: 50%;
     background-color: red;
   }
+
+h2 {
+    margin: 0 0 20px;
+}
+
+p {
+    margin: 0 0 10px;
+}
+
+.subject {
+    font-weight: bold;
+}
+
+.message-body {
+    margin-top: 20px;
+}
+
+.message-body p {
+    margin: 10px 0;
+}
+
+.slot-details {
+    margin-bottom: 10px;
+}
+
+.alert-body {
+    margin-bottom: 10px;
+}
+
+.alert-body:last-child {
+    margin-bottom: 0;
+}

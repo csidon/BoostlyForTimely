@@ -1,59 +1,71 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<style>
+/* Center the container */
+html, body {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+
+}
+</style>
 
 <div class="container">
 		<h2>Kia ora {{ current_user.userFirstName }}!</h2>
 		<p>Notify Your Waitlist of Slot Availability</p> 
-	</div>
-<div class="container-fluid px-1 py-5 mx-5">
-	<div class="row d-flex justify-content-center">
-		<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
-			<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
-			 <div class="card">
-				<form class="form-card py-3 mx-5" method="POST">
-					{{ form.hidden_tag() }}
-					<div class="row justify-content-between text-left">
-						<div class="form-group col-sm-6 flex-column d-flex">
+</div>
+<div class="container justify-content-center pt-4">
+	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+	 <div class="card pt-4 px-4" style="width: 45rem;">
+		<form class="form-group" method="POST">
+			{{ form.hidden_tag() }}
 
+			<div class="form-group">
 
+				<div class="row text-left">
+					<div class="col">
+						<!-- Display of content -->
+						{{ form.slotStartDate.label(class="form-control-label") }}
+						{{ form.slotStartDate(class="form-control form-control-lg") }}
 
-							<!-- Display of content -->
-							{{ form.slotStartDate.label(class="form-control-label") }}
-							{{ form.slotStartDate(class="form-control form-control-lg") }}		
+						{{ form.slotStartTime.label(class="form-control-label") }}
+						{{ form.slotStartTime(class="form-control form-control-lg") }}
 
-							{{ form.slotStartTime.label(class="form-control-label") }}
-							{{ form.slotStartTime(class="form-control form-control-lg") }}		
+						{{ form.slotLength.label(class="form-control-label") }}
+						{{ form.slotLength(class="form-control form-control-lg") }}
+					</div>
 
-							{{ form.slotLength.label(class="form-control-label") }}
-							{{ form.slotLength(class="form-control form-control-lg") }}		
+					<div class="col">
+						<h2>Message template</h2>
+						<p class="subject">Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context.alertSubject2 }}</p>
 
-							Message template
-							Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context. alertSubject2 }}
-
-							Message body:
-							{{ context. alertBody1 }} [Client Name] 
-							{{ context.alertBody2 }} {{ context.slotLength }} {{ context.alertBody3 }} {{ context.bizType }}
-							{{ context.alertBody4 }} 
-							{{ context.slotDay }} {{ context.slotDate }}
-							{{ context.alertBody5 }} {{ context.slotStartTime }} {{ context.alertBody6 }}
-							{{ context.alertBody7 }} 
-
-							{{ context.alertBody8 }} 
-
-
-
-	
-					<div class="row justify-content-end">
-						<div class="form-group mr-3">
-							<a href={{ url_for('main.dashboard') }} class="btn btn-info">Cancel</a>
-							<button type="submit" class="btn btn-outline-info">Select Alert Recipients</button>
+						<div class="message-body">
+							<p>{{ context.alertBody1 }} [Client Name]</p>
+							<div class="slot-details">
+								<p>{{ context.alertBody2 }} {{ context.slotLength }} {{ context.alertBody3 }} {{ context.bizType }}</p>
+								<p>{{ context.alertBody4 }}</p>
+								<p>{{ context.slotDay }} {{ context.slotDate }}</p>
+								<p>{{ context.alertBody5 }} {{ context.slotStartTime }} {{ context.alertBody6 }}</p>
+							</div>
+							<div class="alert-body">
+								<p>{{ context.alertBody7 }}</p>
+							</div>
+							<div class="alert-body">
+								<p>{{ context.alertBody8 }}</p>
+							</div>
+						</div>
+						<div class="row pt-5 justify-content-end">
+							<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
+						<button type="submit" class="btn btn-submit">Select Alert Recipients</button>
 						</div>
 					</div>
-				</form>
-			 </div>
-		</div>
-	</div>
+				</div>
+			</div>
+		</form>
+	 </div>
 </div>
 	<script>
 
