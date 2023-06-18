@@ -32,9 +32,9 @@ function updateMessagePreview() {
 }
 
 // Attach event listeners to update preview on field changes
-document.getElementById("dateInput").addEventListener("change", updateMessagePreview);
-document.getElementById("timeInput").addEventListener("change", updateMessagePreview);
-document.getElementById("availabilityInput").addEventListener("input", updateMessagePreview);
+//document.getElementById("dateInput").addEventListener("change", updateMessagePreview);
+//document.getElementById("timeInput").addEventListener("change", updateMessagePreview);
+//document.getElementById("availabilityInput").addEventListener("input", updateMessagePreview);
 
 function hideNavbar() {
   // Get the current URL
@@ -59,7 +59,6 @@ function hideNavbar() {
   }
 }
 
-import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
 
 //function createDropdownButton(cell, row, rowIndex) {
@@ -136,3 +135,41 @@ import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 //			pagination: true,
 //}).render(document.getElementById('table'));
 
+//STORE CLIENT IDs IN THE LIST
+let checkedClients = [];
+
+function onSelectorSelect(id) {
+    console.log("checkedClients");
+    const clientId = id;
+    const isChecked = event.target.checked;
+
+      if (isChecked) {
+        // Add client ID to the list
+        checkedClients.push(clientId);
+      } else {
+        // Remove client ID from the list
+        const index = checkedClients.indexOf(clientId);
+        if (index > -1) {
+          checkedClients.splice(index, 1);
+        }
+      }
+    console.log(checkedClients);
+
+};
+
+//    fetch('http://localhost:5000/save_clients', {
+//        method: 'POST',
+//        headers: {
+//            'Content-Type': 'application/json',
+//        },
+//        body: JSON.stringify({ checkedClients }),
+//    })
+//    .then(response => response.json())
+//    .then(data => {
+//    // Handle the response from the Flask API
+//    console.log(data);
+//    })
+//    .catch(error => {
+//    // Handle any errors
+//    console.error('Error:', error);
+//    });

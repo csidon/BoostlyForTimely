@@ -53,12 +53,11 @@
 
 														className: 'dropdown-item',
 														href: `/clientpref/${row.cells[9].data}/update`,
-													}, 'Update client details'),
+													}, 'Update client preference'),
 													h('a', {
 														className: 'dropdown-item',
 														href: `/client/${row.cells[9].data}/update`,
-														onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`),
-													}, 'Update client preference'),
+													}, 'Update client details'),
 												]),
 											]),
 										]);},
