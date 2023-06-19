@@ -121,3 +121,6 @@ db.session.commit()
 #### IMPORTANT!!! ####
 MAKE SURE THAT AWS SECURITY CREDENTIALS ARE SET FOR ELASTIC BEANSTALK!
 https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/deployment-beanstalk-specify-credentials.html
+
+# Go to https://us-east-1.console.aws.amazon.com/iamv2/home#/users/details/ses-smtp-user.20230619-171053?section=permissions
+# Under Security Credentials, select Create Access Key and make sure that you select the option for SES/AWS resources
