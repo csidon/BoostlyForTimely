@@ -14,6 +14,9 @@ class QuerySelectMultipleFieldWithCheckbox(QuerySelectMultipleField):
 
 class WaitAlertForm(FlaskForm):
 	# staff = QuerySelectField		# additional functionality to create ability to change
+	slotStartDate = DateField('Date of available appointment slot', format="%Y-%m-%d", id="dateInput")
+	slotStartTime = TimeField('Appointment Start Time', validators=[DataRequired()], id="timeInput")
+	slotLength =  IntegerField('Slot availability length (in mins)', validators=[DataRequired()], id="availabilityInputInput")
 	slotStartDate = DateField('Date of available appointment slot', format="%Y-%m-%d")
 	slotStartTime = TimeField('Appointment Start Time', validators=[DataRequired()])
 	slotLength =  IntegerField('Slot availability length (in mins)', validators=[DataRequired(), NumberRange(min=15)])

@@ -42,7 +42,7 @@ def newWaitAlert(tempalertid, owneremail):
 		alert = TempWaitAlert.query.get_or_404(tempalertid)
 
 	context['alertSubject1'] =  msg.subj1
-	context['companyName'] =  current_user.coyowner.companyName
+	# context['companyName'] =  current_user.coyowner.companyName
 	context['alertSubject2'] =  msg.subj2
 	context['alertBody1'] = msg.part1                                                   # Hi + [clientName]
 	context['alertBody2'] = msg.part2                                                   # I’m contacting everyone on my waitlist as a
@@ -77,9 +77,10 @@ def newWaitAlert(tempalertid, owneremail):
 	context['bookingURL'] = '[staff.bookURL]'
 
 	if form.validate_on_submit():
+
 		# Collect data from form and update TempWaitAlert
 		# Combine start date and time to startDateTime
-  
+
 		alert.slotStartDateTime = datetime.combine(form.slotStartDate.data, form.slotStartTime.data)
 		alert.slotLength = form.slotLength.data
 		# Attach current_user.id to userid

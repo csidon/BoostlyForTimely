@@ -22,14 +22,14 @@ function filterTable() {
   }
 }
 
-function updateMessagePreview() {
-  var date = document.getElementById("dateInput").value;
-  var time = document.getElementById("timeInput").value;
-  var availabilityLength = document.getElementById("availabilityInput").value;
-
-  var messagePreview = "Hello, I am contacting everyone on my waitlist as " + availabilityLength + " minute slot available on " + date + " starting on " + time;
-  document.getElementById("messagePreview").value = messagePreview;
-}
+//function updateMessagePreview() {
+//  var date = document.getElementById("dateInput").value;
+//  const time = document.querySelector('[name="slotStartDate"]').value;
+//  var availabilityLength = document.getElementById("availabilityInput").value;
+//
+////  var messagePreview = "Hello, I am contacting everyone on my waitlist as " + availabilityLength + " minute slot available on " + date + " starting on " + time;
+//  document.getElementById("tempTime").value = time;
+//}
 
 // Attach event listeners to update preview on field changes
 //document.getElementById("dateInput").addEventListener("change", updateMessagePreview);
