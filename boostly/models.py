@@ -50,6 +50,7 @@ class Client(db.Model):
     firstName = db.Column(db.String(100), nullable=False)
     lastName = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
+    bookingURL = db.Column(db.String(120), nullable=False, default="remove default!!")
     mobile = db.Column(db.Integer)
     status = db.Column(db.String(30))
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes

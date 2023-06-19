@@ -22,6 +22,7 @@ html, body {
 	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
 	 <div class="card pt-4 px-4" style="width: 45rem;">
 		<form class="form-group" action="" method="POST">
+			<!-- # Hidden tag method adds a CSRF token -->
 			{{ form.hidden_tag() }}
 
 			<div class="form-group" >
@@ -30,7 +31,7 @@ html, body {
 					<div class="col">
 						<!-- Display of content -->
 						{{ form.slotStartDate.label(class="form-control-label") }}
-						{{ form.slotStartDate(class="form-control form-control-lg", id="data-input") }}
+						{{ form.slotStartDate(class="form-control form-control-lg", id="dateInput") }}
 
 						{{ form.slotStartTime.label(class="form-control-label") }}
 						{{ form.slotStartTime(class="form-control form-control-lg", id="timeInput") }}
@@ -38,11 +39,11 @@ html, body {
 						{{ form.slotLength.label(class="form-control-label") }}
 						{{ form.slotLength(class="form-control form-control-lg", id="availabilityInput") }}
 						<div class="row justify-content-center pt-4">
-							<button type="submit" class="btn btn-submit" id="refresh-button">Generate template</button>
+							<button type="button" class="btn btn-submit" id="refresh-button">Generate template</button>
 						</div>
 					</div>
 
-					<div class="col" id="message-preview">
+					<div class="col">
 						<h2>Message template</h2>
 						<p class="subject">Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context.alertSubject2 }}</p>
 
@@ -51,7 +52,7 @@ html, body {
 							<div class="slot-details">
 								<p>{{ context.alertBody2 }} <strong>{{ context.slotLength }} {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
 								<strong>{{ context.slotDay }}, {{ context.slotDate }}</strong>
-								<p>{{ context.alertBody5 }} <strong> {{ context.slotStartTime }}</strong> {{ context.alertBody6 }}</p>
+								<p>{{ context.alertBody5 }} <strong id="tempTime"></strong> {{ context.alertBody6 }}</p>
 							</div>
 							<div class="alert-body">
 								<p>{{ context.alertBody7 }}</p>
@@ -62,7 +63,7 @@ html, body {
 						</div>
 						<div class="row pt-5 justify-content-end">
 							<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
-						<button type="submit" class="btn btn-submit">Select Alert Recipients</button>
+						<button type="submit" class="btn btn-submit" value="sub-button">Select Alert Recipients</button>
 						</div>
 					</div>
 				</div>
@@ -85,6 +86,36 @@ html, body {
         //     // show the output:
         //     // output.innerText = selectedStatus ? `You selected ${selectedStatus}` : `You haven't selected any status`;
         // });
+
+    var savedData = localStorage.getItem('savedData');
+    if (savedData) {
+      document.getElementById('timeInput').value = savedData;
+    }
+
+
+    document.getElementById('refresh-button').addEventListener('click', function() {
+		var slotStartDate = document.getElementById('dateInput').value;
+      var slotStartTime = document.getElementById('timeInput').value;
+      var slotLength = document.getElementById('availabilityInput').value;
+		console.log("slotLength");
+      // Store the values in session storage
+      sessionStorage.setItem('slotStartDate', slotStartDate);
+      sessionStorage.setItem('slotStartTime', slotStartTime);
+      sessionStorage.setItem('slotLength', slotLength);
+
+      var getDate = sessionStorage.getItem('slotStartDate')
+      var getTime = sessionStorage.getItem('slotStartTime')
+      var getLength = sessionStorage.getItem('slotLength')
+
+      document.getElementById("tempTime").value = getTime;
+
+
+		// Optional: Provide feedback or perform additional actions
+
+
+
+		location.reload();
+    });
 	</script>
 
 

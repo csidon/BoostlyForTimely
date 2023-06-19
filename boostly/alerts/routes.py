@@ -6,6 +6,7 @@ from flask import render_template, url_for, flash, redirect, request, abort, Blu
 from flask_cors import CORS
 from boostly import db
 from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
+from boostly.alerts.emailAlert import sendEmail
 from boostly.models import User, TempWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
 from flask_login import current_user, login_required
 from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to request.form
@@ -21,7 +22,7 @@ alerts = Blueprint('alerts', __name__)
 @alerts.route("/waitalert/<int:tempalertid>/<string:owneremail>", methods=['GET','POST'])
 # @login_required             # Needed for routes that can only be accessed after login
 def newWaitAlert(tempalertid, owneremail):
-	alert = TempWaitAlert.query.get_or_404(tempalertid)
+	
 	# if owneremail != current_user.userEmail:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
 	#     abort(403)
 	# If check is successful, then the alert belongs to current_user
@@ -34,8 +35,14 @@ def newWaitAlert(tempalertid, owneremail):
 	print("Message retrieved: " + str(msg))
 
 	context = dict()
+	alert=TempWaitAlert()
+	if tempalertid==0 and owneremail=="new":
+		alert = TempWaitAlert(slotLength=0, slotStartDateTime=datetime.now())
+	else:
+		alert = TempWaitAlert.query.get_or_404(tempalertid)
+
 	context['alertSubject1'] =  msg.subj1
-	context['companyName'] =  current_user.coyowner.companyName
+	# context['companyName'] =  current_user.coyowner.companyName
 	context['alertSubject2'] =  msg.subj2
 	context['alertBody1'] = msg.part1                                                   # Hi + [clientName]
 	context['alertBody2'] = msg.part2                                                   # I’m contacting everyone on my waitlist as a
@@ -71,9 +78,10 @@ def newWaitAlert(tempalertid, owneremail):
 	context['bookingURL'] = '[staff.bookURL]'
 
 	if form.validate_on_submit():
+
 		# Collect data from form and update TempWaitAlert
 		# Combine start date and time to startDateTime
-  
+
 		alert.slotStartDateTime = datetime.combine(form.slotStartDate.data, form.slotStartTime.data)
 		alert.slotLength = form.slotLength.data
 		# Attach current_user.id to userid
@@ -81,36 +89,17 @@ def newWaitAlert(tempalertid, owneremail):
 		alert.status = "draft"
 		alert.msgTmpl = msg.id
 		lastUpdated = datetime.now()
-		db.session.commit()
 
-		# availhumans={}
-
-		# Then redirect user to select clients ("/waitalert/<int:tempalertid>/alertees)
-
-
-
-
-
-		
-		# Send all the form data to EmailAlert.py, which will then do the following FOR EACH CLIENT
-		# slotDateTime = ""           # ** get the date and time, format string, then convert to datetime object **
-		# alert = TempWaitAlert(
-		#     slotStartDateTime=slotDateTime, 
-		#     slotLength=form.slotLength.data, 
-		#     msgTmpl = 1,            # Use the default message template always for now 
-		#     staff=  # lookup staffID based on alertID, 
-		#     client=client       # Referencing client of clients
-		#     )
-		# # Send alert, get send status, then update to TempWaitAlert table
-		# db.session.add(alert)
-		# db.session.commit()
-		# # When all of the clients in the waitlist have been committed to database
-		# # In theory, here we should have a success/failure flag system that would check send status and report back to client. That's for v2
-		
-		# 1) Update TempWaitAlert table with choices and append the user's id
-		# Get the date that is selected, check what day of the week <<isoweekday()>> it is, 
-		## then search all availtime_ids that match the isoweekday() of slotStartDate and display the clients
-		# [(clientpref_id, availtimes_id)]
+		if tempalertid==0 and owneremail=="new":
+			# This will be a new entry, so add to database and get new alertID
+			db.session.add(alert)
+			db.session.commit()
+			db.session.refresh(alert)     # Allows me to get the companyID
+			tempalertid = alert.id        # can i successfully get the id?
+			print("The Alert id retrieved is : " + str(tempalertid))
+		else:
+			# Just update the existing alert entry
+			db.session.commit()
 
 		flash('Please select the alert recipients', 'success')
 		return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
@@ -163,28 +152,12 @@ def selectAlertees(tempalertid):
 	print("The current company is " + str(curr_companyid))
 	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid)
 	print("The clients are: " + str(clients))
-
-	# outLoop = ClientPref.query.join(PrefTimes).join(AvailTimes).filter(ClientPref.avtimes==alertDayOfWeek)
-	# print("Available humans outloop pulled are: " + str(outLoop))
 	print("alertDayOfWeek is " + str(alertDayOfWeek) + " with type " + str(type(alertDayOfWeek)))
-	# checkAvailTimes = AvailTimes.query.filter(AvailTimes.timeUnit==alertDayOfWeek).all()
-	# print("checkAvailTimes inloop pulled are: " + str(checkAvailTimes))
-	# outloop = ClientPref.query.join(PrefTimes).join(AvailTimes).filter(AvailTimes.timeUnit==alertDayOfWeek).all()
-	# print("Available humans outloop pulled are: " + str(outloop))
+
 	availhumans = []
 	availhumannames = []
 
-	for client in clients:
-		inloop = ClientPref.query.join(PrefTimes).join(AvailTimes)\
-					.filter(AvailTimes.timeUnit==alertDayOfWeek)\
-					.filter(ClientPref.clientid==client.id).all()
-		if len(inloop) > 0:
-			# availhumans.append(client.id) 
-			# availhumannames.append(client.firstName + " " + client.lastName) 
-			availhumans.append(client)
-
-		print("Available humans inloop pulled are: " + str(availhumans))
-	
+	alertid = tempalertid
 	#-- Now we present the data in the UI table
 	print("The avail human names are: " + str(availhumans))
 	form = SelectAlerteesForm()
@@ -193,7 +166,36 @@ def selectAlertees(tempalertid):
 	context['slotAvailDay'] =  alert.slotStartDateTime.strftime("%A")  
 	# context['lastAlerted'] =  		# To add last alerted
 	# context['alertyesno'] = msg.part1
+	if form.validate_on_submit():
+		selectedClients = form.selectedClients.data.split(',')
+		# We need to process the selected client ids here but for now let's just print it
+		companyname =  current_user.coyowner.companyName
+		# sendEmail(alertid, companyname, clientid, staffname)
+		for client in selectedClients:
+			print("Checking that this is a clientid" + str(client) + " with the right datatype " + str(type(client)))
+			sendEmail(tempalertid, companyname, int(client), current_user.userFirstName)
+		print("The selected clients are" + str(selectedClients))
+
+		return jsonify({'message': 'Selected clients received successfully'})
+	# elif:
+	# 	return jsonify({'message': 'Form validation failed'})
+
+	elif request.method == 'GET':
+		for client in clients:
+			inloop = ClientPref.query.join(PrefTimes).join(AvailTimes)\
+						.filter(AvailTimes.timeUnit==alertDayOfWeek)\
+						.filter(ClientPref.clientid==client.id).all()
+			if len(inloop) > 0:
+				# availhumans.append(client.id) 
+				# availhumannames.append(client.firstName + " " + client.lastName) 
+				availhumans.append(client)
+
+			print("Available humans inloop pulled are: " + str(availhumans))
 
 
+	return render_template('selectAlertees.html', availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
-	return render_template('selectAlertees.html', availhumans=availhumans, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
+
+# @alerts.route("/waitalert/all", methods=['GET','POST'])
+# @login_required             # Needed for routes that can only be accessed after login
+# def allAlerts(tempalertid):
