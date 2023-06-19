@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm				# Provides form validation functionality
 from wtforms.widgets import ListWidget, CheckboxInput				
 from wtforms import StringField, SubmitField, DateField, SelectMultipleField, TimeField, IntegerField, HiddenField
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, NumberRange
 
 
 
@@ -16,7 +16,7 @@ class WaitAlertForm(FlaskForm):
 	# staff = QuerySelectField		# additional functionality to create ability to change
 	slotStartDate = DateField('Date of available appointment slot', format="%Y-%m-%d")
 	slotStartTime = TimeField('Appointment Start Time', validators=[DataRequired()])
-	slotLength =  IntegerField('Slot availability length (in mins)', validators=[DataRequired()])
+	slotLength =  IntegerField('Slot availability length (in mins)', validators=[DataRequired(), NumberRange(min=15)])
 
 
     # To get the date that is selected, check what day of the week <<isoweekday()>> it is, 

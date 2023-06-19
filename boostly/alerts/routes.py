@@ -74,7 +74,6 @@ def newWaitAlert(tempalertid, owneremail):
 
 	context['clientName'] = '[BobTheClient]'
 
-	context['staffName'] = '[staff.prefName]'
 	context['bookingURL'] = '[staff.bookURL]'
 
 	if form.validate_on_submit():
