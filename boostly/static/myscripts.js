@@ -135,27 +135,24 @@ function hideNavbar() {
 //			pagination: true,
 //}).render(document.getElementById('table'));
 
+
 //STORE CLIENT IDs IN THE LIST
-let checkedClients = [];
+// Array stores selected client IDs
+let selectedClients = []
 
-function onSelectorSelect(id) {
-    console.log("checkedClients");
-    const clientId = id;
-    const isChecked = event.target.checked;
-
-      if (isChecked) {
-        // Add client ID to the list
-        checkedClients.push(clientId);
-      } else {
-        // Remove client ID from the list
-        const index = checkedClients.indexOf(clientId);
-        if (index > -1) {
-          checkedClients.splice(index, 1);
-        }
-      }
-    console.log(checkedClients);
-
+function onSelectorSelect(clientID) {
+	if (selectedClients.includes(clientID)) {
+		// Client ID already selected, remove it from the list
+		selectedClients = selectedClients.filter(id => id !== clientId);
+	} else {
+		// Add the client ID to the list of selected clients
+		selectedClients.push(clientID);
+	}
+	// Updating the value of the hidden field
+	const selectedClientsField = document.getElementById('selected_clients');
+	selectedClientsField.value = selectedClients.join(',');
 };
+
 
 //    fetch('http://localhost:5000/save_clients', {
 //        method: 'POST',

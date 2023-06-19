@@ -22,6 +22,7 @@ html, body {
 	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
 	 <div class="card pt-4 px-4" style="width: 45rem;">
 		<form class="form-group" action="" method="POST">
+			<!-- # Hidden tag method adds a CSRF token -->
 			{{ form.hidden_tag() }}
 
 			<div class="form-group" >

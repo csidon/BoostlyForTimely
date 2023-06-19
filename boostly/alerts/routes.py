@@ -163,28 +163,12 @@ def selectAlertees(tempalertid):
 	print("The current company is " + str(curr_companyid))
 	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid)
 	print("The clients are: " + str(clients))
-
-	# outLoop = ClientPref.query.join(PrefTimes).join(AvailTimes).filter(ClientPref.avtimes==alertDayOfWeek)
-	# print("Available humans outloop pulled are: " + str(outLoop))
 	print("alertDayOfWeek is " + str(alertDayOfWeek) + " with type " + str(type(alertDayOfWeek)))
-	# checkAvailTimes = AvailTimes.query.filter(AvailTimes.timeUnit==alertDayOfWeek).all()
-	# print("checkAvailTimes inloop pulled are: " + str(checkAvailTimes))
-	# outloop = ClientPref.query.join(PrefTimes).join(AvailTimes).filter(AvailTimes.timeUnit==alertDayOfWeek).all()
-	# print("Available humans outloop pulled are: " + str(outloop))
+
 	availhumans = []
 	availhumannames = []
 
-	for client in clients:
-		inloop = ClientPref.query.join(PrefTimes).join(AvailTimes)\
-					.filter(AvailTimes.timeUnit==alertDayOfWeek)\
-					.filter(ClientPref.clientid==client.id).all()
-		if len(inloop) > 0:
-			# availhumans.append(client.id) 
-			# availhumannames.append(client.firstName + " " + client.lastName) 
-			availhumans.append(client)
-
-		print("Available humans inloop pulled are: " + str(availhumans))
-	
+	alertid = tempalertid
 	#-- Now we present the data in the UI table
 	print("The avail human names are: " + str(availhumans))
 	form = SelectAlerteesForm()
@@ -193,7 +177,31 @@ def selectAlertees(tempalertid):
 	context['slotAvailDay'] =  alert.slotStartDateTime.strftime("%A")  
 	# context['lastAlerted'] =  		# To add last alerted
 	# context['alertyesno'] = msg.part1
+	if form.validate_on_submit():
+		selectedClients = form.selectedClients.data.split(',')
+		# We need to process the selected client ids here but for now let's just print it
+		print(selectedClients)
+
+		return jsonify({'message': 'Selected clients received successfully'})
+	# elif:
+	# 	return jsonify({'message': 'Form validation failed'})
+
+	elif request.method == 'GET':
+		for client in clients:
+			inloop = ClientPref.query.join(PrefTimes).join(AvailTimes)\
+						.filter(AvailTimes.timeUnit==alertDayOfWeek)\
+						.filter(ClientPref.clientid==client.id).all()
+			if len(inloop) > 0:
+				# availhumans.append(client.id) 
+				# availhumannames.append(client.firstName + " " + client.lastName) 
+				availhumans.append(client)
+
+			print("Available humans inloop pulled are: " + str(availhumans))
 
 
+	return render_template('selectAlertees.html', availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
-	return render_template('selectAlertees.html', availhumans=availhumans, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
+
+# @alerts.route("/waitalert/all", methods=['GET','POST'])
+# @login_required             # Needed for routes that can only be accessed after login
+# def allAlerts(tempalertid):

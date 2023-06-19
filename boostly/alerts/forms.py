@@ -2,7 +2,7 @@
 
 from flask_wtf import FlaskForm				# Provides form validation functionality
 from wtforms.widgets import ListWidget, CheckboxInput				
-from wtforms import StringField, SubmitField, DateField, SelectMultipleField, TimeField, IntegerField
+from wtforms import StringField, SubmitField, DateField, SelectMultipleField, TimeField, IntegerField, HiddenField
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.validators import DataRequired
 
@@ -31,8 +31,8 @@ class WaitAlertForm(FlaskForm):
 	submit = SubmitField(label='Send Alert')
 
 class SelectAlerteesForm(FlaskForm):
-    selected = QuerySelectMultipleFieldWithCheckbox("Alert", allow_blank=True)
-    # selected=
+    selectedClients = HiddenField('Selected clients to notify')
+
 
 
     # id = db.Column(db.Integer, primary_key = True)
