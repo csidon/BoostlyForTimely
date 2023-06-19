@@ -138,20 +138,21 @@ function hideNavbar() {
 
 //STORE CLIENT IDs IN THE LIST
 // Array stores selected client IDs
-let selectedClients = []
+// let selectedClients = []
 
-function onSelectorSelect(clientID) {
-	if (selectedClients.includes(clientID)) {
-		// Client ID already selected, remove it from the list
-		selectedClients = selectedClients.filter(id => id !== clientId);
-	} else {
-		// Add the client ID to the list of selected clients
-		selectedClients.push(clientID);
-	}
-	// Updating the value of the hidden field
-	const selectedClientsField = document.getElementById('selected_clients');
-	selectedClientsField.value = selectedClients.join(',');
-};
+// function onSelectorSelect(clientID) {
+// 	if (selectedClients.includes(clientID)) {
+// 		// Client ID already selected, remove it from the list
+// 		selectedClients = selectedClients.filter(id => id !== clientId);
+// 	} else {
+// 		// Add the client ID to the list of selected clients
+// 		selectedClients.push(clientID);
+// 	}
+// 	// Updating the value of the hidden field
+// 	const selectedClientsField = document.getElementById('selected_clients');
+// 	selectedClientsField.value = selectedClients.join(',');
+//   console.log(selectedClientsField)
+// };
 
 
 //    fetch('http://localhost:5000/save_clients', {

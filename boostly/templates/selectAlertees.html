@@ -4,6 +4,9 @@
 		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
 
+		
+
+
 
 		<div>
 			<h1>Select clients to alert</h1>
@@ -29,7 +32,22 @@
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
-			
+			let selectedClients = []
+
+			function onSelectorSelect(clientID) {
+				if (selectedClients.includes(clientID)) {
+					// Client ID already selected, remove it from the list -->
+					selectedClients = selectedClients.filter(id => id !== clientID);
+				} else {
+					// Add the client ID to the list of selected clients -->
+					selectedClients.push(clientID);
+				}
+				// Updating the value of the hidden field -->
+				const selectedClientsField = document.getElementById('selectedClients');
+				selectedClientsField.value = selectedClients.join(',');
+			  console.log(selectedClientsField)
+			};
+				
 
 
 
@@ -79,6 +97,7 @@
 			sort: true,
 			pagination: true,
 			}).render(document.getElementById('table'));
+
 
 
 		</script>
