@@ -7,6 +7,11 @@
 
 		<div>
 			<h1>Select clients to alert</h1>
+
+
+			
+
+
 			{% for human in availhumans %}
 
 				name: {{ human.firstName }},
@@ -24,13 +29,8 @@
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
-
-
 			
-			// function onSubmit(){
-			// 	console.log("Submitted " + selected)
-			// 	$(selector).post(URL,data,function(data,status,xhr))
-			// }
+
 
 
 			new Grid({
@@ -83,10 +83,21 @@
 
 		</script>
 
+		<form method="POST" action="/waitalert/{{ alertid }}/alertees">
+			<!-- # Hidden tag method adds a CSRF token -->
+			{{ form.hidden_tag() }}
+
+			<!-- Hidden field for selected client IDs -->
+			{{ form.selectedClients() }}
+
+			<!-- {{ form.submit }} -->
 			<div class="row pt-5 justify-content-end pr-1">
-				<a href={{ url_for('main.dashboard') }} class="btn cancel-btn pr-1">Cancel</a>
+				<a href={{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail="changethis") }} class="btn cancel-btn pr-1">Back</a>
 				<button type="submit" class="btn btn-submit">Send Alert</button>
 			</div>
+
+		</form>
+
 
 	</div>
 	
