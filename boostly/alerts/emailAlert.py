@@ -40,10 +40,10 @@ def sendEmail(alertid, companyname, clientid, staffname):
 	slotLength = str(alert.slotLength)                                            #slotLength
 	alertBody3 = msg.part3                                                   # min 
 	bizType = ""                                                             #massage  
-	slotDay = alert.slotStartDateTime.strftime("%w")                         # appointment is now available on
-	slotDate = str(datetime.strptime(str(alert.slotStartDateTime.strftime("%d/%m/%y")),("%d/%m/%y")))
+	slotDay = alert.slotStartDateTime.strftime("%A")                         # appointment is now available on
+	slotDate = str(alert.slotStartDateTime.strftime("%d/%m/%y"))
 	alertBody4 = msg.part4                                                   # starting at 
-	slotStartTime = alert.slotStartDateTime.strftime("%H:%M")                # 
+	slotStartTime = alert.slotStartDateTime.strftime("%I:%M %p")                # 
 	alertBody5 = msg.part5                                                   # \nIf you would like to book in please do so on this link
 	alertBody6 = msg.part6                                                   # Look forward to seeing you
 	alertBody7 = msg.part7
@@ -106,12 +106,12 @@ def sendEmail(alertid, companyname, clientid, staffname):
 										<div style="font-size:18px">{salut} </div>
 									</div>
 									<div
-										style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:14px;color:rgba(0,0,0,0.87);line-height:30px;padding-top:20px;text-align:center">
+										style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:14px;color:rgba(0,0,0,0.87);line-height:10px;padding-top:20px;text-align:center">
 										<p>{alertBody2} 
-										<div style="font-size:18px"><strong>{slotLength} {alertBody3}</strong></div> 
+										<div style="font-size:18px;padding:15px"><strong>{slotLength} {alertBody3}</strong></div> 
 										<br> {bizType} {alertBody4}
-										<div style="font-size:18px"><strong>{slotDay}, {slotDate}</strong></div>
-										<div style="font-size:18px">{alertBody5} <strong> {slotStartTime}</strong> {alertBody6}</div>
+										<div style="font-size:18px;padding:15px; padding-top: 25px"><strong>{slotDay}, {slotDate}</strong></div>
+										<div style="font-size:18px;padding:15px">{alertBody5} <strong> {slotStartTime}</strong> {alertBody6}</div>
 										</p>
 									</div>
 									<div
@@ -123,7 +123,7 @@ def sendEmail(alertid, companyname, clientid, staffname):
 									<div
 										style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:14px;color:rgba(0,0,0,0.87);line-height:30px;padding-top:20px;text-align:center">
 										<p>{alertBody7}
-											<br>{alertBody8}
+											<br>{staffname}
 										</p>
 									</div>
  
@@ -147,7 +147,7 @@ def sendEmail(alertid, companyname, clientid, staffname):
 	</html>
 	""".format(salut=bodySalute, alertBody2=alertBody2, slotLength=slotLength, alertBody3=alertBody3, bizType=bizType, alertBody4=alertBody4,\
 				slotDay=slotDay, slotDate=slotDate, alertBody5=alertBody5, slotStartTime=slotStartTime,\
-				alertBody6=alertBody6, wurl=bookingURL, alertBody7=alertBody7, alertBody8=alertBody8)
+				alertBody6=alertBody6, wurl=bookingURL, alertBody7=alertBody7, staffname=staffname, alertBody8=alertBody8)
 	
 	# The character encoding for the email.
 	CHARSET = "UTF-8"
