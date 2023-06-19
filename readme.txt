@@ -116,3 +116,8 @@ db.session.commit()
 
 
 <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+
+
+#### IMPORTANT!!! ####
+MAKE SURE THAT AWS SECURITY CREDENTIALS ARE SET FOR ELASTIC BEANSTALK!
+https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/deployment-beanstalk-specify-credentials.html
