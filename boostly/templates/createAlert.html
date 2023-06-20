@@ -49,11 +49,17 @@ html, body {
 
 						<div class="card px-2 message-body" style="background-color:#F4E4E2;">
 							<p>{{ context.alertBody1 }} [Client Name]</p>
-							<div class="slot-details">
+
+							<div id="templatebodySlotLength" class="slot-details">
 								<p>{{ context.alertBody2 }} <strong>{{ context.slotLength }} {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
-								<strong>{{ context.slotDay }}, {{ context.slotDate }}</strong>
+							</div>
+
+							<div class="slot-details">
+								<strong><span id="stringDay">{{ context.slotDay }}</span>, <span id="stringDate">{{ context.slotDate }}</span></strong>
+							<div id="templatebodyStartTime" class="slot-details">
 								<p>{{ context.alertBody5 }} <strong id="tempTime"></strong> {{ context.alertBody6 }}</p>
 							</div>
+
 							<div class="alert-body">
 								<p>{{ context.alertBody7 }}</p>
 							</div>
@@ -72,50 +78,96 @@ html, body {
 	 </div>
 </div>
 	<script>
+		// $(document).ready() function ensures that the code is executed when fully loaded
+		$(document).ready(function() {
+			function convertDateToStrings() {
+				// Getting the date value from form field and turning it to a date object
+				var dateValue = $('#dateInput').val();
+				var dateObject = new Date(dateValue);
 
-		// const btn = document.getElementById('submit');     
-		// const radioButtons = document.querySelectorAll('input[name="taskStatus"]');
-        // btn.addEventListener("click", () => {
-        //     let selectedStatus;
-        //     for (const radioButton of radioButtons) {
-        //         if (radioButton.checked) {
-        //             selectedStatus = radioButton.value;
-        //             break;
-        //         }
-        //     }
-        //     // show the output:
-        //     // output.innerText = selectedStatus ? `You selected ${selectedStatus}` : `You haven't selected any status`;
-        // });
+				// Converting them to strings with the right format
+				var slotDateString = dateObject.toLocaleDateString();
+				var slotDayString = dateObject.toLocaleDateString('en-US',{weekday:'long'});
 
-    var savedData = localStorage.getItem('savedData');
-    if (savedData) {
-      document.getElementById('timeInput').value = savedData;
-    }
+				// Updating the message 
+				$('#stringDate').text(slotDateString);
+				$('#stringDay').text(slotDayString);
+			}
 
+			function updateMessageTemplate() {
+			// Gets the values of form fields
+			var slotStartTime = $('#timeInput').val();
+			var slotLength = $('#availabilityInput').val();
 
-    document.getElementById('refresh-button').addEventListener('click', function() {
-		var slotStartDate = document.getElementById('dateInput').value;
-      var slotStartTime = document.getElementById('timeInput').value;
-      var slotLength = document.getElementById('availabilityInput').value;
-		console.log("slotLength");
-      // Store the values in session storage
-      sessionStorage.setItem('slotStartDate', slotStartDate);
-      sessionStorage.setItem('slotStartTime', slotStartTime);
-      sessionStorage.setItem('slotLength', slotLength);
+			// Creating content for message template body details
+			var HTMLtemplateSlotLength = '<p>{{ context.alertBody2 }}<strong>' + slotLength + '{{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p><strong> <span id="stringDay"></span> <span id="stringDate"></span> </strong>';
+			var HTMLtemplateStartTime = '<p>{{ context.alertBody5 }} <strong>' + slotStartTime + '</strong> {{ context.alertBody6 }}</p>';
 
-      var getDate = sessionStorage.getItem('slotStartDate')
-      var getTime = sessionStorage.getItem('slotStartTime')
-      var getLength = sessionStorage.getItem('slotLength')
+			// Updating message template with HTML content
+			$('#templatebodySlotLength').html(HTMLtemplateSlotLength);
+			$('#templatebodyStartTime').html(HTMLtemplateStartTime);
+			
+		}
 
-      document.getElementById("tempTime").value = getTime;
+			// When the form fields change, call updateMessageTemplate()
+			$("#timeInput, #availabilityInput").on("input", function(){
+				updateMessageTemplate();
+			});
+			$('#dateInput').on('input', function() {
+			    convertDateToStrings();
+			});
 
-
-		// Optional: Provide feedback or perform additional actions
+		});
+		
 
 
 
-		location.reload();
-    });
+
+
+// // Ana's code
+// 		// const btn = document.getElementById('submit');     
+// 		// const radioButtons = document.querySelectorAll('input[name="taskStatus"]');
+//         // btn.addEventListener("click", () => {
+//         //     let selectedStatus;
+//         //     for (const radioButton of radioButtons) {
+//         //         if (radioButton.checked) {
+//         //             selectedStatus = radioButton.value;
+//         //             break;
+//         //         }
+//         //     }
+//         //     // show the output:
+//         //     // output.innerText = selectedStatus ? `You selected ${selectedStatus}` : `You haven't selected any status`;
+//         // });
+
+//     var savedData = localStorage.getItem('savedData');
+//     if (savedData) {
+//       document.getElementById('timeInput').value = savedData;
+//     }
+
+
+//     document.getElementById('refresh-button').addEventListener('click', function() {
+// 		var slotStartDate = document.getElementById('dateInput').value;
+//       var slotStartTime = document.getElementById('timeInput').value;
+//       var slotLength = document.getElementById('availabilityInput').value;
+// 		console.log("slotLength");
+//       // Store the values in session storage
+//       sessionStorage.setItem('slotStartDate', slotStartDate);
+//       sessionStorage.setItem('slotStartTime', slotStartTime);
+//       sessionStorage.setItem('slotLength', slotLength);
+
+//       var getDate = sessionStorage.getItem('slotStartDate')
+//       var getTime = sessionStorage.getItem('slotStartTime')
+//       var getLength = sessionStorage.getItem('slotLength')
+
+//       document.getElementById("tempTime").value = getTime;
+
+
+// 		// Optional: Provide feedback or perform additional actions
+
+
+
+// 		location.reload();
+//     });
 	</script>
 
 
