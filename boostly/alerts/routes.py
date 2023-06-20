@@ -7,7 +7,7 @@ from flask_cors import CORS
 from boostly import db
 from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
 from boostly.alerts.emailAlert import sendEmail
-from boostly.models import User, TempWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
+from boostly.models import User, TempWaitAlert, SentWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
 from flask_login import current_user, login_required
 from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to request.form
 from datetime import datetime
@@ -172,12 +172,19 @@ def selectAlertees(tempalertid):
 		# sendEmail(alertid, companyname, clientid, staffname)
 		for client in selectedClients:
 			print("Checking that this is a clientid" + str(client) + " with the right datatype " + str(type(client)))
-			sendEmail(tempalertid, companyname, int(client), current_user.userFirstName)
+			sendEmail(tempalertid, companyname, int(client), current_user.userFirstName)	# Sends email notification and creates a record in SentWaitAlert db table
+		# Update parent alert with status of Sent
+		alert.status = "sent"
+		lastUpdated = datetime.now()
+		db.session.commit()
+
+		# Update the parent TempWaitAlert (with alertid=tempalertid) to show status as sent
 		print("The selected clients are" + str(selectedClients))
 
-		return jsonify({'message': 'Selected clients received successfully'})
-	# elif:
-	# 	return jsonify({'message': 'Form validation failed'})
+		# return jsonify({'message': 'Selected clients received successfully'})
+		flash('Notifications sent!', 'success')
+		return redirect(url_for('alerts.alertHistory'))
+
 
 	elif request.method == 'GET':
 		for client in clients:
@@ -195,6 +202,16 @@ def selectAlertees(tempalertid):
 	return render_template('selectAlertees.html', availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
 
-# @alerts.route("/waitalert/all", methods=['GET','POST'])
-# @login_required             # Needed for routes that can only be accessed after login
-# def allAlerts(tempalertid):
+@alerts.route("/waitalert/history", methods=['GET','POST'])
+@login_required             # Needed for routes that can only be accessed after login
+def alertHistory():
+	# Find all alerts in TempWaitAlert that have a history of sent and get the alertID
+	alerts = TempWaitAlert.query.filter(TempWaitAlert.status=="sent").all()
+
+	for alert in alerts:
+		# Get all the alerts in SentWaitAlert that match the alert.id
+		sentAlert=SentWaitAlert.query.filter(SentWaitAlert.sendAlertID==alert.id).all()
+
+
+
+	return render_template('alertHistory.html', title='Alert History', legend="Alert History")

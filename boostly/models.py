@@ -32,6 +32,7 @@ class User(db.Model, UserMixin):
     userFirstName = db.Column(db.String(100), nullable=False)
     userLastName = db.Column(db.String(100), nullable=False)
     userEmail = db.Column(db.String(120), unique=True, nullable=False)
+    timelyBookingURL = db.Column(db.String(120), nullable=False, default="remove default!!")
     # A hash will be generated for userImage to be 20 Char, and userPass as 60 Char
     userImage = db.Column(db.String(20), nullable=False, default='default.jpg')
     userPassword = db.Column(db.String(60), nullable=False)
@@ -50,7 +51,6 @@ class Client(db.Model):
     firstName = db.Column(db.String(100), nullable=False)
     lastName = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    bookingURL = db.Column(db.String(120), nullable=False, default="remove default!!")
     mobile = db.Column(db.Integer)
     status = db.Column(db.String(30))
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
@@ -132,9 +132,26 @@ class MsgTmpl(db.Model):
 
 
 # This is a table that stores temporary alert data. A cron job can be run daily to remove data that is no longer useful/necessary
-# There are 2 types of temp alerts --> One registers that a slot available, 
+# There are 2 types of alerts --> One registers that a slot is available/created, 
 # the other registers that an alert has been sent (and who it's been sent to)
 class TempWaitAlert(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    # Alert data
+    slotStartDateTime = db.Column(db.DateTime, nullable=False)
+    slotLength = db.Column(db.Integer, nullable=False)
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'))        # Attached when business owner submits waitAlert form part 1
+    msgTmpl = db.Column(db.Integer, db.ForeignKey('msg_tmpl.id'))    # Attached when business owner submits waitAlert form part 1
+    # For cron job to look at to know whether to clear out or not
+    lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    status = db.Column(db.String(30))
+
+    def __repr__(self):
+        return f"TempWaitAlert('{self.id}', '{self.slotStartDateTime}', '{self.slotLength}','{self.sendStatus}')"
+
+
+# There are 2 types of temp alerts --> One registers that a slot available, 
+# the other registers that an alert has been sent (and who it's been sent to)
+class SentWaitAlert(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     # Alert data
     slotStartDateTime = db.Column(db.DateTime, nullable=False)
@@ -144,7 +161,7 @@ class TempWaitAlert(db.Model):
 
     # Send data
     clientid = db.Column(db.Integer)        # This will be null if not sent, otherwise there will be multiple records for each batch notification, 1 for each alert
-    sendStatus = db.Column(db.String(30))
+    sendAlertID = db.Column(db.Integer)  # This will be null for the parent Alert when sent. If populated, the id should match with the parent AlertID
     sendFlag = db.Column(db.Integer)
     # For cron job to look at to know whether to clear out or not
     lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
