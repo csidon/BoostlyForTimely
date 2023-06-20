@@ -2,7 +2,8 @@ import json
 import csv, smtplib, ssl
 import boto3
 from botocore.exceptions import ClientError
-from boostly.models import User, TempWaitAlert, MsgTmpl, Client
+from boostly import db
+from boostly.models import User, TempWaitAlert, MsgTmpl, Client, SentWaitAlert
 from datetime import datetime
 
 # message = """Subject: Your grade
@@ -181,16 +182,36 @@ def sendEmail(alertid, companyname, clientid, staffname):
 		)
 	# Display an error if something goes wrong. 
 	except ClientError as e:
-		# childResponse = {
-		# 'error' : e
-		# 'sentTimestamp' : sentTimestamp
-		# }
-		# print("Sending back childResponse: " + str(childResponse))
 		print("Something went wrong while trying to send out the email" + str(e))
+		sentAlertRecord = SentWaitAlert(slotStartDateTime=alert.slotStartDateTime, 
+										slotLength=alert.slotLength,
+										userid=alert.userid,
+										msgTmpl=alert.msgTmpl,
+										clientid=clientid,
+										sendAlertID=alert.id,
+										lastUpdated=datetime.now(),
+										status="failed")
+		db.session.add(sentAlertRecord)
+		db.session.commit()
+		db.session.refresh(sentAlertRecord)
+		print("The successful sentAlertRecord id is: " + str(sentAlertRecord.id))
+
 	else:
 		print("Email sent to " + RECIPIENT + "! Message ID:" + response['MessageId']),
-		print()
-	
+		# Now I want to create a new record in the database for each client that we're sending to
+		sentAlertRecord = SentWaitAlert(slotStartDateTime=alert.slotStartDateTime, 
+										slotLength=alert.slotLength,
+										userid=alert.userid,
+										msgTmpl=alert.msgTmpl,
+										clientid=clientid,
+										sendAlertID=alert.id,
+										lastUpdated=datetime.now(),
+										status="sent")
+		db.session.add(sentAlertRecord)
+		db.session.commit()
+		db.session.refresh(sentAlertRecord)
+		print("The failed sentAlertRecord id is: " + str(sentAlertRecord.id))
+
 	childResponse = {
 		'salut' : bodySalute,
 		'slotLength' : slotLength,

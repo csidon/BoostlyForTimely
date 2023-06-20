@@ -10,12 +10,14 @@ from boostly.models import User, Company
 
 
 class RegistrationForm(FlaskForm):
+
 	companyName = StringField('Company Name', validators=[DataRequired()])	# At this stage there is no company validation check. 
 	userFirstName = StringField('First Name', validators=[DataRequired()])
 	userLastName = StringField('Last Name', validators=[DataRequired()])
 	userEmail = StringField('Email (This will also be your username)', validators=[DataRequired(), Email()])
 	userPassword = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=20)])
 	confirmPassword = PasswordField('Confirm your password', validators=[DataRequired(), EqualTo('userPassword', message='Password must match')])
+	timelyBookingURL = StringField('Enter your Timely Booking URL', validators=[DataRequired()])
 	submit = SubmitField('Create account')
 
 	def validate_userEmail(self, userEmail):
@@ -40,6 +42,7 @@ class UpdateAccountForm(FlaskForm):
 	userFirstName = StringField('First Name', validators=[DataRequired()])
 	userLastName = StringField('Last Name', validators=[DataRequired()])
 	userEmail = StringField('Email (This will also be your username)', validators=[DataRequired(), Email()])
+	timelyBookingURL = StringField('Enter your Timely Booking URL', validators=[DataRequired()])
 	uploadImage = FileField('Update your profile picture', validators=[FileAllowed(['jpg', 'png'])])
 
 	submit = SubmitField('Update')

@@ -84,6 +84,7 @@ def account():
         current_user.userLastName = form.userLastName.data
         current_user.userEmail = form.userEmail.data
         current_company.companyName = form.companyName.data
+        current_user.timelyBookingURL = form.timelyBookingURL.data
 
         db.session.commit()
         flash('Your account has been updated', 'success')
