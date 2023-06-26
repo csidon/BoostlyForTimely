@@ -21,7 +21,7 @@ class RegistrationForm(FlaskForm):
 	submit = SubmitField('Create account')
 
 	def validate_userEmail(self, userEmail):
-		user = User.query.filter_by(userEmail=userEmail.data).first()
+		user = User.query.filter_by(user_email=userEmail.data).first()
 		# If the user query is none, nothing happens. Otherwise if the query returns data, throw validation error message
 		if user:
 			raise ValidationError("That email already exists. Please register with another email address")
@@ -48,8 +48,8 @@ class UpdateAccountForm(FlaskForm):
 	submit = SubmitField('Update')
 
 	def validate_userEmail(self, userEmail):
-		if userEmail.data != current_user.userEmail:
-			user = User.query.filter_by(userEmail=userEmail.data).first()
+		if userEmail.data != current_user.user_email:
+			user = User.query.filter_by(user_email=userEmail.data).first()
 			# If the user query is none, nothing happens. Otherwise if the query returns data, throw validation error message
 			if user:
 				raise ValidationError("That email already exists. Please register with another email address")

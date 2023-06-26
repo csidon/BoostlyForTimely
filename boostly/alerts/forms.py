@@ -39,12 +39,12 @@ class SelectAlerteesForm(FlaskForm):
 
 
     # id = db.Column(db.Integer, primary_key = True)
-    # slotStartDateTime = db.Column(db.DateTime, nullable=False)
-    # slotLength = db.Column(db.Integer, nullable=False)
-    # sendStatus = db.Column(db.String(30))
-    # sendFlag = db.Column(db.Integer)
-    # lastUpdated = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    # msgTmpl = db.Column(db.Integer, db.ForeignKey('msgtmpl.id'), nullable=False)
+    # slot_start_date_time = db.Column(db.DateTime, nullable=False)
+    # slot_length = db.Column(db.Integer, nullable=False)
+    # send_status = db.Column(db.String(30))
+    # send_flag = db.Column(db.Integer)
+    # last_updated = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    # msg_tmpl = db.Column(db.Integer, db.ForeignKey('msgtmpl.id'), nullable=False)
     # staff = db.Column(db.Integer, db.ForeignKey('staff.id'), nullable=False)
     # client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
 

@@ -11,12 +11,12 @@ application = Flask(__name__)
 # Set a secret key to prevent against modifying cookies and XSS requests on forms (randomly generated using python's secrets.token_hex)
 application.config['SECRET_KEY'] = 'ea3c9fdee984c581c3272cb37b6268746bc67adcdbb60ede'
 # format for the URI is postgresql://{user}:{password}@{RDS endpoint}/{db name, default is postgres}
-# application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgresmaster:1NewPass!@s3-lambda-rdspostgresv2.clbvaq8mp9jk.us-east-1.rds.amazonaws.com:5432/boostly_db'
-# application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgresmaster:1NewPass!@s3-lambda-rdspostgresv2.clbvaq8mp9jk.us-east-1.rds.amazonaws.com:5432/boostly_db'
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 # engine = create_engine('postgresql+psycopg2://postgresmaster:1NewPass!@host=localhost:5432/database_name')
-application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1NewPass!@localhost:5432/postgres'
+# application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1NewPass!@localhost:5432/postgres'
 # application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Jele2789!@localhost:5432/postgres'
 
 # inspector = inspect(db.engine)
