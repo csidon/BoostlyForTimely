@@ -17,9 +17,11 @@ html, body {
 <div class="container">
 		<h2>Kia ora {{ current_user.user_first_name }}!</h2>
 		<p>Notify Your Waitlist of Slot Availability</p> 
+
 </div>
 <div class="container justify-content-center pt-4">
 	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+	<p style="text-align: center;">Notify Your Waitlist of Slot Availability</p>
 	 <div class="card pt-4 px-4" style="width: 45rem;">
 		<form class="form-group" action="" method="POST">
 			<!-- # Hidden tag method adds a CSRF token -->
@@ -38,9 +40,6 @@ html, body {
 
 						{{ form.slotLength.label(class="form-control-label") }}
 						{{ form.slotLength(class="form-control form-control-lg", id="availabilityInput") }}
-						<div class="row justify-content-center pt-4">
-							<button type="button" class="btn btn-submit" id="refresh-button">Generate template</button>
-						</div>
 					</div>
 
 					<div class="col">
@@ -67,10 +66,10 @@ html, body {
 								<p>{{ context.alertBody8 }}</p>
 							</div>
 						</div>
-						<div class="row pt-5 justify-content-end">
-							<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
+					</div>
+					<div class="row pt-3 pr-3 justify-content-end">
+						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn mr-2">Cancel</a>
 						<button type="submit" class="btn btn-submit" value="sub-button">Select Alert Recipients</button>
-						</div>
 					</div>
 				</div>
 			</div>

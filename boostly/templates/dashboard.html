@@ -1,38 +1,65 @@
 {% extends "layout.html" %}
 	{% block content %}
+ <style>
+    /* Center the container */
+    html, body {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      background-image: url('static/images/back_home.png');
+      background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: cover;
+    }
+  </style>
 	<div class="container">
-		<h2>Kia ora {{ current_user.user_first_name }}!</h2>
-		<p>Notify Your Waitlist of Slot Availability</p>
+		<h1 style="text-align: center;">Kia ora, {{ current_user.user_first_name }}!</h1>
+		<hr>
 		<div class="container pt-4">
-		  <div class="row">
-			<div class="col-md-4">
-			  <div class="card">
-				<div class="card-body">
-				  <h5 class="card-title">Add New Client</h5>
-				  <p class="card-text">Click here to add a new client to your list.</p>
-				  <a href="{{ url_for('clients.newClient') }}" class="btn btn-submit">Add Client</a>
-				</div>
-			  </div>
-			</div>
-			<div class="col-md-4">
-			  <div class="card">
-				<div class="card-body">
-				  <h5 class="card-title">Client Information</h5>
-				  <p class="card-text">View and manage client information.</p>
-				  <a href="{{ url_for('clients.displayClients') }}" class="btn btn-submit">View Information</a>
-				</div>
-			  </div>
-			</div>
-			<div class="col-md-4">
-			  <div class="card">
-				<div class="card-body">
-				  <h5 class="card-title">Client Preferences</h5>
-				  <p class="card-text">Manage client preferences and settings.</p>
-				  <a href="{{ url_for('clients.displayClientPrefs') }}" class="btn btn-submit">Manage Preferences</a>
-				</div>
+		 <div class="row mr-3">
+		  <div class="col-md-3">
+			<div class="card" style="width: 15rem; height: 27rem;">
+			  <img src="https://images.squarespace-cdn.com/content/v1/5a974fe3365f02cda9b63647/1521130602718-6HAF9VHQU9Y3QQZPT60C/Wait+List-01.png" class="card-img-top" alt="Waitlist">
+			  <div class="card-body">
+				<h5 class="card-title">Create Waitlist</h5>
+				<p class="card-text">Click here to create a new waitlist.</p>
+				<a href="{{ url_for('alerts.newWaitAlert', tempalertid=1, owneremail='owner') }}" class="btn btn-submit">Create Waitlist</a>
 			  </div>
 			</div>
 		  </div>
+		  <div class="col-md-3">
+			<div class="card" style="width: 15rem;height: 27rem;">
+			  <img src="https://cdn2.hubspot.net/hubfs/62664/Top_8_tips_to_effective_client_management1.jpg" class="card-img-top" alt="Client Information">
+			  <div class="card-body">
+				<h5 class="card-title">Client Information</h5>
+				<p class="card-text">View and manage client information.</p>
+				<a href="{{ url_for('clients.displayClients') }}" class="btn btn-submit">View Information</a>
+			  </div>
+			</div>
+		  </div>
+		  <div class="col-md-3">
+			<div class="card" style="width: 15rem;height: 27rem;">
+			  <img src="https://commerce.beaboss.fr/assets/Img/BREVE/2016/6/305560/Relation-client-cles-federer-vos-clients-autour-votre-commerce-F.jpg" class="card-img-top" alt="Client Preferences">
+			  <div class="card-body">
+				<h5 class="card-title">Client Preferences</h5>
+				<p class="card-text">Manage client preferences and settings.</p>
+				<a href="{{ url_for('clients.displayClientPrefs') }}" class="btn btn-submit">Manage Preferences</a>
+			  </div>
+			</div>
+		  </div>
+		  <div class="col-md-3">
+			<div class="card" style="width: 15rem;height: 27rem;">
+			  <img src="https://imageio.forbes.com/specials-images/imageserve/63933ffe940d9c0caeb13be0/Marketing-strategy/960x0.jpg?height=626&width=711&fit=bounds" class="card-img-top" alt="Add New Client">
+			  <div class="card-body">
+				<h5 class="card-title">Add New Client</h5>
+				<p class="card-text">Click here to add a new client to your list.</p>
+				<a href="{{ url_for('clients.newClient') }}" class="btn btn-submit">Add Client</a>
+			  </div>
+			</div>
+		  </div>
+		</div>
 		</div>
 	</div>
 	

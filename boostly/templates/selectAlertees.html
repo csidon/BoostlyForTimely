@@ -1,14 +1,10 @@
 {% extends "layout.html" %}
 	{% block content %}
-	<div class="container">
+	<div class="container pt-3">
 		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
 		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
-
-		
-
-
-
 		<div>
+<<<<<<< HEAD
 			<h1>Select clients to alert</h1>
 
 
@@ -22,6 +18,9 @@
 
 
 			{% endfor %}
+=======
+			<h1 style="text-align: center;" >Select clients to alert</h1>
+>>>>>>> 9616e1283af31b0859f72dc6f08b078119e233f1
 			<hr>
 			<div id="table"></div>
 		</div>
@@ -68,7 +67,8 @@
 												h('input', {
 													className: 'form-check',
 													type: 'checkbox',
-													onClick: () => onSelectorSelect(row.cells[2].data)
+													onClick: () => onSelectorSelect(row.cells[2].data),
+													checked: true
 
 												}),
 
@@ -81,8 +81,8 @@
 			data: [
 				{% for human in availhumans %}
 				{
-					name: '{{ human.first_name }}',
-					slotDay: "Test",
+					name: '{{ human.first_name }} {{human.first_name}}',
+					slotDay: "⚫",
 					clientid: '{{ human.id }}',
 
 
@@ -108,8 +108,8 @@
 			{{ form.selectedClients() }}
 
 			<!-- {{ form.submit }} -->
-			<div class="row pt-5 justify-content-end pr-1">
-				<a href={{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail="changethis") }} class="btn cancel-btn pr-1">Back</a>
+			<div class="row pt-5 justify-content-end pr-3">
+				<a href={{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail="changethis") }} class="btn cancel-btn mr-2">Back</a>
 				<button type="submit" class="btn btn-submit">Send Alert</button>
 			</div>
 

@@ -278,3 +278,7 @@ p {
 .alert-body:last-child {
     margin-bottom: 0;
 }
+
+.card-img-top{
+    height:16rem;
+}
