@@ -14,7 +14,7 @@
     html, body {
       height: 100%;
       display: flex;
-      align-items: center;
+
       justify-content: center;
       background-color: white;
       background-image: url('static/images/back_home.png');
@@ -24,9 +24,11 @@
     }
   </style>
 <div class="container pt-5">
-			<legend class="border-bottom text-center pt-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+	<legend class="border-bottom text-center pb-3"  style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+	 	<div class="card pt-4 px-4" style="width: 55rem;">
 			<form method="POST">
 				{{ form.hidden_tag() }}
+				<div class="row ">
 					<div class="form-group col-sm-6 flex-column d-flex">
 						{{ form.minDuration.label(class="form-control-label") }}
 						{% if form.minDuration.errors %}
@@ -42,7 +44,7 @@
 					</div>
 
 					<div id="avail-days" style="">
-						<div class="form-group col-sm-6 flex-column d-flex">
+						<div class="form-group pl-3">
 							{{ form.availtimes.label(class="form-control-label") }}
 							  <div>
 								<input type="checkbox" id="selectAllCheckbox" style="margin-left: 20px;"> Select All
@@ -50,12 +52,13 @@
 							{{ form.availtimes(class="form-control-label") }}
 						</div>
 					</div>
-					<div class="form-group mr-3">
-						<button type="submit" class="btn btn-submit">Save Preferences</button>
-						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn">Cancel</a>
-					</div>
+				</div>
+				<div class="row mr-3 mb-3 justify-content-end">
+					<a href={{ url_for('main.dashboard') }} class="btn cancel-btn mr-2">Cancel</a>
+					<button type="submit" class="btn btn-submit mr-2">Save Preferences</button>
+				</div>
 			</form>
-
+		</div>
 </div>
 <!-- 	<script>
 
