@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
     user_first_name = db.Column(db.String(100), nullable=False)
     user_last_name = db.Column(db.String(100), nullable=False)
     user_email = db.Column(db.String(120), unique=True, nullable=False)
-    timely_booking_url = db.Column(db.String(120), nullable=False, default="remove default!!")
+    timely_booking_url = db.Column(db.String(120), nullable=False)
     # A hash will be generated for user_image to be 20 Char, and userPass as 60 Char
     user_image = db.Column(db.String(20), nullable=False, default='default.jpg')
     user_password = db.Column(db.String(60), nullable=False)

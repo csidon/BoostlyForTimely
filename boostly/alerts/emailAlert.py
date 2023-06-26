@@ -29,6 +29,8 @@ from datetime import datetime
 
 # To send in: company_name =  current_user.coyowner.company_name
 def sendEmail(alertid, company_name, client_id, staffname):
+	alertid = int(alertid)
+	client_id=int(client_id)
 	msg = MsgTmpl.query.get(1)      # Hardcoding to a single message template for the MVP
 	alert = TempWaitAlert.query.get_or_404(alertid)
 	recipient = Client.query.get_or_404(client_id)

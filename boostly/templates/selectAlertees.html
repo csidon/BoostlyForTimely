@@ -6,6 +6,7 @@
 		<div>
 			<h1 style="text-align: center;" >Select clients to alert</h1>
 			<hr>
+			
 			<div id="table"></div>
 		</div>
 
@@ -15,24 +16,24 @@
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
-			let selectedClients = []
+			$(document).ready(function () {
+				let selectedClients = []
 
-			function onSelectorSelect(clientID) {
-				if (selectedClients.includes(clientID)) {
-					// Client ID already selected, remove it from the list -->
-					selectedClients = selectedClients.filter(id => id !== clientID);
-				} else {
-					// Add the client ID to the list of selected clients -->
-					selectedClients.push(clientID);
+				function onSelectorSelect(clientID) {
+					if (selectedClients.includes(clientID)) {
+						// Client ID already selected, remove it from the list
+						selectedClients = selectedClients.filter(id => id !== clientID);
+					} else {
+						// Add the client ID to the list of selected clients
+						selectedClients.push(clientID);
+					}
+					// Updating the value of the hidden field
+					const selectedClientsField = $('#selectedClients');
+					selectedClientsField.val(selectedClients.join(','));
+					console.log(selectedClients);
 				}
-				// Updating the value of the hidden field -->
-				const selectedClientsField = document.getElementById('selectedClients');
-				selectedClientsField.value = selectedClients.join(',');
-			  console.log(selectedClientsField)
-			};
 				
-
-
+				
 
 			new Grid({
 
@@ -52,24 +53,21 @@
 													className: 'form-check',
 													type: 'checkbox',
 													onClick: () => onSelectorSelect(row.cells[2].data),
-													checked: true
+													checked: true,
 
 												}),
 
 											]),
-										])
-										;},
+										]);
 									},
-
-				],
+								},
+							],
 			data: [
 				{% for human in availhumans %}
 				{
 					name: '{{ human.first_name }} {{human.first_name}}',
 					slotDay: "⚫",
 					clientid: '{{ human.id }}',
-
-
 
 
 				},
@@ -81,6 +79,21 @@
 			sort: true,
 			pagination: true,
 			}).render(document.getElementById('table'));
+		});
+
+		// // Checks the 
+		// 		$('.form-check').each(function () {
+		// 			const checkbox = $(this);
+		// 			const clientID = checkbox.data('client-id');
+		// 			if (!checkbox.prop('checked')) {
+		// 				selectedClients.push(clientID);
+		// 			}
+		// 		});
+		// 		// Update value after check
+		// 		const selectedClientsField = $('#selectedClients');
+		// 		selectedClientsField.val(selectedClients.join(','));
+		// 		console.log(selectedClients)
+			
 
 		</script>
 

@@ -42,7 +42,7 @@ def newWaitAlert(tempalertid, owneremail):
 		alert = TempWaitAlert.query.get_or_404(tempalertid)
 
 	context['alertSubject1'] =  msg.subj1
-	# context['companyName'] =  current_user.coyowner.company_name
+	context['companyName'] =  current_user.coyowner.company_name
 	context['alertSubject2'] =  msg.subj2
 	context['alertBody1'] = msg.part1                                                   # Hi + [clientName]
 	context['alertBody2'] = msg.part2                                                   # I’m contacting everyone on my waitlist as a
@@ -172,6 +172,8 @@ def selectAlertees(tempalertid):
 		# sendEmail(alertid, company_name, client_id, staffname)
 		for client in selectedClients:
 			print("Checking that this is a client_id" + str(client) + " with the right datatype " + str(type(client)))
+
+			#**************** NOT WORKING BECAUSE SELECTALERTEES.HTML IS NOT RETURNING THE VALUES FOR THE CHECKED USERS. THE CHECK IS FALSE.
 			sendEmail(tempalertid, company_name, int(client), current_user.user_first_name)	# Sends email notification and creates a record in SentWaitAlert db table
 		# Update parent alert with status of Sent
 		alert.status = "sent"
