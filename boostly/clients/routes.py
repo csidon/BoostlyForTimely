@@ -68,7 +68,7 @@ def updateClient(client_id):
 		client.status = "active"
 		db.session.commit()
 		flash("Your client's details have been updated", 'success')
-		return redirect(url_for('clients.updateClient', client_id=client.id))
+		return redirect(url_for('clients.displayClients', client_id=client.id))
 
 	elif request.method == 'GET':
 		form.firstName.data = client.first_name

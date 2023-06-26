@@ -74,7 +74,7 @@
 				{% for client in clients %}
 				{
 					name: '{{ client.first_name }}' + ' ' + '{{ client.last_name}}',
-					minDuration:'{{ client.clientprefs.minDuration }}',
+					minDuration:'{{ client.clientprefs.min_duration }}',
 					mon: '{{ Mon[client] }}',
 					tue: '{{ Tue[client] }}',
 					wed: '{{ Wed[client] }}',

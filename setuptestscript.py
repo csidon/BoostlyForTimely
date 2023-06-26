@@ -192,8 +192,8 @@ print(">>> Client avtimes preferences added!!")
     
 
 
-rawAlert1=TempWaitAlert(slotStartDateTime="2023-05-16 20:15:00", slotLength=45)
-rawAlert2 = TempWaitAlert(slotStartDateTime="2023-06-01 11:30:00", slotLength=120)
+rawAlert1=TempWaitAlert(slot_start_date_time="2023-05-16 20:15:00", slot_length=45)
+rawAlert2 = TempWaitAlert(slot_start_date_time="2023-06-01 11:30:00", slot_length=120)
 db.session.add(rawAlert1)
 db.session.add(rawAlert2)
 db.session.commit()
