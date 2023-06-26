@@ -17,7 +17,7 @@
 
 			{% for human in availhumans %}
 
-				name: {{ human.firstName }},
+				name: {{ human.first_name }},
 
 
 
@@ -81,7 +81,7 @@
 			data: [
 				{% for human in availhumans %}
 				{
-					name: '{{ human.firstName }}',
+					name: '{{ human.first_name }}',
 					slotDay: "Test",
 					clientid: '{{ human.id }}',
 

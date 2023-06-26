@@ -27,31 +27,31 @@ from datetime import datetime
 ######################################
 
 
-# To send in: companyName =  current_user.coyowner.companyName
-def sendEmail(alertid, companyname, clientid, staffname):
+# To send in: company_name =  current_user.coyowner.company_name
+def sendEmail(alertid, company_name, client_id, staffname):
 	msg = MsgTmpl.query.get(1)      # Hardcoding to a single message template for the MVP
 	alert = TempWaitAlert.query.get_or_404(alertid)
-	recipient = Client.query.get_or_404(clientid)
+	recipient = Client.query.get_or_404(client_id)
 	
 	# Extracting alert data
 	alertSubject1 =  msg.subj1
 	alertSubject2 =  msg.subj2
 	alertBody1 = msg.part1                                                   # Hi + [clientName]
 	alertBody2 = msg.part2                                                   # I’m contacting everyone on my waitlist as a
-	slotLength = str(alert.slotLength)                                            #slotLength
+	slotLength = str(alert.slot_length)                                            #slotLength
 	alertBody3 = msg.part3                                                   # min 
 	bizType = ""                                                             #massage  
-	slotDay = alert.slotStartDateTime.strftime("%A")                         # appointment is now available on
-	slotDate = str(alert.slotStartDateTime.strftime("%d/%m/%y"))
+	slotDay = alert.slot_start_date_time.strftime("%A")                         # appointment is now available on
+	slotDate = str(alert.slot_start_date_time.strftime("%d/%m/%y"))
 	alertBody4 = msg.part4                                                   # starting at 
-	slotStartTime = alert.slotStartDateTime.strftime("%I:%M %p")                # 
+	slotStartTime = alert.slot_start_date_time.strftime("%I:%M %p")                # 
 	alertBody5 = msg.part5                                                   # \nIf you would like to book in please do so on this link
 	alertBody6 = msg.part6                                                   # Look forward to seeing you
 	alertBody7 = msg.part7
 	alertBody8 = msg.part8
 
 	bookingURL = recipient.bookingURL
-	fullSubject = alertSubject1 + companyname + alertSubject2
+	fullSubject = alertSubject1 + company_name + alertSubject2
 	bodySalute = alertBody1 + recipient.firstName
 	fullTextBody = bodySalute + alertBody2 + slotLength + alertBody3 + bizType + alertBody4 + slotDay + slotDate +\
 					alertBody5 + slotStartTime + alertBody6 + bookingURL + alertBody7 + alertBody8
@@ -183,13 +183,13 @@ def sendEmail(alertid, companyname, clientid, staffname):
 	# Display an error if something goes wrong. 
 	except ClientError as e:
 		print("Something went wrong while trying to send out the email" + str(e))
-		sentAlertRecord = SentWaitAlert(slotStartDateTime=alert.slotStartDateTime, 
-										slotLength=alert.slotLength,
-										userid=alert.userid,
-										msgTmpl=alert.msgTmpl,
-										clientid=clientid,
-										sendAlertID=alert.id,
-										lastUpdated=datetime.now(),
+		sentAlertRecord = SentWaitAlert(slot_start_date_time=alert.slot_start_date_time, 
+										slot_length=alert.slot_length,
+										user_id=alert.user_id,
+										msg_tmpl=alert.msg_tmpl,
+										client_id=client_id,
+										send_alert_id=alert.id,
+										last_updated=datetime.now(),
 										status="failed")
 		db.session.add(sentAlertRecord)
 		db.session.commit()
@@ -199,13 +199,13 @@ def sendEmail(alertid, companyname, clientid, staffname):
 	else:
 		print("Email sent to " + RECIPIENT + "! Message ID:" + response['MessageId']),
 		# Now I want to create a new record in the database for each client that we're sending to
-		sentAlertRecord = SentWaitAlert(slotStartDateTime=alert.slotStartDateTime, 
-										slotLength=alert.slotLength,
-										userid=alert.userid,
-										msgTmpl=alert.msgTmpl,
-										clientid=clientid,
-										sendAlertID=alert.id,
-										lastUpdated=datetime.now(),
+		sentAlertRecord = SentWaitAlert(slot_start_date_time=alert.slot_start_date_time, 
+										slotLength=alert.slot_length,
+										user_id=alert.user_id,
+										msg_tmpl=alert.msg_tmpl,
+										client_id=client_id,
+										send_alert_id=alert.id,
+										last_updated=datetime.now(),
 										status="sent")
 		db.session.add(sentAlertRecord)
 		db.session.commit()

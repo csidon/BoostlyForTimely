@@ -23,7 +23,7 @@ alerts = Blueprint('alerts', __name__)
 # @login_required             # Needed for routes that can only be accessed after login
 def newWaitAlert(tempalertid, owneremail):
 	
-	# if owneremail != current_user.userEmail:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
+	# if owneremail != current_user.user_email:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
 	#     abort(403)
 	# If check is successful, then the alert belongs to current_user
 
@@ -37,22 +37,22 @@ def newWaitAlert(tempalertid, owneremail):
 	context = dict()
 	alert=TempWaitAlert()
 	if tempalertid==0 and owneremail=="new":
-		alert = TempWaitAlert(slotLength=0, slotStartDateTime=datetime.now())
+		alert = TempWaitAlert(slot_length=0, slot_start_date_time=datetime.now())
 	else:
 		alert = TempWaitAlert.query.get_or_404(tempalertid)
 
 	context['alertSubject1'] =  msg.subj1
-	# context['companyName'] =  current_user.coyowner.companyName
+	# context['companyName'] =  current_user.coyowner.company_name
 	context['alertSubject2'] =  msg.subj2
 	context['alertBody1'] = msg.part1                                                   # Hi + [clientName]
 	context['alertBody2'] = msg.part2                                                   # I’m contacting everyone on my waitlist as a
-	context['slotLength'] = alert.slotLength                                            #slotLength
+	context['slotLength'] = alert.slot_length                                            #slotLength
 	context['alertBody3'] = msg.part3                                                   # min 
 	context['bizType'] = ""                                                             #massage  
-	context['slotDay'] = alert.slotStartDateTime.strftime("%w")                         # appointment is now available on
-	context['slotDate'] = datetime.strptime(str(alert.slotStartDateTime.strftime("%d/%m/%y")),("%d/%m/%y"))
+	context['slotDay'] = alert.slot_start_date_time.strftime("%w")                         # appointment is now available on
+	context['slotDate'] = datetime.strptime(str(alert.slot_start_date_time.strftime("%d/%m/%y")),("%d/%m/%y"))
 	context['alertBody4'] = msg.part4                                                   # starting at 
-	context['slotStartTime'] = alert.slotStartDateTime.strftime("%H:%M")                # 
+	context['slotStartTime'] = alert.slot_start_date_time.strftime("%H:%M")                # 
 	context['alertBody5'] = msg.part5                                                   # \nIf you would like to book in please do so on this link
 	context['alertBody6'] = msg.part6                                                   # Look forward to seeing you
 	context['alertBody7'] = msg.part7
@@ -81,19 +81,19 @@ def newWaitAlert(tempalertid, owneremail):
 		# Collect data from form and update TempWaitAlert
 		# Combine start date and time to startDateTime
 
-		alert.slotStartDateTime = datetime.combine(form.slotStartDate.data, form.slotStartTime.data)
-		alert.slotLength = form.slotLength.data
-		# Attach current_user.id to userid
-		alert.userid = current_user.id
+		alert.slot_start_date_time = datetime.combine(form.slotStartDate.data, form.slotStartTime.data)
+		alert.slot_length = form.slotLength.data
+		# Attach current_user.id to user_id
+		alert.user_id = current_user.id
 		alert.status = "draft"
-		alert.msgTmpl = msg.id
-		lastUpdated = datetime.now()
+		alert.msg_tmpl = msg.id
+		last_updated = datetime.now()
 
 		if tempalertid==0 and owneremail=="new":
 			# This will be a new entry, so add to database and get new alertID
 			db.session.add(alert)
 			db.session.commit()
-			db.session.refresh(alert)     # Allows me to get the companyID
+			db.session.refresh(alert)     # Allows me to get the company_id
 			tempalertid = alert.id        # can i successfully get the id?
 			print("The Alert id retrieved is : " + str(tempalertid))
 		else:
@@ -104,16 +104,16 @@ def newWaitAlert(tempalertid, owneremail):
 		return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
 
 	elif request.method == 'GET':
-		dbSlotDT = alert.slotStartDateTime
+		dbSlotDT = alert.slot_start_date_time
 
 		context['slotDay'] = dbSlotDT.strftime("%A")
 		context['slotDate'] = dbSlotDT.strftime("%d %b %Y")
 		context['slotTime'] = dbSlotDT.strftime("%H:%M")
-		context['slotLength'] = alert.slotLength
+		context['slotLength'] = alert.slot_length
 
 		form.slotStartDate.data = dbSlotDT
 		form.slotStartTime.data = dbSlotDT
-		form.slotLength.data = alert.slotLength
+		form.slotLength.data = alert.slot_length
 
 
 	return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert", alert=alert)
@@ -145,7 +145,7 @@ def newWaitAlert(tempalertid, owneremail):
 @login_required             # Needed for routes that can only be accessed after login
 def selectAlertees(tempalertid):
 	alert = TempWaitAlert.query.get_or_404(tempalertid)
-	alertDayOfWeek = alert.slotStartDateTime.strftime("%A")  
+	alertDayOfWeek = alert.slot_start_date_time.strftime("%A")  
 	# Filter preftimes table to get all clientpref_ids of clients matching those days
 	curr_companyid = current_user.companyid
 	print("The current company is " + str(curr_companyid))
@@ -162,20 +162,20 @@ def selectAlertees(tempalertid):
 	form = SelectAlerteesForm()
 	context = dict()
 	# context['name'] =  msg.subj1
-	context['slotAvailDay'] =  alert.slotStartDateTime.strftime("%A")  
+	context['slotAvailDay'] =  alert.slot_start_date_time.strftime("%A")  
 	# context['lastAlerted'] =  		# To add last alerted
 	# context['alertyesno'] = msg.part1
 	if form.validate_on_submit():
 		selectedClients = form.selectedClients.data.split(',')
 		# We need to process the selected client ids here but for now let's just print it
-		companyname =  current_user.coyowner.companyName
-		# sendEmail(alertid, companyname, clientid, staffname)
+		company_name =  current_user.coyowner.company_name
+		# sendEmail(alertid, company_name, client_id, staffname)
 		for client in selectedClients:
-			print("Checking that this is a clientid" + str(client) + " with the right datatype " + str(type(client)))
-			sendEmail(tempalertid, companyname, int(client), current_user.userFirstName)	# Sends email notification and creates a record in SentWaitAlert db table
+			print("Checking that this is a client_id" + str(client) + " with the right datatype " + str(type(client)))
+			sendEmail(tempalertid, company_name, int(client), current_user.user_first_name)	# Sends email notification and creates a record in SentWaitAlert db table
 		# Update parent alert with status of Sent
 		alert.status = "sent"
-		lastUpdated = datetime.now()
+		last_updated = datetime.now()
 		db.session.commit()
 
 		# Update the parent TempWaitAlert (with alertid=tempalertid) to show status as sent
@@ -189,11 +189,11 @@ def selectAlertees(tempalertid):
 	elif request.method == 'GET':
 		for client in clients:
 			inloop = ClientPref.query.join(PrefTimes).join(AvailTimes)\
-						.filter(AvailTimes.timeUnit==alertDayOfWeek)\
-						.filter(ClientPref.clientid==client.id).all()
+						.filter(AvailTimes.time_unit==alertDayOfWeek)\
+						.filter(ClientPref.client_id==client.id).all()
 			if len(inloop) > 0:
 				# availhumans.append(client.id) 
-				# availhumannames.append(client.firstName + " " + client.lastName) 
+				# availhumannames.append(client.first_name + " " + client.last_name) 
 				availhumans.append(client)
 
 			print("Available humans inloop pulled are: " + str(availhumans))
@@ -210,7 +210,7 @@ def alertHistory():
 
 	for alert in alerts:
 		# Get all the alerts in SentWaitAlert that match the alert.id
-		sentAlert=SentWaitAlert.query.filter(SentWaitAlert.sendAlertID==alert.id).all()
+		sentAlert=SentWaitAlert.query.filter(SentWaitAlert.send_alert_id==alert.id).all()
 
 
 
