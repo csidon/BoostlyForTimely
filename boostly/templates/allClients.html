@@ -29,9 +29,9 @@
 				{ id: 'edit', name: 'Actions',
         							formatter: (cell, row) => {
           								return h('button', {
-            								className: 'btn btn-primary',
-            								onClick: () => alert(`Editing "${row.cells[0].data}" "${row.cells[1].data}" with id "${row.cells[5].data}"`)
-											}, 'Edit');},
+            								className: 'btn btn-submit',
+            								onClick: () =>  location.href = `/client/${row.cells[5].data}/update`
+											}, 'Update');},
           							},
 				],
 			data: [
