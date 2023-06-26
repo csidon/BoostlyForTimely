@@ -92,6 +92,7 @@ def account():
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.companyName.data = current_company.company_name
+        form.timelyBookingURL.data = current_user.timely_booking_url
         form.userFirstName.data = current_user.user_first_name
         form.userLastName.data = current_user.user_last_name
         form.userEmail.data = current_user.user_email

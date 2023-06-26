@@ -127,7 +127,7 @@ def updateClientPref(client_id):
 		flash("Preferences added!", 'success')
 		# Bring the user/staff back to their client overview page
 
-		return redirect(url_for('clients.displayClients', client_id=client_id))
+		return redirect(url_for('clients.displayClientPrefs', client_id=client_id))
 
 	client = Client.query.get(client_id)
 	clientname = client.first_name + " " + client.last_name
@@ -182,10 +182,9 @@ def updateClientPref(client_id):
 @clients.route("/clients/overview", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def displayClients():
-	
 	curr_companyid = current_user.companyid
 	print("The current company is " + str(curr_companyid))
-	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid).all()
+	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid, Client.status == 'active').all()
 	print("The clients are: " + str(clients))
 
 	return render_template('allClients.html', title='Client Overview', clients=clients, legend="Client Overview")
@@ -197,7 +196,7 @@ def displayClientPrefs():
 	curr_companyid = current_user.companyid
 	print("The current company is " + str(curr_companyid))
 
-	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid).all()
+	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid, Client.status == 'active').all()
 	print("The clients are: " + str(clients))
 
 	MonDic={}
