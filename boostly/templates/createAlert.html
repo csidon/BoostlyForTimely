@@ -14,13 +14,9 @@ html, body {
 </style>
 
 
-<div class="container">
-		<h2>Kia ora {{ current_user.user_first_name }}!</h2>
-		<p>Notify Your Waitlist of Slot Availability</p> 
 
-</div>
-<div class="container justify-content-center pt-4">
-	<legend class="border-bottom text-center mb-5" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
+<div class="container justify-content-center pt-5">
+	<legend class="border-bottom text-center mt-4" style = "font-weight: bold; font-size: 32px; color: #5E5E5E;">{{ legend }}</legend>
 	<p style="text-align: center;">Notify Your Waitlist of Slot Availability</p>
 	 <div class="card pt-4 px-4" style="width: 45rem;">
 		<form class="form-group" action="" method="POST">
@@ -47,30 +43,19 @@ html, body {
 						<p class="subject">Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context.alertSubject2 }}</p>
 
 						<div class="card px-2 message-body" style="background-color:#F4E4E2;">
-							<p>{{ context.alertBody1 }} [Client Name]</p>
+							<p>{{ context.alertBody1 }} [Client Name],</p>
+							<p>{{ context.alertBody2 }} <strong id="tempLength">{{ context.slotLength }}</strong><strong> {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
+							<strong><span id="stringDay">{{ context.slotDay }}</span>, <span id="stringDate">{{ context.slotDate }}</span></strong>
+							<p>{{ context.alertBody5 }} <strong id="tempTime">{{ context.slotStartTime }}</strong> {{ context.alertBody6 }}</p>
+							<p>{{ context.alertBody7 }}</p>
+							<p>{{ context.alertBody8 }}</p>
 
-							<div id="templatebodySlotLength" class="slot-details">
-								<p>{{ context.alertBody2 }} <strong>{{ context.slotLength }} {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
-							</div>
-
-							<div class="slot-details">
-								<strong><span id="stringDay">{{ context.slotDay }}</span>, <span id="stringDate">{{ context.slotDate }}</span></strong>
-							<div id="templatebodyStartTime" class="slot-details">
-								<p>{{ context.alertBody5 }} <strong id="tempTime"></strong> {{ context.alertBody6 }}</p>
-							</div>
-
-							<div class="alert-body">
-								<p>{{ context.alertBody7 }}</p>
-							</div>
-							<div class="alert-body">
-								<p>{{ context.alertBody8 }}</p>
-							</div>
 						</div>
-					</div>
 					<div class="row pt-3 pr-3 justify-content-end">
 						<a href={{ url_for('main.dashboard') }} class="btn cancel-btn mr-2">Cancel</a>
 						<button type="submit" class="btn btn-submit" value="sub-button">Select Alert Recipients</button>
 					</div>
+				</div>
 				</div>
 			</div>
 		</form>
@@ -91,28 +76,22 @@ html, body {
 				// Updating the message 
 				$('#stringDate').text(slotDateString);
 				$('#stringDay').text(slotDayString);
+
+				// Gets the values of form fields
+				var slotStartTime = $('#timeInput').val();
+				var slotLength = $('#availabilityInput').val();
+
+
+				// Updating message template with HTML content
+				$('#tempLength').text(slotLength);
+				$('#tempTime').text(slotStartTime);
 			}
 
-			function updateMessageTemplate() {
-			// Gets the values of form fields
-			var slotStartTime = $('#timeInput').val();
-			var slotLength = $('#availabilityInput').val();
 
-			// Creating content for message template body details
-			var HTMLtemplateSlotLength = '<p>{{ context.alertBody2 }}<strong>' + slotLength + '{{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p><strong> <span id="stringDay"></span> <span id="stringDate"></span> </strong>';
-			var HTMLtemplateStartTime = '<p>{{ context.alertBody5 }} <strong>' + slotStartTime + '</strong> {{ context.alertBody6 }}</p>';
-
-			// Updating message template with HTML content
-			$('#templatebodySlotLength').html(HTMLtemplateSlotLength);
-			$('#templatebodyStartTime').html(HTMLtemplateStartTime);
-			
-		}
 
 			// When the form fields change, call updateMessageTemplate()
-			$("#timeInput, #availabilityInput").on("input", function(){
-				updateMessageTemplate();
-			});
-			$('#dateInput').on('input', function() {
+
+			$('#dateInput, #timeInput, #availabilityInput').on('input', function() {
 			    convertDateToStrings();
 			});
 

@@ -149,7 +149,7 @@ def selectAlertees(tempalertid):
 	# Filter preftimes table to get all clientpref_ids of clients matching those days
 	curr_companyid = current_user.companyid
 	print("The current company is " + str(curr_companyid))
-	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid)
+	clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid, Client.status == 'active')
 	print("The clients are: " + str(clients))
 	print("alertDayOfWeek is " + str(alertDayOfWeek) + " with type " + str(type(alertDayOfWeek)))
 

@@ -24,7 +24,7 @@
 			 	{ id: 'lname', name: 'Last Name' },
 				{ id: 'email', name: 'Email', sort: false },
 				{ id: 'mobile', name: 'Mobile Number', sort: false },
-				{ id: 'status', name: 'Status' },
+				{ id: 'status', name: 'Status', hidden: true },
 				{ id: 'clientid', name: 'id', hidden: true},
 				{ id: 'edit', name: 'Actions',
         							formatter: (cell, row) => {
@@ -53,6 +53,7 @@
 			pagination: true,
 		  }).render(document.getElementById('table'));
 		</script>
+		<a href={{ url_for('clients.newClient') }} class="btn btn-submit mr-2">Add new client</a>
 	</div>
 	
 
