@@ -20,11 +20,12 @@ alerts = Blueprint('alerts', __name__)
 
 
 @alerts.route("/waitalert/<int:tempalertid>/<string:owneremail>", methods=['GET','POST'])
-# @login_required             # Needed for routes that can only be accessed after login
+@login_required             # Needed for routes that can only be accessed after login
 def newWaitAlert(tempalertid, owneremail):
+	print("owneremail is " + owneremail + " and the logged in user is " + current_user.user_email)	# Might need to put userID check in there once it comes to multi-user on one device. But for now this is actually more efficient and secure
 	
-	# if owneremail != current_user.user_email:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
-	#     abort(403)
+	if owneremail != current_user.user_email:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
+	    abort(403)
 	# If check is successful, then the alert belongs to current_user
 
 	form = WaitAlertForm()
@@ -174,7 +175,7 @@ def selectAlertees(tempalertid):
 			print("Checking that this is a client_id" + str(client) + " with the right datatype " + str(type(client)))
 
 			#**************** NOT WORKING BECAUSE SELECTALERTEES.HTML IS NOT RETURNING THE VALUES FOR THE CHECKED USERS. THE CHECK IS FALSE.
-			sendEmail(tempalertid, company_name, int(client), current_user.user_first_name)	# Sends email notification and creates a record in SentWaitAlert db table
+			sendEmail(tempalertid, company_name, int(client), current_user)	# Sends email notification and creates a record in SentWaitAlert db table
 		# Update parent alert with status of Sent
 		alert.status = "sent"
 		last_updated = datetime.now()
@@ -200,8 +201,8 @@ def selectAlertees(tempalertid):
 
 			print("Available humans inloop pulled are: " + str(availhumans))
 
-
-	return render_template('selectAlertees.html', availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
+	useremail = current_user.user_email
+	return render_template('selectAlertees.html', useremail = useremail, availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
 
 @alerts.route("/waitalert/history", methods=['GET','POST'])

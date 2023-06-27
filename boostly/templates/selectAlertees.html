@@ -53,7 +53,7 @@
 													className: 'form-check',
 													type: 'checkbox',
 													onClick: () => onSelectorSelect(row.cells[2].data),
-													checked: true,
+													// checked: true,
 
 												}),
 
@@ -78,6 +78,10 @@
 			},
 			sort: true,
 			pagination: true,
+			language: {
+				noRecordsFound: "None of your client's preferences matches your new slot availability date",
+			}
+			
 			}).render(document.getElementById('table'));
 		});
 
@@ -106,7 +110,7 @@
 
 			<!-- {{ form.submit }} -->
 			<div class="row pt-5 justify-content-end pr-3">
-				<a href={{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail="changethis") }} class="btn cancel-btn mr-2">Back</a>
+				<a href="{{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail=useremail )}}" class="btn cancel-btn mr-2">Back</a>
 				<button type="submit" class="btn btn-submit">Send Alert</button>
 			</div>
 

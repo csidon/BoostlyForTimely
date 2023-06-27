@@ -28,12 +28,14 @@ from datetime import datetime
 
 
 # To send in: company_name =  current_user.coyowner.company_name
-def sendEmail(alertid, company_name, client_id, staffname):
+def sendEmail(alertid, company_name, client_id, currentuser):
+	print("currentuser is " + str(currentuser) + " with datatype " + str(type(currentuser)))
 	alertid = int(alertid)
 	client_id=int(client_id)
 	msg = MsgTmpl.query.get(1)      # Hardcoding to a single message template for the MVP
 	alert = TempWaitAlert.query.get_or_404(alertid)
 	recipient = Client.query.get_or_404(client_id)
+
 	
 	# Extracting alert data
 	alertSubject1 =  msg.subj1
@@ -52,11 +54,12 @@ def sendEmail(alertid, company_name, client_id, staffname):
 	alertBody7 = msg.part7
 	alertBody8 = msg.part8
 
-	bookingURL = recipient.bookingURL
+	bookingURL = currentuser.timely_booking_url
 	fullSubject = alertSubject1 + company_name + alertSubject2
-	bodySalute = alertBody1 + recipient.firstName
+	bodySalute = alertBody1 + recipient.first_name
 	fullTextBody = bodySalute + alertBody2 + slotLength + alertBody3 + bizType + alertBody4 + slotDay + slotDate +\
 					alertBody5 + slotStartTime + alertBody6 + bookingURL + alertBody7 + alertBody8
+	staffname = currentuser.user_first_name
 	
 
 	print("The fullTextBody is " + fullTextBody)
@@ -202,7 +205,7 @@ def sendEmail(alertid, company_name, client_id, staffname):
 		print("Email sent to " + RECIPIENT + "! Message ID:" + response['MessageId']),
 		# Now I want to create a new record in the database for each client that we're sending to
 		sentAlertRecord = SentWaitAlert(slot_start_date_time=alert.slot_start_date_time, 
-										slotLength=alert.slot_length,
+										slot_length=alert.slot_length,
 										user_id=alert.user_id,
 										msg_tmpl=alert.msg_tmpl,
 										client_id=client_id,

@@ -39,14 +39,14 @@ html, body {
 					</div>
 
 					<div class="col">
-						<h2>Message template</h2>
+						<h3>Message preview</h3>
 						<p class="subject">Subject: {{ context.alertSubject1 }} {{ context.companyName }} {{ context.alertSubject2 }}</p>
 
 						<div class="card px-2 message-body" style="background-color:#F4E4E2;">
 							<p>{{ context.alertBody1 }} [Client Name],</p>
-							<p>{{ context.alertBody2 }} <strong id="tempLength">{{ context.slotLength }}</strong><strong> {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}</p>
-							<strong><span id="stringDay">{{ context.slotDay }}</span>, <span id="stringDate">{{ context.slotDate }}</span></strong>
-							<p>{{ context.alertBody5 }} <strong id="tempTime">{{ context.slotStartTime }}</strong> {{ context.alertBody6 }}</p>
+							<p>{{ context.alertBody2 }} <strong id="tempLength">{{ context.slotLength }}</strong><strong> {{ context.alertBody3 }}</strong> {{ context.bizType }} {{ context.alertBody4 }}:</p>
+							<p style="text-align: center;"><strong><span id="stringDay">{{ context.slotDay }}</span>, <span id="stringDate">{{ context.slotDate }}</span></strong>
+							<br>{{ context.alertBody5 }} <strong id="tempTime">{{ context.slotStartTime }}</strong> {{ context.alertBody6 }}</p>
 							<p>{{ context.alertBody7 }}</p>
 							<p>{{ context.alertBody8 }}</p>
 
@@ -70,8 +70,10 @@ html, body {
 				var dateObject = new Date(dateValue);
 
 				// Converting them to strings with the right format
-				var slotDateString = dateObject.toLocaleDateString();
-				var slotDayString = dateObject.toLocaleDateString('en-US',{weekday:'long'});
+				const optionsDate = {  day: 'numeric', month: 'long', year: 'numeric' };
+				const optionsDay = { weekday: 'long'};
+				var slotDateString = dateObject.toLocaleDateString('en-GB', optionsDate);
+				var slotDayString = dateObject.toLocaleDateString('en-GB', optionsDay);
 
 				// Updating the message 
 				$('#stringDate').text(slotDateString);
