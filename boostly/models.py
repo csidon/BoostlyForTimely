@@ -178,7 +178,7 @@ class SentWaitAlert(db.Model):
     status = db.Column(db.String(30))
 
     def __repr__(self):
-        return f"TempWaitAlert('{self.id}', '{self.slot_start_date_time}', '{self.slot_length}','{self.sendStatus}')"
+        return f"TempWaitAlert('{self.id}', '{self.slot_start_date_time}', '{self.slot_length}','{self.status}')"
 
 # class UserTest(db.Model, UserMixin):                                                # User is also the "BusinessOwner", or the overarching account. 
 #     id = db.Column(db.Integer, primary_key = True)

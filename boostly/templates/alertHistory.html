@@ -1,7 +1,56 @@
 {% extends "layout.html" %}
-{% block content %}
+	{% block content %}
+	<div class="container">
+		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
 
-	<h1> Here we will display a table with subtables showing the alerts and who they are sent to with details of status</h1>
+
+		<div>
+		  <h1>History</h1>
+		  <hr>
+		  <div id="table"></div>
+		</div>
+
+		<script type="module">
+			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
+			import { Grid, h } from "https://unpkg.com/gridjs?module";
+
+
+		  const grid  = new Grid({
+
+				columns: [
+					{ id: 'slot_start_date_time', name: 'Available slot' },
+					{ id: 'slot_length', name: 'Slot length' },
+					{ id: 'status', name: 'Status'},
+
+					],
+			data: [
+				{% for alert in sentAlert %}
+				{
+					slot_start_date_time: '{{ alert.slot_start_date_time }}',
+					slot_length: '{{ alert.slot_length }}',
+					status: '{{ alert.status }}',
+
+
+				},
+				{% endfor %}
+			],
+			search: {
+				selector: (cell, rowIndex, cellIndex) => [0, 1, 4].includes(cellIndex) ? cell : null,
+			},
+			sort: true,
+			pagination: true,
+			language: {
+				noRecordsFound: "You have not sent any notifications yet",
+			}
+
+			}).render(document.getElementById('table'));
+		</script>
+	</div>
+
+
 
 
 {% endblock content %}
+
+
