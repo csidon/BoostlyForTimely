@@ -24,9 +24,7 @@ alerts = Blueprint('alerts', __name__)
 def newWaitAlert(tempalertid, owneremail):
 	print("owneremail is " + owneremail + " and the logged in user is " + current_user.user_email)	# Might need to put userID check in there once it comes to multi-user on one device. But for now this is actually more efficient and secure
 	
-	if owneremail != current_user.user_email:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
-	    abort(403)
-	# If check is successful, then the alert belongs to current_user
+	
 
 	form = WaitAlertForm()
 	print(" What does current_user get...?" + str(current_user) + " with datatype: " + str(type(current_user)))
@@ -39,6 +37,9 @@ def newWaitAlert(tempalertid, owneremail):
 	alert=TempWaitAlert()
 	if tempalertid==0 and owneremail=="new":
 		alert = TempWaitAlert(slot_length=0, slot_start_date_time=datetime.now())
+	elif owneremail != current_user.user_email:                               # ** Put in if id=0 and string="" conditions, then ENABLE LATER
+	    abort(403)
+	# If check is successful, then the alert belongs to current_user
 	else:
 		alert = TempWaitAlert.query.get_or_404(tempalertid)
 
