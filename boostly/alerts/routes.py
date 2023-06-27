@@ -209,13 +209,8 @@ def selectAlertees(tempalertid):
 @alerts.route("/waitalert/history", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def alertHistory():
-	# Find all alerts in TempWaitAlert that have a history of sent and get the alertID
-	alerts = TempWaitAlert.query.filter(TempWaitAlert.status=="sent").all()
-
-	for alert in alerts:
-		# Get all the alerts in SentWaitAlert that match the alert.id
-		sentAlert=SentWaitAlert.query.filter(SentWaitAlert.send_alert_id==alert.id).all()
+	sentAlert = SentWaitAlert.query.all()
 
 
 
-	return render_template('alertHistory.html', title='Alert History', legend="Alert History")
+	return render_template('alertHistory.html', title='Alert History', legend="Alert History", sentAlert=sentAlert)
