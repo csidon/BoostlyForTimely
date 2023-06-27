@@ -63,7 +63,7 @@
 													type: 'checkbox',
 													id: 'myCheckbox',
 													value: true,
-													checked: true,
+													// checked: true,
 													onClick: () => onSelectorSelect(row.cells[2].data),
 												}),
 
@@ -88,6 +88,10 @@
 			},
 			sort: true,
 			pagination: true,
+			language: {
+				noRecordsFound: "None of your client's preferences matches your new slot availability date",
+			}
+			
 			}).render(document.getElementById('table'));
 
 			// Function to reload and check all checkboxes !NOT WORKING!
@@ -126,7 +130,7 @@
 
 			<!-- {{ form.submit }} -->
 			<div class="row pt-5 justify-content-end pr-3">
-				<a href={{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail="changethis") }} class="btn cancel-btn mr-2">Back</a>
+				<a href="{{ url_for('alerts.newWaitAlert', tempalertid=alertid, owneremail=useremail )}}" class="btn cancel-btn mr-2">Back</a>
 				<button type="submit" class="btn btn-submit">Send Alert</button>
 			</div>
 
