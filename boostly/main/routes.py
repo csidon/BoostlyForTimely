@@ -33,10 +33,10 @@ def home():
 @main.route("/dashboard")
 @login_required             # Needed for routes that can only be accessed after login
 def dashboard():
-    context = dict()
+    # context = dict()
     # dateToday = datetime.today()
 
-    return render_template('dashboard.html', title='Your Boostly Stats At A Glance', context=context)
+    return render_template('dashboard.html', title='Your Boostly Stats At A Glance')
 
 @main.route("/test")
 def test():

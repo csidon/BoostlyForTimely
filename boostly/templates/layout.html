@@ -56,7 +56,7 @@
 							Your clients
 						  </button>
 						  <div class="dropdown-menu" aria-labelledby="clientDropdown">
-							  <a class="dropdown-item" href="{{ url_for('alerts.newWaitAlert', tempalertid=1, owneremail='owner') }}">Create alert</a>
+							  <a class="dropdown-item" href="{{ url_for('alerts.newWaitAlert', tempalertid=0, owneremail='new') }}">Create alert</a>
 						  	<a class="dropdown-item" href="{{ url_for('clients.newClient') }}">Add new client</a>
 							<a class="dropdown-item" href="{{ url_for('clients.displayClients') }}">Client Information</a>
 							<a class="dropdown-item" href="{{ url_for('clients.displayClientPrefs') }}">Client Preferences</a>
