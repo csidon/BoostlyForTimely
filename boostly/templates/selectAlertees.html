@@ -16,26 +16,35 @@
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
+
 			$(document).ready(function () {
-				let selectedClients = []
 
-				function onSelectorSelect(clientID) {
-					if (selectedClients.includes(clientID)) {
-						// Client ID already selected, remove it from the list
-						selectedClients = selectedClients.filter(id => id !== clientID);
-					} else {
-						// Add the client ID to the list of selected clients
-						selectedClients.push(clientID);
-					}
-					// Updating the value of the hidden field
-					const selectedClientsField = $('#selectedClients');
-					selectedClientsField.val(selectedClients.join(','));
-					console.log(selectedClients);
+			let selectedClients = [];
+			console.log(selectedClients);
+			function onSelectorSelect(clientID) {
+				// Initializing the list of selected clients if it doesn't exist
+				if (!selectedClients) {
+					selectedClients = [];
 				}
-				
+
+				// Checking the default behavior of the checkboxes
+				const isChecked = event.target.checked;
+				if (isChecked && !selectedClients.includes(clientID)) {
+					selectedClients.push(clientID);
+				} else if (!isChecked && selectedClients.includes(clientID)) {
+					selectedClients = selectedClients.filter(id => id !== clientID);
+				}
+
+				// Updating the value of the hidden field
+				const selectedClientsField = $('#selectedClients');
+				selectedClientsField.val(selectedClients.join(','));
+
+				console.log(selectedClients);
+			}
+
 				
 
-			new Grid({
+	const grid  = new Grid({
 
 				columns: [
 					{ id: 'name', name: 'Name' },
@@ -52,9 +61,10 @@
 												h('input', {
 													className: 'form-check',
 													type: 'checkbox',
-													onClick: () => onSelectorSelect(row.cells[2].data),
+													id: 'myCheckbox',
+													value: true,
 													checked: true,
-
+													onClick: () => onSelectorSelect(row.cells[2].data),
 												}),
 
 											]),
@@ -65,7 +75,7 @@
 			data: [
 				{% for human in availhumans %}
 				{
-					name: '{{ human.first_name }} {{human.first_name}}',
+					name: '{{ human.first_name }} {{human.last_name}}',
 					slotDay: "⚫",
 					clientid: '{{ human.id }}',
 
@@ -79,22 +89,32 @@
 			sort: true,
 			pagination: true,
 			}).render(document.getElementById('table'));
+
+			// Function to reload and check all checkboxes !NOT WORKING!
+			function reloadCheckboxes() {
+				// Get all the checkboxes within the Grid
+				console.log("checkboxes are set to true");
+				const checkboxes = document.querySelectorAll('.grid-cell input[type="checkbox"]');
+
+				// Loop through each checkbox
+				checkboxes.forEach(checkbox => {
+				// Set the checked attribute to true
+				checkbox.checked = true;
+				});
+				console.log("checkboxes are set to true");
+			}
+
+			// Event handler for Grid load
+			function onGridLoad() {
+			console.log("checkboxes are set to true");
+			reloadCheckboxes();
+
+			}
+
+			// Call the function when the Grid is loaded
+			grid.on('grid:load', onGridLoad);
+
 		});
-
-		// // Checks the 
-		// 		$('.form-check').each(function () {
-		// 			const checkbox = $(this);
-		// 			const clientID = checkbox.data('client-id');
-		// 			if (!checkbox.prop('checked')) {
-		// 				selectedClients.push(clientID);
-		// 			}
-		// 		});
-		// 		// Update value after check
-		// 		const selectedClientsField = $('#selectedClients');
-		// 		selectedClientsField.val(selectedClients.join(','));
-		// 		console.log(selectedClients)
-			
-
 		</script>
 
 		<form method="POST" action="/waitalert/{{ alertid }}/alertees">

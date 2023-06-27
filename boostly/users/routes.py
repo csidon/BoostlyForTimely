@@ -29,7 +29,8 @@ def register():
 
         # Using Bcrypt to hash the password so that we don't store passwords in plain text
         hashedPW = bcrypt.generate_password_hash(form.userPassword.data).decode('utf-8')
-        # Create an object user with the data collected from the form, passing in the hashed password (instead of cleartext) 
+        # Create an object user with the data collected from the form, passing in the hashed password (instead of cleartext)
+        user = User(user_email=form.userEmail.data, timely_booking_url=form.timelyBookingURL.data, user_last_name=form.userLastName.data, user_first_name=form.userFirstName.data, user_password=hashedPW, companyid=companyid)
         user = User(user_email=form.userEmail.data, user_last_name=form.userLastName.data,  timely_booking_url=form.timelyBookingURL.data, user_first_name=form.userFirstName.data, user_password=hashedPW, companyid=companyid)
         db.session.add(user)        # Adds user to db
         db.session.commit()         # Commits user to db                   
