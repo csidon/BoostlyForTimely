@@ -207,6 +207,7 @@ def displayClientPrefs():
 	SatDic={}
 	SunDic={}
 	clientIDlist=[]
+	availabilities = ""
 	
 	for client in clients:
 
