@@ -1,21 +1,18 @@
 # Contains all the routes specific to main routes - home(not logged in), dashboard(logged in)
 
-from flask import render_template, url_for, flash, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask_login import login_user, current_user, login_required
+from boostly import bcrypt
 from boostly.models import User
 from boostly.users.forms import LoginForm
-from flask_login import current_user, login_required
-from datetime import datetime
-
-
-
 
 main = Blueprint('main', __name__)
 
-@main.route("/")
-@main.route("/home")
+@main.route("/", methods=['GET','POST'])
+@main.route("/home", methods=['GET','POST'])
 def home():
-    # tasks = Task.query.all()
-    users = User.query.all()
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(user_email=form.userEmail.data).first()
@@ -28,16 +25,10 @@ def home():
             return redirect(nextPage) if nextPage else redirect(url_for('main.dashboard'))
         else:
             flash('Login unsuccessful. Please check email and password', 'danger')
-    return render_template('home.html', users=users, form=form)
+    return render_template('home.html', form=form)
 
 @main.route("/dashboard")
 @login_required             # Needed for routes that can only be accessed after login
 def dashboard():
-    # context = dict()
-    # dateToday = datetime.today()
-
+    
     return render_template('dashboard.html', title='Your Boostly Stats At A Glance')
-
-@main.route("/test")
-def test():
-    return 'test'

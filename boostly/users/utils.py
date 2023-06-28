@@ -2,7 +2,6 @@
 import os
 import secrets              # Package that generates a random hex value
 from PIL import Image       # Pillow package that helps to resize image
-from flask import render_template, url_for  # Not needed here but commonly used, clean up if not used on submission!
 from boostly import application
 
 
