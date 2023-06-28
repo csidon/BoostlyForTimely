@@ -1,3 +1,15 @@
+#################################################
+# IMPORTANT: DO NOT PIP FREEZE REQUIREMENTS.TXT!! 
+"""""""""""""""""""""""""""""""""""""""""""""""""
+# ***IMPT Deployment Notes:***
+# AWS has specific packages that are different to windows, so DON'T freeze requirements!
+# A backup copy as of 28Jun23 has been taken
+# This version has been tested and deployed for Elastic Beanstalk/CodePipeline 
+# Python 3.7 running on 64bit Amazon Linux <-- This does NOT work on Amazon Linux 2023 due to pg_config incompatibility (amazon-linux-extras no longer exists on Amazon Linux 2023).
+
+# Note: Successfully deployed on the staging env with all ports open - This needs to be closed for security purposes!
+
+
 >> cd /boostly
 >> venv\Scripts\activate
 
