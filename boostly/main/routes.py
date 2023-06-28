@@ -6,13 +6,6 @@ from boostly import db, bcrypt
 from boostly.models import User
 from boostly.users.forms import LoginForm
 
-
-
-from datetime import datetime
-
-
-
-
 main = Blueprint('main', __name__)
 
 @main.route("/", methods=['GET','POST'])
@@ -32,15 +25,10 @@ def home():
             return redirect(nextPage) if nextPage else redirect(url_for('main.dashboard'))
         else:
             flash('Login unsuccessful. Please check email and password', 'danger')
-    
     return render_template('home.html', form=form)
 
 @main.route("/dashboard")
 @login_required             # Needed for routes that can only be accessed after login
 def dashboard():
-
+    
     return render_template('dashboard.html', title='Your Boostly Stats At A Glance')
-
-@main.route("/test")
-def test():
-    return 'test'
