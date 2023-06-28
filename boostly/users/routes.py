@@ -80,19 +80,24 @@ def account():
     current_company=Company.query.get(coyID)
     print("The current_company pulled is "+ str(current_company))
     if form.validate_on_submit():
+        try:
 
-        if form.uploadImage.data:
-            # Saving the picture and updating the database with the hex-ed filename
-            hexedImage = saveImage(form.uploadImage.data)
-            current_user.user_image = hexedImage
-            current_user.user_first_name = form.userFirstName.data
-            current_user.user_last_name = form.userLastName.data
-            current_user.user_email = form.userEmail.data
-            current_company.company_name = form.companyName.data
-            current_user.timely_booking_url = form.timelyBookingURL.data
-            db.session.commit()
-            flash('Your account has been updated', 'success')
-            return redirect(url_for('users.account'))
+            if form.uploadImage.data:
+                # Saving the picture and updating the database with the hex-ed filename
+                hexedImage = saveImage(form.uploadImage.data)
+                current_user.user_image = hexedImage
+                current_user.user_first_name = form.userFirstName.data
+                current_user.user_last_name = form.userLastName.data
+                current_user.user_email = form.userEmail.data
+                current_company.company_name = form.companyName.data
+                current_user.timely_booking_url = form.timelyBookingURL.data
+                db.session.commit()
+                flash('Your account has been updated', 'success')
+                return redirect(url_for('users.account'))
+        except Exception as err:
+            raise err
+        finally:
+            cleanup(db.session)
         
     elif request.method == 'GET':
         form.companyName.data = current_company.company_name

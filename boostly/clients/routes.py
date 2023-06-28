@@ -4,6 +4,7 @@
 
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from boostly import db
+from boostly.utils import cleanup
 from boostly.models import Client, ClientPref, AvailTimes, PrefTimes, Company, ClientCompany
 from boostly.clients.forms import ClientForm, ClientPrefForm
 from flask_login import current_user, login_required
@@ -17,29 +18,34 @@ def newClient():
     form = ClientForm()
     current_company=Company.query.get(current_user.companyid)			# Each new client must be registered to the right company
     if form.validate_on_submit():
-        client = Client(
-            first_name=form.firstName.data, 
-            last_name=form.lastName.data, 
-            email=form.email.data,
-            mobile=form.mobile.data,
-            status = "active")
-        
-        db.session.add(client)
-        db.session.commit()
-        # After creating a client, form the relationship with the client to the company
-        client.companies.append(current_company)
-        db.session.commit()
+        try: 
+            client = Client(
+                first_name=form.firstName.data, 
+                last_name=form.lastName.data, 
+                email=form.email.data,
+                mobile=form.mobile.data,
+                status = "active")
+            
+            db.session.add(client)
+            db.session.commit()
+            # After creating a client, form the relationship with the client to the company
+            client.companies.append(current_company)
+            db.session.commit()
 
-        db.session.refresh(client)                                           
-        client_id = client.id        # Refresh to try and get client id
-        print("The Client's id retrieved is : " + str(client_id))
-        # Create a blank client preference
-        clientpref = ClientPref(min_duration=0, client_id=client_id)
-        db.session.add(clientpref)
-        db.session.commit()
-        print("A blank client pref has been created and attached to this client")
-        flash("You have created a new client! Now let's set their alert preferences", 'success')
-        return redirect(url_for('clients.updateClientPref', client_id=client_id))
+            db.session.refresh(client)                                           
+            client_id = client.id        # Refresh to try and get client id
+            print("The Client's id retrieved is : " + str(client_id))
+            # Create a blank client preference
+            clientpref = ClientPref(min_duration=0, client_id=client_id)
+            db.session.add(clientpref)
+            db.session.commit()
+            print("A blank client pref has been created and attached to this client")
+            flash("You have created a new client! Now let's set their alert preferences", 'success')
+            return redirect(url_for('clients.updateClientPref', client_id=client_id))
+        except Exception as err:
+            raise err
+        finally:
+            cleanup(db.session)
     btnCreateUpdate = "Create"
     return render_template('createClient.html', title='Create a New Client', form=form, legend="Create a New Client", btnCreateUpdate=btnCreateUpdate)
 
@@ -56,14 +62,19 @@ def updateClient(client_id):
 
     form = ClientForm()
     if form.validate_on_submit():
-        client.first_name = form.firstName.data
-        client.last_name = form.lastName.data
-        client.email = form.email.data
-        client.mobile = form.mobile.data
-        client.status = "active"
-        db.session.commit()
-        flash("Your client's details have been updated", 'success')
-        return redirect(url_for('clients.displayClients', client_id=client.id))
+        try:
+            client.first_name = form.firstName.data
+            client.last_name = form.lastName.data
+            client.email = form.email.data
+            client.mobile = form.mobile.data
+            client.status = "active"
+            db.session.commit()
+            flash("Your client's details have been updated", 'success')
+            return redirect(url_for('clients.displayClients', client_id=client.id))
+        except Exception as err:
+            raise err
+        finally:
+            cleanup(db.session)
 
     elif request.method == 'GET':
         form.firstName.data = client.first_name
@@ -71,6 +82,7 @@ def updateClient(client_id):
         form.email.data = client.email
         form.mobile.data = client.mobile
     btnCreateUpdate = "Update"
+
     return render_template('createClient.html', title='Update Client Details', form=form, client=client, legend="Update Client Details", btnCreateUpdate=btnCreateUpdate)
 
 
@@ -86,7 +98,8 @@ def deleteClient(client_id):
         abort(403)
     client.status = "archived"
     db.session.commit()
-    flash("We've archived your client information. You can still view it in your Recycle Bin for the next 90 days!", 'success')
+    cleanup(db.session)
+    flash("We've archived your client's information", 'success')
     return redirect(url_for('main.dashboard'))
 
 ###########################################
@@ -107,20 +120,25 @@ def updateClientPref(client_id):
     print("Let's just check what's in clientpref.avtimes: "+ str(clientpref.avtimes))
     form.availtimes.query = AvailTimes.query.all()
     if form.validate_on_submit():
+        try:
 
-        clientpref.min_duration = form.minDuration.data,
-        db.session.commit()
-        clientpref.avtimes.clear()
-        clientpref.avtimes.extend(form.availtimes.data)
-        db.session.commit()
-        flash("Preferences added!", 'success')
-        # Bring the user/staff back to their client overview page
-        return redirect(url_for('clients.displayClientPrefs', client_id=client_id))
+            clientpref.min_duration = form.minDuration.data,
+            db.session.commit()
+            clientpref.avtimes.clear()
+            clientpref.avtimes.extend(form.availtimes.data)
+            db.session.commit()
+            flash("Preferences added!", 'success')
+            # Bring the user/staff back to their client overview page
+            return redirect(url_for('clients.displayClientPrefs', client_id=client_id))
+        except Exception as err:
+            raise err
+        finally:
+            cleanup(db.session)
 
     client = Client.query.get(client_id)
     clientname = client.first_name + " " + client.last_name
     legend = clientname + "'s Preferences"
-    
+
     return render_template('createClientPref.html', title='Client Preferences', form=form, legend=legend, client_id=client_id)
 
 
