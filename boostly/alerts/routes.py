@@ -9,7 +9,7 @@ from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
 from boostly.alerts.emailAlert import sendEmail
 from boostly.models import User, TempWaitAlert, SentWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
 from flask_login import current_user, login_required
-from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to request.form
+# from werkzeug.datastructures import ImmutableMultiDict  # To allow data input to request.form
 from datetime import datetime
 
 
@@ -179,7 +179,6 @@ def selectAlertees(tempalertid):
 			sendEmail(tempalertid, company_name, int(client), current_user)	# Sends email notification and creates a record in SentWaitAlert db table
 		# Update parent alert with status of Sent
 		alert.status = "sent"
-		last_updated = datetime.now()
 		db.session.commit()
 
 		# Update the parent TempWaitAlert (with alertid=tempalertid) to show status as sent
@@ -209,8 +208,30 @@ def selectAlertees(tempalertid):
 @alerts.route("/waitalert/history", methods=['GET','POST'])
 @login_required             # Needed for routes that can only be accessed after login
 def alertHistory():
-	sentAlert = SentWaitAlert.query.all()
+
+	curr_companyid = current_user.companyid
+	print("The current company is " + str(curr_companyid))
+
+	alerts = SentWaitAlert.query.filter(SentWaitAlert.user_id==current_user.id).all()
+	print("The alerts retrieved are " + str(alerts))
+
+	sentClient = {}
+	slotDetails = {}
+	slotLength = {}
+	alertStatus = {}
+	lastUpdated = {}
+	for alert in alerts:
+		# Have to pull out all this information to be able to query Client db for name
+		client = Client.query.get(alert.id)
+		sentClient[alert] = client.first_name + " " + client.last_name
+
+		slotDetails[alert] = alert.slot_start_date_time.strftime("%A, %d %b %Y")
+		slotLength[alert] = str(alert.slot_length)
+		alertStatus[alert] = alert.status
+		lastUpdated[alert] = alert.last_updated.strftime("%d/%m/%y")
+
+		print("List of clients sent to: " + str(sentClient[alert]) + " with slot deets: " + str(slotDetails))
 
 
-
-	return render_template('alertHistory.html', title='Alert History', legend="Alert History", sentAlert=sentAlert)
+	return render_template('alertHistory.html', title='Alert History', legend="Alert History", alerts=alerts,\
+					client=sentClient, details=slotDetails, length=slotLength, status=alertStatus, updated=lastUpdated)

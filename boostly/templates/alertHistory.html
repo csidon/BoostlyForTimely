@@ -5,8 +5,9 @@
 		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
 
 
-		<div>
-		  <h1>History</h1>
+		<div class="pt-3">
+		  <h1>Your alert history</h1>
+		  <p>We keep up to 3 weeks' worth of your alert history </p>
 		  <hr>
 		  <div id="table"></div>
 		</div>
@@ -19,17 +20,22 @@
 		  const grid  = new Grid({
 
 				columns: [
-					{ id: 'slot_start_date_time', name: 'Available slot' },
+					{ id: 'client', name: 'Sent to' },
+					{ id: 'slot_start_date_time', name: 'Slot Details' },
 					{ id: 'slot_length', name: 'Slot length' },
 					{ id: 'status', name: 'Status'},
+					{ id: 'updated', name: 'Last Updated'},
 
 					],
+
 			data: [
-				{% for alert in sentAlert %}
+				{% for alert in alerts %}
 				{
-					slot_start_date_time: '{{ alert.slot_start_date_time }}',
-					slot_length: '{{ alert.slot_length }}',
-					status: '{{ alert.status }}',
+					client: '{{ client[alert] }}',
+					slot_start_date_time: '{{ details[alert] }}',
+					slot_length: '{{ length[alert] }}',
+					status: '{{ status[alert] }}',
+					updated: '{{ updated[alert] }}',
 
 
 				},

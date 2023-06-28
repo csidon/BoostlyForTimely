@@ -17,6 +17,12 @@ ClientCompany = db.Table('client_company',
     db.Column('company_id', db.Integer, db.ForeignKey('company.id')), 
     )
 
+# Associating Client.ids with SentWaitAlerts.id
+# ClientAlerts = db.Table('client_alerts', 
+#     db.Column('client_id', db.Integer, db.ForeignKey('client.id')), 
+#     db.Column('sent_wait_alert', db.Integer, db.ForeignKey('sent_wait_alert.id')), 
+#     )
+
 
 # The company model isn't really used in the front end for the MVP but is created to form the relationship between the User and Clients. 
 # It is the equivalent of your "Company Admin Account"
@@ -51,21 +57,23 @@ class Client(db.Model):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    mobile = db.Column(db.Integer)
+    mobile = db.Column(db.BigInteger)
     status = db.Column(db.String(30))
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
     companies = db.relationship('Company', secondary=ClientCompany, backref='clientsof')         # Refer to client_company table for client/company relsp
     clientprefs = db.relationship('ClientPref', backref='client', uselist=False)           # Forming a 1 Client --> * ClientPref relationship
+    # sentalerts = db.relationship('SentWaitAlert', backref='receivedalerts', lazy=True, uselist=False) 
+    sentalerts = db.relationship('SentWaitAlert', backref='alerted', uselist=False) 
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'fname': self.first_name,
-            'lname': self.last_name,
-            'email': self.email,
-            'mobile': self.mobile,
-            'status': self.status
-        }
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'fname': self.first_name,
+    #         'lname': self.last_name,
+    #         'email': self.email,
+    #         'mobile': self.mobile,
+    #         'status': self.status
+    #     }
 
 # Association table connecting the ClientPref with AvailTimes 
 PrefTimes = db.Table(
@@ -170,7 +178,8 @@ class SentWaitAlert(db.Model):
     msg_tmpl = db.Column(db.Integer, db.ForeignKey('msg_tmpl.id'))    # Attached when business owner submits waitAlert form part 1
 
     # Send data
-    client_id = db.Column(db.Integer)        # This will be null if not sent, otherwise there will be multiple records for each batch notification, 1 for each alert
+    # alertedclient = db.relationship('Client', backref='sentclient', lazy=True, uselist=False) 
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'))        
     send_alert_id = db.Column(db.Integer)  # This will be null for the parent Alert when sent. If populated, the id should match with the parent AlertID
     send_flag = db.Column(db.Integer)
     # For cron job to look at to know whether to clear out or not
