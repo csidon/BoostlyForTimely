@@ -59,3 +59,4 @@ virtualenv==20.17.1
 wcwidth==0.1.9
 Werkzeug==2.2.2
 WTForms==3.0.1
+WTForms-SQLAlchemy
