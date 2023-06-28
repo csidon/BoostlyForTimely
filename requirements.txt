@@ -4,8 +4,8 @@ autopep8==2.0.2
 awsebcli==3.20.5
 bcrypt==4.0.1
 behave==1.2.6
-boto3==1.26.138
-botocore==1.29.138
+boto3
+botocore
 cement==2.8.2
 certifi==2022.12.7
 charset-normalizer==2.0.12
