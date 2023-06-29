@@ -165,7 +165,7 @@ def alertHistory():
     curr_companyid = current_user.companyid
     print("The current company is " + str(curr_companyid))
 
-    alerts = SentWaitAlert.query.filter(SentWaitAlert.sent_user_id==current_user.id).all()
+    alerts = SentWaitAlert.query.filter(SentWaitAlert.sent_user_id==current_user.id).order_by(SentWaitAlert.last_updated.desc()).all()
     print("The alerts retrieved are " + str(alerts))
 
     sentClient = {}
