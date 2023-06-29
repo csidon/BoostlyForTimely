@@ -169,7 +169,7 @@ def sendEmail(alertid, company_name, client_id, currentuser):
         print("Something went wrong while trying to send out the email" + str(e))
         sentAlertRecord = SentWaitAlert(slot_start_date_time=alert.slot_start_date_time, 
                                         slot_length=alert.slot_length,
-                                        user_id=alert.user_id,
+                                        sent_user_id=alert.user_id,
                                         msg_tmpl=alert.msg_tmpl,
                                         client_id=client_id,
                                         send_alert_id=alert.id,
@@ -185,7 +185,7 @@ def sendEmail(alertid, company_name, client_id, currentuser):
         # Now I want to create a new record in the database for each client that we're sending to
         sentAlertRecord = SentWaitAlert(slot_start_date_time=alert.slot_start_date_time, 
                                         slot_length=alert.slot_length,
-                                        user_id=alert.user_id,
+                                        sent_user_id=alert.user_id,
                                         msg_tmpl=alert.msg_tmpl,
                                         client_id=client_id,
                                         send_alert_id=alert.id,

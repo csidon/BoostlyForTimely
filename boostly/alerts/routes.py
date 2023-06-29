@@ -165,7 +165,7 @@ def alertHistory():
     curr_companyid = current_user.companyid
     print("The current company is " + str(curr_companyid))
 
-    alerts = SentWaitAlert.query.filter(SentWaitAlert.user_id==current_user.id).all()
+    alerts = SentWaitAlert.query.filter(SentWaitAlert.sent_user_id==current_user.id).all()
     print("The alerts retrieved are " + str(alerts))
 
     sentClient = {}
@@ -175,13 +175,13 @@ def alertHistory():
     lastUpdated = {}
     for alert in alerts:
         # Have to pull out all this information to be able to query Client db for name
-        client = Client.query.get(alert.id)
+        client = Client.query.get(alert.client_id)
         sentClient[alert] = client.first_name + " " + client.last_name
 
         slotDetails[alert] = alert.slot_start_date_time.strftime("%A, %d %b %Y")
         slotLength[alert] = str(alert.slot_length)
         alertStatus[alert] = alert.status
-        lastUpdated[alert] = alert.last_updated.strftime("%d/%m/%y")
+        lastUpdated[alert] = str(alert.last_updated)
 
         print("List of clients sent to: " + str(sentClient[alert]) + " with slot deets: " + str(slotDetails))
         

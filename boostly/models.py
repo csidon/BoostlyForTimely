@@ -52,7 +52,7 @@ class Client(db.Model):
     pswd = db.Column(db.String(60))                                             # For when we want to give clients a way to make their own changes
     companies = db.relationship('Company', secondary=ClientCompany, backref='clientsof')         # Refer to client_company table for client/company relsp
     clientprefs = db.relationship('ClientPref', backref='client', uselist=False)           # Forming a 1 Client --> * ClientPref relationship
-    sentalerts = db.relationship('SentWaitAlert', backref='alerted', uselist=False) 
+    sentalerts = db.relationship('SentWaitAlert', backref='alerted') 
 
 
 # Association table connecting the ClientPref with AvailTimes 
@@ -134,7 +134,7 @@ class SentWaitAlert(db.Model):
     # Alert data
     slot_start_date_time = db.Column(db.DateTime, nullable=False)
     slot_length = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))        # Attached when business owner submits waitAlert form part 1
+    sent_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))        # Attached when business owner submits waitAlert form part 1
     msg_tmpl = db.Column(db.Integer, db.ForeignKey('msg_tmpl.id'))    # Attached when business owner submits waitAlert form part 1
 
     # Send data
