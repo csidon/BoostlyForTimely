@@ -1,7 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 from boostly import db
-from boostly.utils import cleanup
+# from boostly.utils import cleanup     # Learn how sessions work, then enable and insert
 from boostly.models import TempWaitAlert, MsgTmpl, Client, SentWaitAlert
 from datetime import datetime
 
@@ -195,8 +195,7 @@ def sendEmail(alertid, company_name, client_id, currentuser):
         db.session.commit()
         db.session.refresh(sentAlertRecord)
         print("The failed sentAlertRecord id is: " + str(sentAlertRecord.id))
-    finally:
-        cleanup(db.session)
+
 
     childResponse = {
         'salut' : bodySalute,

@@ -1,7 +1,7 @@
 # Contains all the routes specific to alerts - waitlistAlert
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from boostly import db
-from boostly.utils import cleanup
+# from boostly.utils import cleanup     # Learn how sessions work, then enable and insert
 from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
 from boostly.alerts.emailAlert import sendEmail
 from boostly.models import TempWaitAlert, SentWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
@@ -74,16 +74,13 @@ def newWaitAlert(tempalertid, owneremail):
                 print("The Alert id retrieved is : " + str(tempalertid))
             except Exception as err:
                 raise err
-            finally:
-                cleanup(db.session)
+
         else:
             try:
                 # Just update the existing alert entry
                 db.session.commit()
             except Exception as err:
                 raise err
-            finally:
-                cleanup(db.session)
 
         flash('Please select the alert recipients', 'success')
         return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
@@ -145,8 +142,7 @@ def selectAlertees(tempalertid):
             return redirect(url_for('alerts.alertHistory'))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
+
 
     elif request.method == 'GET':
         for client in clients:

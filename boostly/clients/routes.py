@@ -4,7 +4,7 @@
 
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from boostly import db
-from boostly.utils import cleanup
+# from boostly.utils import cleanup     # Learn how sessions work, then enable and insert
 from boostly.models import Client, ClientPref, AvailTimes, PrefTimes, Company, ClientCompany
 from boostly.clients.forms import ClientForm, ClientPrefForm
 from flask_login import current_user, login_required
@@ -44,8 +44,7 @@ def newClient():
             return redirect(url_for('clients.updateClientPref', client_id=client_id))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
+
     btnCreateUpdate = "Create"
     return render_template('createClient.html', title='Create a New Client', form=form, legend="Create a New Client", btnCreateUpdate=btnCreateUpdate)
 
@@ -73,8 +72,6 @@ def updateClient(client_id):
             return redirect(url_for('clients.displayClients', client_id=client.id))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
 
     elif request.method == 'GET':
         form.firstName.data = client.first_name
@@ -98,7 +95,7 @@ def deleteClient(client_id):
         abort(403)
     client.status = "archived"
     db.session.commit()
-    cleanup(db.session)
+
     flash("We've archived your client's information", 'success')
     return redirect(url_for('main.dashboard'))
 
@@ -132,8 +129,6 @@ def updateClientPref(client_id):
             return redirect(url_for('clients.displayClientPrefs', client_id=client_id))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
 
     client = Client.query.get(client_id)
     clientname = client.first_name + " " + client.last_name

@@ -3,7 +3,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from boostly import db, bcrypt
-from boostly.utils import cleanup
+# from boostly.utils import cleanup     # Learn how sessions work, then enable and insert
 from boostly.models import User, Company
 from boostly.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
 from boostly.users.utils import saveImage
@@ -38,8 +38,6 @@ def register():
             return redirect(url_for('users.login'))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
 
     errors = [{'field': key, 'messages': form.errors[key]} for key in form.errors.keys()] if form.errors else []
     return render_template('register.html', title='Sign up for your Boostly Account!', form=form, errors=errors)
@@ -96,8 +94,6 @@ def account():
                 return redirect(url_for('users.account'))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
         
     elif request.method == 'GET':
         form.companyName.data = current_company.company_name
