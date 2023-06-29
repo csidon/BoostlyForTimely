@@ -99,7 +99,6 @@ def newWaitAlert(tempalertid, owneremail):
         form.slotStartDate.data = dbSlotDT
         form.slotStartTime.data = dbSlotDT
         form.slotLength.data = alert.slot_length
-        cleanup(db.session)
 
     return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert", alert=alert)
 
@@ -160,7 +159,6 @@ def selectAlertees(tempalertid):
             print("Available humans inloop pulled are: " + str(availhumans))
 
     useremail = current_user.user_email
-    cleanup(db.session)
     return render_template('selectAlertees.html', useremail = useremail, availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
 
@@ -191,6 +189,5 @@ def alertHistory():
 
         print("List of clients sent to: " + str(sentClient[alert]) + " with slot deets: " + str(slotDetails))
         
-    cleanup(db.session)
     return render_template('alertHistory.html', title='Alert History', legend="Alert History", alerts=alerts,\
                     client=sentClient, details=slotDetails, length=slotLength, status=alertStatus, updated=lastUpdated)

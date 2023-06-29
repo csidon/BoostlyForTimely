@@ -67,13 +67,13 @@ print("AvailTimes table data entered")
 
 defaultEmailMsg = MsgTmpl(subj1="Waitlist Notification for ", subj2="'s clients",\
 							part1="Hi ", part2="I'm contacting everyone on my Waitlist as a ",\
-							part3=" minute ", part4=" appointment is now available on ", \
+							part3=" minute ", part4=" appointment slot is now available on ", \
 							part5=" starting at ", part6=".", part7="Look forward to seeing you,", 
 							part8="Please note that this is a first-come-first-serve notification. Be quick, or someone else might book it first!")
 
 defaultSmsMsg = MsgTmpl(subj1="Waitlist Notification for ", subj2="'s clients",\
 							part1="Hi ", part2="I'm contacting everyone on my Waitlist as a ",\
-							part3=" minute ", part4=" appointment is now available on ", \
+							part3=" minute ", part4=" appointment slot is now available on ", \
 							part5=" starting at ", part6=". If you would like to book in please do so via this link: ", \
 							part7="Look forward to seeing you,")
 
