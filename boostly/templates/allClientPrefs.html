@@ -2,8 +2,6 @@
 	{% block content %}
 	<div class="container">
 		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
-
 
 		<div>
 		  <h1>Client Preferences Overview</h1>
@@ -12,16 +10,12 @@
 		</div>
 
 		<script type="module">
-
-			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
 
-
 		  new Grid({
-
 			  columns: [
-				  { id: 'name', name: 'Name' },
-                  { id: 'minDuration', name: html('Min<br/>slot') },
+				{ id: 'name', name: 'Name' },
+                { id: 'minDuration', name: html('Min<br/>slot') },
 				{ id: 'mon', name: 'Mon', sort: true },
 				{ id: 'tue', name: 'Tues', sort: true },
 				{ id: 'wed', name: 'Wed', sort: true },

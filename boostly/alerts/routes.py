@@ -1,7 +1,7 @@
 # Contains all the routes specific to alerts - waitlistAlert
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from boostly import db
-from boostly.utils import cleanup
+# from boostly.utils import cleanup     # Learn how sessions work, then enable and insert
 from boostly.alerts.forms import WaitAlertForm, SelectAlerteesForm
 from boostly.alerts.emailAlert import sendEmail
 from boostly.models import TempWaitAlert, SentWaitAlert, MsgTmpl, AvailTimes, PrefTimes, ClientPref, Client, ClientCompany, Company
@@ -74,16 +74,13 @@ def newWaitAlert(tempalertid, owneremail):
                 print("The Alert id retrieved is : " + str(tempalertid))
             except Exception as err:
                 raise err
-            finally:
-                cleanup(db.session)
+
         else:
             try:
                 # Just update the existing alert entry
                 db.session.commit()
             except Exception as err:
                 raise err
-            finally:
-                cleanup(db.session)
 
         flash('Please select the alert recipients', 'success')
         return redirect(url_for('alerts.selectAlertees', tempalertid=tempalertid))
@@ -99,7 +96,6 @@ def newWaitAlert(tempalertid, owneremail):
         form.slotStartDate.data = dbSlotDT
         form.slotStartTime.data = dbSlotDT
         form.slotLength.data = alert.slot_length
-        cleanup(db.session)
 
     return render_template('createAlert.html', title='Send a new waitlist notification', form=form, context=context, legend="New Waitlist Alert", alert=alert)
 
@@ -115,7 +111,8 @@ def selectAlertees(tempalertid):
     alertDayOfWeek = alert.slot_start_date_time.strftime("%A")  
     # Filter preftimes table to get all clientpref_ids of clients matching those days
     curr_companyid = current_user.companyid
-    print("The current company is " + str(curr_companyid))
+    print("The current  company is " + str(curr_companyid))
+    # Querying the database to get the intersection between the Company and the Client using the current_user's company id, then adding status filtering on top of that
     clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid, Client.status == 'active')
     print("The clients are: " + str(clients))
     # print("alertDayOfWeek is " + str(alertDayOfWeek) + " with type " + str(type(alertDayOfWeek)))
@@ -135,7 +132,7 @@ def selectAlertees(tempalertid):
             # We need to process the selected client ids here but for now let's just print it
             company_name =  current_user.coyowner.company_name
             for client in selectedClients:
-                # print("Checking that this is a client_id of:" + str(client) + " with the right datatype " + str(type(client)))
+                # print("Checking that this is a client of:" + str(client) + " with the right datatype " + str(type(client)))
                 sendEmail(tempalertid, company_name, int(client), current_user)	# Sends email notification and creates a record in SentWaitAlert db table
             # Update parent alert with status of Sent
             alert.status = "sent"
@@ -146,8 +143,7 @@ def selectAlertees(tempalertid):
             return redirect(url_for('alerts.alertHistory'))
         except Exception as err:
             raise err
-        finally:
-            cleanup(db.session)
+
 
     elif request.method == 'GET':
         for client in clients:
@@ -160,7 +156,6 @@ def selectAlertees(tempalertid):
             print("Available humans inloop pulled are: " + str(availhumans))
 
     useremail = current_user.user_email
-    cleanup(db.session)
     return render_template('selectAlertees.html', useremail = useremail, availhumans=availhumans, alertid=alertid, alertDayOfWeek=alertDayOfWeek, clients=clients, title='Select the recipents of the alert', form=form, context=context, legend="Select the recipents of the alert", alert=alert)
 
 
@@ -171,7 +166,7 @@ def alertHistory():
     curr_companyid = current_user.companyid
     print("The current company is " + str(curr_companyid))
 
-    alerts = SentWaitAlert.query.filter(SentWaitAlert.user_id==current_user.id).all()
+    alerts = SentWaitAlert.query.filter(SentWaitAlert.sent_user_id==current_user.id).order_by(SentWaitAlert.last_updated.desc()).all()
     print("The alerts retrieved are " + str(alerts))
 
     sentClient = {}
@@ -181,16 +176,15 @@ def alertHistory():
     lastUpdated = {}
     for alert in alerts:
         # Have to pull out all this information to be able to query Client db for name
-        client = Client.query.get(alert.id)
+        client = Client.query.get(alert.client_id)
         sentClient[alert] = client.first_name + " " + client.last_name
 
         slotDetails[alert] = alert.slot_start_date_time.strftime("%A, %d %b %Y")
         slotLength[alert] = str(alert.slot_length)
         alertStatus[alert] = alert.status
-        lastUpdated[alert] = alert.last_updated.strftime("%d/%m/%y")
+        lastUpdated[alert] = str(alert.last_updated)
 
         print("List of clients sent to: " + str(sentClient[alert]) + " with slot deets: " + str(slotDetails))
         
-    cleanup(db.session)
     return render_template('alertHistory.html', title='Alert History', legend="Alert History", alerts=alerts,\
                     client=sentClient, details=slotDetails, length=slotLength, status=alertStatus, updated=lastUpdated)

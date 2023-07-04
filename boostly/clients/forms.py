@@ -20,7 +20,7 @@ class QuerySelectMultipleFieldWithCheckbox(QuerySelectMultipleField):
 
 
 class ClientPrefForm(FlaskForm):
-    minDuration = IntegerField('Minimum timeslot (You will not be notified for anything less than this timeslot)', default=60,
+    minDuration = IntegerField('Minimum timeslot (You will receive notifications for anything longer than this timeslot. We suggest 30 mins, although you can enter a minimum of 15 mins)', default=60,
         validators=[DataRequired(), NumberRange(min=15)])
     availtimes = QuerySelectMultipleFieldWithCheckbox("Select timeslots that you want to be notified for", allow_blank=True)
     

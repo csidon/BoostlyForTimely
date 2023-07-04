@@ -2,20 +2,16 @@
 	{% block content %}
 	<div class="container pt-3">
 		<link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-		<!-- <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script> -->
 		<div>
 			<h1 style="text-align: center;" >Select clients to alert</h1>
 			<hr>
-			
 			<div id="table"></div>
 		</div>
-
 		<script type="module">
 
 
 			// import { html, render } from 'https://unpkg.com/htm/preact/standalone.module.js';
 			import { Grid, h, html } from "https://unpkg.com/gridjs?module";
-
 
 			$(document).ready(function () {
 
@@ -26,7 +22,6 @@
 				if (!selectedClients) {
 					selectedClients = [];
 				}
-
 				// Checking the default behavior of the checkboxes
 				const isChecked = event.target.checked;
 				if (isChecked && !selectedClients.includes(clientID)) {
@@ -34,11 +29,9 @@
 				} else if (!isChecked && selectedClients.includes(clientID)) {
 					selectedClients = selectedClients.filter(id => id !== clientID);
 				}
-
 				// Updating the value of the hidden field
 				const selectedClientsField = $('#selectedClients');
 				selectedClientsField.val(selectedClients.join(','));
-
 				console.log(selectedClients);
 			}
 
