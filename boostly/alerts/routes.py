@@ -111,7 +111,8 @@ def selectAlertees(tempalertid):
     alertDayOfWeek = alert.slot_start_date_time.strftime("%A")  
     # Filter preftimes table to get all clientpref_ids of clients matching those days
     curr_companyid = current_user.companyid
-    print("The current company is " + str(curr_companyid))
+    print("The current  company is " + str(curr_companyid))
+    # Querying the database to get the intersection between the Company and the Client using the current_user's company id, then adding status filtering on top of that
     clients = Client.query.join(ClientCompany).join(Company).filter(Company.id==curr_companyid, Client.status == 'active')
     print("The clients are: " + str(clients))
     # print("alertDayOfWeek is " + str(alertDayOfWeek) + " with type " + str(type(alertDayOfWeek)))
@@ -131,7 +132,7 @@ def selectAlertees(tempalertid):
             # We need to process the selected client ids here but for now let's just print it
             company_name =  current_user.coyowner.company_name
             for client in selectedClients:
-                # print("Checking that this is a client_id of:" + str(client) + " with the right datatype " + str(type(client)))
+                # print("Checking that this is a client of:" + str(client) + " with the right datatype " + str(type(client)))
                 sendEmail(tempalertid, company_name, int(client), current_user)	# Sends email notification and creates a record in SentWaitAlert db table
             # Update parent alert with status of Sent
             alert.status = "sent"
