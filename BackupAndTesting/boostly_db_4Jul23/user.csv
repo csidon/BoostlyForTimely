@@ -1,0 +1,6 @@
+id,user_first_name,user_last_name,user_email,timely_booking_url,user_image,user_password,companyid
+1,Rachelle,Skywalker,fakerachellette@gmail.com,https://bookings.gettimely.com/rachelleeastwoodmassagetherapist/book,default.jpg,$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu,1
+2,Chipper,Mika,chris.chonghuihui@gmail.com,https://bookings.gettimely.com/rachelleeastwoodmassagetherapist/book,default.jpg,$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu,1
+3,Evan,Master,evan@user.com,https://bookings.gettimely.com/rachelleeastwoodmassagetherapist/book,default.jpg,$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu,1
+4,Lena,Walton,LenaWalton.MassageTherapist@gmail.com,https://bookings.gettimely.com/rachelleeastwoodmassagetherapist/book,default.jpg,$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu,2
+5,Hester,TheTester,hester.hamilton@gmail.com,https://bookings.gettimely.com/rachelleeastwoodmassagetherapist/book,default.jpg,$2b$12$6Lxi6jt8RtxNlggq9ugHlusxuDmbydw084Gl5IfQfcSVjERO6vtLu,2
